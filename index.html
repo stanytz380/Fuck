@@ -58,7 +58,6 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
-            -webkit-user-select: none;
             font-family: 'SF Pro Display', 'Inter', -apple-system, sans-serif;
         }
         body {
@@ -326,10 +325,14 @@
             border-top: 1px solid var(--ios-border);
             padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
             z-index: 10000;
+            overflow-x: auto;
+            white-space: nowrap;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
+            scrollbar-width: none;
         }
+        .bottom-nav::-webkit-scrollbar { display: none; }
         .nav-item {
             display: flex;
             flex-direction: column;
@@ -465,17 +468,32 @@
             cursor: pointer;
         }
         
-        /* 2 Column Grid Layout */
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            padding: 0 20px;
-            margin-bottom: 16px;
+        /* Horizontal Scroll Layout - 2 cards per column stacked vertically */
+        .horizontal-scroll-container {
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0 20px 16px;
+            gap: 16px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar { display: none; }
+        .scroll-column {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: calc(50% - 8px);
+            max-width: calc(50% - 8px);
+            scroll-snap-align: start;
+        }
+        @media (min-width: 768px) {
+            .scroll-column { min-width: calc(25% - 12px); max-width: calc(25% - 12px); }
         }
         .content-card {
             position: relative;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
@@ -495,12 +513,12 @@
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 10px;
+            padding: 12px;
             background: linear-gradient(transparent, rgba(0,0,0,0.85));
         }
         .content-title {
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
             white-space: nowrap;
             overflow: hidden;
@@ -508,14 +526,14 @@
         }
         .live-badge {
             position: absolute;
-            top: 8px;
-            left: 8px;
+            top: 12px;
+            left: 12px;
             background: var(--ios-red);
             color: white;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: bold;
-            padding: 3px 6px;
-            border-radius: 12px;
+            padding: 4px 8px;
+            border-radius: 20px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
@@ -524,10 +542,10 @@
         .play-button {
             position: absolute;
             bottom: 50%;
-            right: 8px;
+            right: 12px;
             transform: translateY(50%);
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             background: rgba(0,0,0,0.7);
             backdrop-filter: blur(4px);
             border-radius: 50%;
@@ -535,7 +553,7 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.2s;
             z-index: 2;
@@ -559,7 +577,7 @@
             justify-content: center;
             border-radius: 16px;
         }
-        .lock-icon { font-size: 28px; color: white; }
+        .lock-icon { font-size: 32px; color: white; }
         .category-section {
             margin-bottom: 28px;
         }
@@ -888,22 +906,22 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--ios-gray); border-radius: 3px; }
-        body.small-cards .content-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        body.large-cards .content-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        body.small-cards .content-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        body.large-cards .content-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
         body.small-font { font-size: 12px; }
         body.large-font { font-size: 18px; }
         @media (max-width: 480px) {
             body.small-cards .content-grid { gap: 8px; }
-            body.large-cards .content-grid { gap: 14px; }
+            body.large-cards .content-grid { gap: 16px; }
         }
         .favorite-star {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 12px;
+            right: 12px;
             background: rgba(0,0,0,0.6);
             backdrop-filter: blur(4px);
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -914,7 +932,7 @@
         }
         .favorite-star i {
             color: #ffd700;
-            font-size: 14px;
+            font-size: 18px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
         .favorite-star:active { transform: scale(0.9); }
@@ -1016,7 +1034,7 @@
         }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
 <div id="loader">
     <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" class="loader-logo">
@@ -1137,7 +1155,7 @@
             <h2 class="section-title">All Live Channels</h2>
             <span class="see-all" onclick="viewAllCategory('All Channels')">See All</span>
         </div>
-        <div class="content-grid" id="allChannelsGrid"></div>
+        <div class="horizontal-scroll-container" id="allChannelsGrid"></div>
     </div>
 
     <div id="movies" class="page">
@@ -1145,7 +1163,7 @@
             <h2 class="section-title">All Movies</h2>
             <span class="see-all" onclick="viewAllCategory('All Movies')">See All</span>
         </div>
-        <div class="content-grid" id="allMoviesGrid"></div>
+        <div class="horizontal-scroll-container" id="allMoviesGrid"></div>
     </div>
 
     <div id="watchlist" class="page">
@@ -1278,17 +1296,6 @@
 </div>
 
 <script>
-    // Disable right-click and developer tools
-    document.addEventListener('contextmenu', event => event.preventDefault());
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123) { return false; }
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){ return false; }
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)){ return false; }
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){ return false; }
-        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){ return false; }
-        if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)){ return false; }
-    }
-
     const firebaseConfig = {
         apiKey: "AIzaSyAGQqAiYCnWR7X8XkxEXCGu19PU45qXDnc",
         authDomain: "stanyappstore.firebaseapp.com",
@@ -1427,14 +1434,18 @@
             section.innerHTML = `<div class="category-header"><h3>${catName}</h3><span class="see-all" onclick="viewAllCategory('${catName}')">See All</span></div>`;
             if (items.channels.length > 0) {
                 const channelsDiv = document.createElement('div');
-                channelsDiv.className = 'content-grid';
-                channelsDiv.innerHTML = items.channels.map(ch => createCard(ch, true)).join('');
+                channelsDiv.className = 'horizontal-scroll-container';
+                const columns = [];
+                for(let i=0; i<items.channels.length; i+=2) columns.push(items.channels.slice(i,i+2));
+                channelsDiv.innerHTML = columns.map(col => `<div class="scroll-column">${col.map(ch => createCard(ch, true)).join('')}</div>`).join('');
                 section.appendChild(channelsDiv);
             }
             if (items.movies.length > 0) {
                 const moviesDiv = document.createElement('div');
-                moviesDiv.className = 'content-grid';
-                moviesDiv.innerHTML = items.movies.map(m => createCard(m, false)).join('');
+                moviesDiv.className = 'horizontal-scroll-container';
+                const columns = [];
+                for(let i=0; i<items.movies.length; i+=2) columns.push(items.movies.slice(i,i+2));
+                moviesDiv.innerHTML = columns.map(col => `<div class="scroll-column">${col.map(m => createCard(m, false)).join('')}</div>`).join('');
                 section.appendChild(moviesDiv);
             }
             container.appendChild(section);
@@ -1447,11 +1458,19 @@
     }
     function renderAllChannels() {
         const grid = document.getElementById('allChannelsGrid');
-        if (grid) grid.innerHTML = allData.channels.map(ch => createCard(ch, true)).join('');
+        if (grid) {
+            const columns = [];
+            for(let i=0; i<allData.channels.length; i+=2) columns.push(allData.channels.slice(i,i+2));
+            grid.innerHTML = columns.map(col => `<div class="scroll-column">${col.map(ch => createCard(ch, true)).join('')}</div>`).join('');
+        }
     }
     function renderAllMovies() {
         const grid = document.getElementById('allMoviesGrid');
-        if (grid) grid.innerHTML = allData.movies.map(m => createCard(m, false)).join('');
+        if (grid) {
+            const columns = [];
+            for(let i=0; i<allData.movies.length; i+=2) columns.push(allData.movies.slice(i,i+2));
+            grid.innerHTML = columns.map(col => `<div class="scroll-column">${col.map(m => createCard(m, false)).join('')}</div>`).join('');
+        }
     }
     function createCard(item, isChannel) {
         let isLocked = false;
