@@ -362,7 +362,7 @@
             font-weight: 500;
             cursor: pointer;
         }
-        /* 2 columns only */
+        /* 2 columns only - like screenshot */
         .content-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -461,14 +461,12 @@
             margin-bottom: 28px;
         }
         .category-header {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 20px 20px 12px;
-            padding-left: 4px;
-            border-left: 4px solid var(--ios-blue);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin: 20px 20px 12px;
+            padding-left: 4px;
+            border-left: 4px solid var(--ios-blue);
         }
         .category-header h3 {
             font-size: 20px;
@@ -919,13 +917,19 @@
 
     <!-- Channels Page -->
     <div id="channels" class="page">
-        <div class="section-header"><h2 class="section-title">All Live Channels</h2></div>
+        <div class="section-header">
+            <h2 class="section-title">All Live Channels</h2>
+            <span class="see-all" onclick="viewAllCategory('All Channels')">See All</span>
+        </div>
         <div class="content-grid" id="allChannelsGrid"></div>
     </div>
 
     <!-- Movies Page -->
     <div id="movies" class="page">
-        <div class="section-header"><h2 class="section-title">All Movies</h2></div>
+        <div class="section-header">
+            <h2 class="section-title">All Movies</h2>
+            <span class="see-all" onclick="viewAllCategory('All Movies')">See All</span>
+        </div>
         <div class="content-grid" id="allMoviesGrid"></div>
     </div>
 
@@ -1181,29 +1185,64 @@
         const container = document.getElementById('homeContent');
         if (!container) return;
         container.innerHTML = '';
+        
+        // Group by categories like "Azam TV"
         const categoryMap = new Map();
-        allData.genres.forEach(genre => categoryMap.set(genre.name, { channels: [], movies: [] }));
+        
+        // First add Azam TV category if exists
+        const azamChannels = allData.channels.filter(ch => {
+            const cats = ch.categories && Array.isArray(ch.categories) ? ch.categories : (ch.genre ? [ch.genre] : []);
+            return cats.some(cat => cat.toLowerCase().includes('azam'));
+        });
+        
+        if (azamChannels.length > 0) {
+            categoryMap.set('Azam tv', { channels: azamChannels, movies: [] });
+        }
+        
+        // Add other genres
+        allData.genres.forEach(genre => {
+            if (!categoryMap.has(genre.name)) {
+                categoryMap.set(genre.name, { channels: [], movies: [] });
+            }
+        });
         categoryMap.set('Uncategorized', { channels: [], movies: [] });
 
+        // Add remaining channels
         allData.channels.forEach(ch => {
+            if (azamChannels.includes(ch)) return; // Skip if already added to Azam TV
+            
             const cats = ch.categories && Array.isArray(ch.categories) ? ch.categories : (ch.genre ? [ch.genre] : []);
-            if (cats.length === 0) categoryMap.get('Uncategorized').channels.push(ch);
-            else cats.forEach(cat => {
-                if (!categoryMap.has(cat)) categoryMap.set(cat, { channels: [], movies: [] });
-                categoryMap.get(cat).channels.push(ch);
-            });
+            if (cats.length === 0) {
+                categoryMap.get('Uncategorized').channels.push(ch);
+            } else {
+                cats.forEach(cat => {
+                    if (!categoryMap.has(cat)) {
+                        categoryMap.set(cat, { channels: [], movies: [] });
+                    }
+                    categoryMap.get(cat).channels.push(ch);
+                });
+            }
         });
+        
+        // Add movies
         allData.movies.forEach(m => {
             const cats = m.genre && Array.isArray(m.genre) ? m.genre : (m.genre ? [m.genre] : []);
-            if (cats.length === 0) categoryMap.get('Uncategorized').movies.push(m);
-            else cats.forEach(cat => {
-                if (!categoryMap.has(cat)) categoryMap.set(cat, { channels: [], movies: [] });
-                categoryMap.get(cat).movies.push(m);
-            });
+            if (cats.length === 0) {
+                categoryMap.get('Uncategorized').movies.push(m);
+            } else {
+                cats.forEach(cat => {
+                    if (!categoryMap.has(cat)) {
+                        categoryMap.set(cat, { channels: [], movies: [] });
+                    }
+                    categoryMap.get(cat).movies.push(m);
+                });
+            }
         });
 
+        // Render categories
         for (let [catName, items] of categoryMap) {
             if (items.channels.length === 0 && items.movies.length === 0) continue;
+            
             const section = document.createElement('div');
             section.className = 'category-section';
             section.innerHTML = `
@@ -1212,31 +1251,40 @@
                     <span class="see-all" onclick="viewAllCategory('${catName}')">See All</span>
                 </div>
             `;
+            
             if (items.channels.length > 0) {
                 const channelsDiv = document.createElement('div');
                 channelsDiv.className = 'content-grid';
                 channelsDiv.innerHTML = items.channels.map(ch => createCard(ch, true)).join('');
                 section.appendChild(channelsDiv);
             }
+            
             if (items.movies.length > 0) {
                 const moviesDiv = document.createElement('div');
                 moviesDiv.className = 'content-grid';
                 moviesDiv.innerHTML = items.movies.map(m => createCard(m, false)).join('');
                 section.appendChild(moviesDiv);
             }
+            
             container.appendChild(section);
         }
     }
 
     function viewAllCategory(catName) {
         showToast(`Showing ${catName} category`);
-        // Optionally we could navigate to a filtered view, but user can use the Channels/Movies pages.
+        // Navigate to channels or movies page based on category
+        if (catName.toLowerCase().includes('channel') || catName === 'Azam tv') {
+            nav('channels', document.querySelector('.nav-item[onclick*="channels"]'));
+        } else {
+            nav('movies', document.querySelector('.nav-item[onclick*="movies"]'));
+        }
     }
 
     function renderAllChannels() {
         const grid = document.getElementById('allChannelsGrid');
         if (grid) grid.innerHTML = allData.channels.map(ch => createCard(ch, true)).join('');
     }
+    
     function renderAllMovies() {
         const grid = document.getElementById('allMoviesGrid');
         if (grid) grid.innerHTML = allData.movies.map(m => createCard(m, false)).join('');
@@ -1246,15 +1294,19 @@
         const isLocked = userIsExpired && item.access === 'VIP';
         const poster = item.posterURL || item.logo || 'https://via.placeholder.com/300x450';
         const title = item.name || item.title || 'Untitled';
+        
         let badge = '';
         if (isChannel && !isLocked) {
             badge = '<div class="live-badge"><i class="fas fa-circle" style="font-size: 8px; margin-right: 4px; color: #ff3b30;"></i> LIVE</div>';
         }
+        
         let playButton = '';
         if (!isChannel && !isLocked) {
             playButton = `<div class="play-button" onclick="event.stopPropagation(); handleClick('${item.type}','${item.id}',false)"><i class="fas fa-play"></i></div>`;
         }
+        
         const favStar = currentUser ? `<div class="favorite-star" onclick="event.stopPropagation(); toggleFavorite('${item.type}','${item.id}')"><i class="fas ${isFavoriteSync(item.id) ? 'fa-star' : 'fa-star-o'}"></i></div>` : '';
+        
         return `<div class="content-card" onclick="handleClick('${item.type}','${item.id}',${isLocked})">
             ${badge}
             ${playButton}
@@ -1320,8 +1372,17 @@
             });
         });
     }
-    function playDownloaded(url) { document.getElementById('playerModal').style.display = 'flex'; if(!player) player = videojs('videoJS', { fluid: true, autoplay: true }); player.src({ src: url, type: url.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4' }); player.play(); }
-    function removeDownload(id) { if(confirm('Delete this download?')) db.ref(`userDownloads/${currentUser.uid}/${id}`).remove(); }
+    
+    function playDownloaded(url) { 
+        document.getElementById('playerModal').style.display = 'flex'; 
+        if(!player) player = videojs('videoJS', { fluid: true, autoplay: true }); 
+        player.src({ src: url, type: url.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4' }); 
+        player.play(); 
+    }
+    
+    function removeDownload(id) { 
+        if(confirm('Delete this download?')) db.ref(`userDownloads/${currentUser.uid}/${id}`).remove(); 
+    }
 
     function loadGeneralTips() {
         db.ref('tips').on('value', snap => {
@@ -1343,7 +1404,12 @@
             snap.forEach(tip => {
                 const t = tip.val();
                 let statusClass = '';
-                switch(t.status) { case 'upcoming': statusClass = 'status-upcoming'; break; case 'completed': statusClass = 'status-completed'; break; case 'successful': statusClass = 'status-successful'; break; case 'failed': statusClass = 'status-failed'; break; }
+                switch(t.status) { 
+                    case 'upcoming': statusClass = 'status-upcoming'; break; 
+                    case 'completed': statusClass = 'status-completed'; break; 
+                    case 'successful': statusClass = 'status-successful'; break; 
+                    case 'failed': statusClass = 'status-failed'; break; 
+                }
                 let codesHtml = '';
                 if(t.bookingCodes && Array.isArray(t.bookingCodes)) t.bookingCodes.forEach(code => codesHtml += `<span class="booking-code-item">${code.platform}: ${code.code}</span>`);
                 container.innerHTML += `
@@ -1387,6 +1453,7 @@
             });
         });
     }
+    
     function playFromWatchlist(id, type) {
         const item = type === 'channel' ? allData.channels.find(x => x.id === id) : allData.movies.find(x => x.id === id);
         if (item) playContent(item);
@@ -1420,13 +1487,16 @@
             });
         });
     }
+    
     function playFromFavorite(id, type) {
         const item = type === 'channel' ? allData.channels.find(x => x.id === id) : allData.movies.find(x => x.id === id);
         if (item) playContent(item);
     }
+    
     function removeFavorite(id) {
         if (currentUser) db.ref(`userFavorites/${currentUser.uid}/${id}`).remove();
     }
+    
     let favoritesSet = new Set();
     function updateFavoritesSet() {
         if (!currentUser) return;
@@ -1435,9 +1505,11 @@
             snap.forEach(f => favoritesSet.add(f.key));
         });
     }
+    
     function isFavoriteSync(id) {
         return favoritesSet.has(id);
     }
+    
     function toggleFavorite(type, id) {
         if (!currentUser) { showToast('Please login to add favorites'); return; }
         const favRef = db.ref(`userFavorites/${currentUser.uid}/${id}`);
@@ -1458,9 +1530,34 @@
     }
 
     // Chat
-    function listenChat() { if(!currentUser) return; db.ref(`stanyBotMessages/${currentUser.uid}`).on('value', snap => { const container = document.getElementById('chatBox'); container.innerHTML = ''; const msgs = []; snap.forEach(msg => msgs.push(msg.val())); msgs.sort((a,b) => a.timestamp - b.timestamp); msgs.forEach(msg => { const div = document.createElement('div'); div.className = `chat-message ${msg.sender === 'user' ? 'user' : 'admin'}`; div.textContent = msg.text; container.appendChild(div); }); container.scrollTop = container.scrollHeight; }); }
-    function sendChat() { const text = document.getElementById('chatInput').value.trim(); if(!text || !currentUser) return; db.ref(`stanyBotMessages/${currentUser.uid}`).push({ text, sender: 'user', timestamp: Date.now() }); document.getElementById('chatInput').value = ''; }
-    function closeChat() { nav('home', document.querySelector('.nav-item[onclick*="home"]')); }
+    function listenChat() { 
+        if(!currentUser) return; 
+        db.ref(`stanyBotMessages/${currentUser.uid}`).on('value', snap => { 
+            const container = document.getElementById('chatBox'); 
+            container.innerHTML = ''; 
+            const msgs = []; 
+            snap.forEach(msg => msgs.push(msg.val())); 
+            msgs.sort((a,b) => a.timestamp - b.timestamp); 
+            msgs.forEach(msg => { 
+                const div = document.createElement('div'); 
+                div.className = `chat-message ${msg.sender === 'user' ? 'user' : 'admin'}`; 
+                div.textContent = msg.text; 
+                container.appendChild(div); 
+            }); 
+            container.scrollTop = container.scrollHeight; 
+        }); 
+    }
+    
+    function sendChat() { 
+        const text = document.getElementById('chatInput').value.trim(); 
+        if(!text || !currentUser) return; 
+        db.ref(`stanyBotMessages/${currentUser.uid}`).push({ text, sender: 'user', timestamp: Date.now() }); 
+        document.getElementById('chatInput').value = ''; 
+    }
+    
+    function closeChat() { 
+        nav('home', document.querySelector('.nav-item[onclick*="home"]')); 
+    }
 
     // Navigation
     function nav(page, el) {
@@ -1497,6 +1594,7 @@
         });
         startCarouselInterval(appSettings.carouselInterval || 5000);
     }
+    
     function startCarouselInterval(interval) {
         if(window.carouselInterval) clearInterval(window.carouselInterval);
         window.carouselInterval = setInterval(() => {
@@ -1522,12 +1620,23 @@
         else if(platform === 'telegram') shareUrl = `https://t.me/share/url?url=${url}&text=${text}`;
         window.open(shareUrl, '_blank');
     }
+    
     function shareContent(platform) { shareApp(platform); }
-    function copyLink() { navigator.clipboard.writeText(window.location.href); showToast('Link copied'); }
+    
+    function copyLink() { 
+        navigator.clipboard.writeText(window.location.href); 
+        showToast('Link copied'); 
+    }
+    
     function copyContentLink() { copyLink(); }
 
     // UI helpers
-    function toggleSearch() { const bar = document.getElementById('searchBar'); bar.style.display = bar.style.display === 'none' ? 'block' : 'none'; if(bar.style.display === 'block') document.getElementById('searchInput').focus(); }
+    function toggleSearch() { 
+        const bar = document.getElementById('searchBar'); 
+        bar.style.display = bar.style.display === 'none' ? 'block' : 'none'; 
+        if(bar.style.display === 'block') document.getElementById('searchInput').focus(); 
+    }
+    
     function globalSearch() {
         const query = document.getElementById('searchInput').value.toLowerCase();
         if (!query) { renderAllChannels(); renderAllMovies(); return; }
@@ -1536,21 +1645,65 @@
         document.getElementById('allChannelsGrid').innerHTML = filteredChannels.map(ch => createCard(ch, true)).join('');
         document.getElementById('allMoviesGrid').innerHTML = filteredMovies.map(m => createCard(m, false)).join('');
     }
+    
     function showNotifications() { showToast('No new notifications'); }
-    function showLanguageSettings() { document.querySelector('.language-selector').scrollIntoView({ behavior: 'smooth' }); }
-    function quickRefresh() { updateAll(); showToast('Refreshed'); }
-    function showLogoutConfirm() { document.getElementById('logoutModal').style.display = 'flex'; }
-    function cancelLogout() { document.getElementById('logoutModal').style.display = 'none'; }
-    function confirmLogout() { auth.signOut(); document.getElementById('logoutModal').style.display = 'none'; showToast('Logged out'); }
-    function closeDetailModal() { document.getElementById('detailModal').style.display = 'none'; }
-    function closePlayer() { document.getElementById('playerModal').style.display = 'none'; if(player) player.pause(); }
-    function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+    
+    function showLanguageSettings() { 
+        document.querySelector('.language-selector').scrollIntoView({ behavior: 'smooth' }); 
+    }
+    
+    function quickRefresh() { 
+        updateAll(); 
+        showToast('Refreshed'); 
+    }
+    
+    function showLogoutConfirm() { 
+        document.getElementById('logoutModal').style.display = 'flex'; 
+    }
+    
+    function cancelLogout() { 
+        document.getElementById('logoutModal').style.display = 'none'; 
+    }
+    
+    function confirmLogout() { 
+        auth.signOut(); 
+        document.getElementById('logoutModal').style.display = 'none'; 
+        showToast('Logged out'); 
+    }
+    
+    function closeDetailModal() { 
+        document.getElementById('detailModal').style.display = 'none'; 
+    }
+    
+    function closePlayer() { 
+        document.getElementById('playerModal').style.display = 'none'; 
+        if(player) player.pause(); 
+    }
+    
+    function showToast(msg) { 
+        const t = document.getElementById('toast'); 
+        document.getElementById('toastMessage').textContent = msg; 
+        t.classList.add('show'); 
+        setTimeout(() => t.classList.remove('show'), 3000); 
+    }
 
     auth.onAuthStateChanged(u => {
-        if(u) { document.getElementById('authPages').style.display = 'none'; document.getElementById('loader').style.display = 'flex'; setTimeout(() => checkDevice(u.uid), 1000); }
-        else { document.getElementById('authPages').style.display = 'flex'; document.getElementById('mainApp').style.display = 'none'; document.getElementById('loader').style.display = 'none'; }
+        if(u) { 
+            document.getElementById('authPages').style.display = 'none'; 
+            document.getElementById('loader').style.display = 'flex'; 
+            setTimeout(() => checkDevice(u.uid), 1000); 
+        } else { 
+            document.getElementById('authPages').style.display = 'flex'; 
+            document.getElementById('mainApp').style.display = 'none'; 
+            document.getElementById('loader').style.display = 'none'; 
+        }
     });
-    window.onload = () => { updateUIText(); updateFavoritesSet(); };
+    
+    window.onload = () => { 
+        updateUIText(); 
+        updateFavoritesSet(); 
+    };
 </script>
 </body>
 </html>
+
