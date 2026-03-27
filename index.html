@@ -233,36 +233,39 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(20, 20, 20, 0.85);
+            background: rgba(20, 20, 20, 0.95);
             backdrop-filter: blur(30px) saturate(180%);
             border-top: 1px solid var(--ios-border);
-            padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
+            padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
             z-index: 10000;
-        }
-        .nav-item {
+            overflow-x: auto;
+            white-space: nowrap;
             display: flex;
+            justify-content: flex-start;
+            scrollbar-width: none;
+        }
+        .bottom-nav::-webkit-scrollbar { display: none; }
+        .nav-item {
+            display: inline-flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             padding: 8px 16px;
             border-radius: 16px;
             cursor: pointer;
             transition: all 0.3s;
-            min-width: 64px;
+            min-width: 70px;
         }
         .nav-item:active { transform: scale(0.92); }
         .nav-item.active { background: rgba(10, 132, 255, 0.15); }
         .nav-icon {
-            font-size: 24px;
+            font-size: 22px;
             color: var(--ios-text-secondary);
             transition: all 0.3s;
         }
         .nav-item.active .nav-icon { color: var(--ios-blue); transform: scale(1.1); }
         .nav-label {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             color: var(--ios-text-secondary);
             transition: all 0.3s;
@@ -814,7 +817,6 @@
             font-size: 18px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
-        .favorite-star.active i { color: #ffd700; }
         .favorite-star:active { transform: scale(0.9); }
     </style>
 </head>
@@ -899,11 +901,9 @@
         </div>
     </div>
 
-    <!-- Home Page (categories grouped) -->
+    <!-- Home Page -->
     <div id="home" class="page active">
-        <!-- Carousel -->
         <div class="carousel-container ios-card" id="carousel"></div>
-        <!-- Share Buttons -->
         <div class="share-section ios-card">
             <div class="share-title"><i class="fas fa-share-alt"></i><span>Share STANY MIN TV</span></div>
             <div class="share-buttons">
@@ -914,41 +914,40 @@
                 <button class="share-button share-copy" onclick="copyLink()"><i class="fas fa-link"></i></button>
             </div>
         </div>
-        <!-- Categories will be rendered here -->
         <div id="homeContent"></div>
     </div>
 
-    <!-- Channels Page (all channels) -->
+    <!-- Channels Page -->
     <div id="channels" class="page">
         <div class="section-header"><h2 class="section-title">All Live Channels</h2></div>
         <div class="content-grid" id="allChannelsGrid"></div>
     </div>
 
-    <!-- Movies Page (all movies) -->
+    <!-- Movies Page -->
     <div id="movies" class="page">
         <div class="section-header"><h2 class="section-title">All Movies</h2></div>
         <div class="content-grid" id="allMoviesGrid"></div>
     </div>
 
-    <!-- Watchlist Page (history) -->
+    <!-- Watch History -->
     <div id="watchlist" class="page">
         <h2 class="section-title" style="margin:20px;">Watch History</h2>
         <div id="watchlistContent" style="padding:20px;"></div>
     </div>
 
-    <!-- Favorites Page -->
+    <!-- Favorites -->
     <div id="favorites" class="page">
         <h2 class="section-title" style="margin:20px;">My Favorites</h2>
         <div id="favoritesContent" style="padding:20px;"></div>
     </div>
 
-    <!-- Downloads Page -->
+    <!-- Downloads -->
     <div id="downloads" class="page">
         <h2 class="section-title" style="margin:20px;">Downloads</h2>
         <div id="dlContent" style="padding:20px;"></div>
     </div>
 
-    <!-- Tips Page -->
+    <!-- Tips -->
     <div id="tips" class="page">
         <h2 class="section-title" style="margin:20px;">Betting Tips</h2>
         <div id="bettingTipsContent" class="tips-container"></div>
@@ -956,7 +955,7 @@
         <div id="generalTipsContent" class="tips-container"></div>
     </div>
 
-    <!-- Chat Page -->
+    <!-- Chat -->
     <div id="bot" class="page">
         <div class="chat-container">
             <div class="chat-header">
@@ -973,7 +972,7 @@
         </div>
     </div>
 
-    <!-- Profile Page -->
+    <!-- Profile -->
     <div id="profile" class="page">
         <div class="profile-header">
             <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" class="profile-avatar">
@@ -1084,7 +1083,7 @@
     // App Settings
     let appSettings = { cardSize: 'medium', fontSize: 'medium', carouselInterval: 5000 };
 
-    // Translations
+    // Translations (simplified)
     const translations = {
         en: { shareApp: 'Share STANY MIN TV', welcomeChat: 'Welcome! How can we help you today?', typeMessage: 'Type a message...', refresh: 'Refresh', language: 'Language', logout: 'Logout', confirmLogout: 'Are you sure you want to logout?', yesLogout: 'Yes, Logout', cancel: 'Cancel', shareThis: 'Share This', watchNow: 'Watch Now', navHome: 'Home', navChannels: 'Channels', navMovies: 'Movies', navWatchlist: 'History', navFavorites: 'Favorites', navDownloads: 'Downloads', navTips: 'Tips', navChat: 'Chat', navProfile: 'Profile', search: 'Search...', noDownloads: 'No downloads yet' },
         sw: { shareApp: 'Shiriki STANY MIN TV', welcomeChat: 'Karibu! Tunaweza kukusaidia vipi leo?', typeMessage: 'Andika ujumbe...', refresh: 'Onyesha Upya', language: 'Lugha', logout: 'Toka', confirmLogout: 'Una uhakika unataka kutoka?', yesLogout: 'Ndio, Toka', cancel: 'Ghairi', shareThis: 'Shiriki Hii', watchNow: 'Tazama Sasa', navHome: 'Nyumbani', navChannels: 'Vituo', navMovies: 'Filamu', navWatchlist: 'Historia', navFavorites: 'Vipendwa', navDownloads: 'Pakua', navTips: 'Vidokezo', navChat: 'Msaada', navProfile: 'Mimi', search: 'Tafuta...', noDownloads: 'Hakuna vilivyopakuliwa' },
@@ -1182,39 +1181,27 @@
         const container = document.getElementById('homeContent');
         if (!container) return;
         container.innerHTML = '';
-        // Group by categories
         const categoryMap = new Map();
-        // Add all genres
-        allData.genres.forEach(genre => {
-            categoryMap.set(genre.name, { channels: [], movies: [] });
-        });
-        // Add uncategorized
+        allData.genres.forEach(genre => categoryMap.set(genre.name, { channels: [], movies: [] }));
         categoryMap.set('Uncategorized', { channels: [], movies: [] });
 
         allData.channels.forEach(ch => {
             const cats = ch.categories && Array.isArray(ch.categories) ? ch.categories : (ch.genre ? [ch.genre] : []);
-            if (cats.length === 0) {
-                categoryMap.get('Uncategorized').channels.push(ch);
-            } else {
-                cats.forEach(cat => {
-                    if (!categoryMap.has(cat)) categoryMap.set(cat, { channels: [], movies: [] });
-                    categoryMap.get(cat).channels.push(ch);
-                });
-            }
+            if (cats.length === 0) categoryMap.get('Uncategorized').channels.push(ch);
+            else cats.forEach(cat => {
+                if (!categoryMap.has(cat)) categoryMap.set(cat, { channels: [], movies: [] });
+                categoryMap.get(cat).channels.push(ch);
+            });
         });
         allData.movies.forEach(m => {
             const cats = m.genre && Array.isArray(m.genre) ? m.genre : (m.genre ? [m.genre] : []);
-            if (cats.length === 0) {
-                categoryMap.get('Uncategorized').movies.push(m);
-            } else {
-                cats.forEach(cat => {
-                    if (!categoryMap.has(cat)) categoryMap.set(cat, { channels: [], movies: [] });
-                    categoryMap.get(cat).movies.push(m);
-                });
-            }
+            if (cats.length === 0) categoryMap.get('Uncategorized').movies.push(m);
+            else cats.forEach(cat => {
+                if (!categoryMap.has(cat)) categoryMap.set(cat, { channels: [], movies: [] });
+                categoryMap.get(cat).movies.push(m);
+            });
         });
 
-        // Render each category
         for (let [catName, items] of categoryMap) {
             if (items.channels.length === 0 && items.movies.length === 0) continue;
             const section = document.createElement('div');
@@ -1222,7 +1209,7 @@
             section.innerHTML = `
                 <div class="category-header">
                     <h3>${catName}</h3>
-                    <span class="see-all" onclick="viewAllForCategory('${catName}')">See All</span>
+                    <span class="see-all" onclick="viewAllCategory('${catName}')">See All</span>
                 </div>
             `;
             if (items.channels.length > 0) {
@@ -1241,10 +1228,10 @@
         }
     }
 
-    function viewAllForCategory(catName) {
-        // Show all channels and movies of this category in the home page? For simplicity, we can navigate to the Channels page filtered.
-        // But we already have separate pages. We'll just scroll to the category section.
-        document.querySelector(`.category-header h3`).scrollIntoView({ behavior: 'smooth' });
+    function viewAllCategory(catName) {
+        // Show all channels and movies of this category in a separate view? For simplicity, we just show a toast.
+        showToast(`Showing ${catName} category`);
+        // Optionally we could navigate to a filtered view, but user can use the Channels/Movies pages.
     }
 
     function renderAllChannels() {
@@ -1268,8 +1255,7 @@
         if (!isChannel && !isLocked) {
             playButton = `<div class="play-button" onclick="event.stopPropagation(); handleClick('${item.type}','${item.id}',false)"><i class="fas fa-play"></i></div>`;
         }
-        // Favorite star (only if logged in)
-        const favStar = currentUser ? `<div class="favorite-star" onclick="event.stopPropagation(); toggleFavorite('${item.type}','${item.id}')"><i class="fas ${isFavorite(item.id) ? 'fa-star' : 'fa-star-o'}"></i></div>` : '';
+        const favStar = currentUser ? `<div class="favorite-star" onclick="event.stopPropagation(); toggleFavorite('${item.type}','${item.id}')"><i class="fas ${isFavoriteSync(item.id) ? 'fa-star' : 'fa-star-o'}"></i></div>` : '';
         return `<div class="content-card" onclick="handleClick('${item.type}','${item.id}',${isLocked})">
             ${badge}
             ${playButton}
@@ -1301,14 +1287,10 @@
         player.src({ src: url, type: url.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4' });
         player.play();
 
-        // Save to watch history
         if (currentUser) {
             db.ref(`userWatchHistory/${currentUser.uid}/${item.id}`).set({
-                id: item.id,
-                type: item.type,
-                name: item.name || item.title,
-                poster: item.posterURL || item.logo,
-                timestamp: Date.now()
+                id: item.id, type: item.type, name: item.name || item.title,
+                poster: item.posterURL || item.logo, timestamp: Date.now()
             });
         }
     }
@@ -1434,7 +1416,6 @@
                         </div>
                     `;
                 } else {
-                    // orphaned favorite, remove
                     db.ref(`userFavorites/${currentUser.uid}/${itemId}`).remove();
                 }
             });
@@ -1447,10 +1428,16 @@
     function removeFavorite(id) {
         if (currentUser) db.ref(`userFavorites/${currentUser.uid}/${id}`).remove();
     }
-    function isFavorite(itemId) {
-        // We'll maintain a local set for quick check; for simplicity we'll use a global variable updated on each favorite change.
-        // For now, we'll just return false and rely on real-time updates; but we'll implement a dynamic update.
-        return false; // we'll add dynamic update in toggleFavorite
+    let favoritesSet = new Set();
+    function updateFavoritesSet() {
+        if (!currentUser) return;
+        db.ref(`userFavorites/${currentUser.uid}`).once('value', snap => {
+            favoritesSet.clear();
+            snap.forEach(f => favoritesSet.add(f.key));
+        });
+    }
+    function isFavoriteSync(id) {
+        return favoritesSet.has(id);
     }
     function toggleFavorite(type, id) {
         if (!currentUser) { showToast('Please login to add favorites'); return; }
@@ -1459,14 +1446,15 @@
             if (snap.exists()) {
                 favRef.remove();
                 showToast('Removed from favorites');
+                favoritesSet.delete(id);
             } else {
                 favRef.set({ type: type, addedAt: Date.now() });
                 showToast('Added to favorites');
+                favoritesSet.add(id);
             }
-            // Refresh favorites page if open
+            updateFavoritesSet();
             if (document.getElementById('favorites').style.display !== 'none') loadFavorites();
-            // Also refresh the star icon on the card (we'll re-render the page)
-            updateAll();
+            updateAll(); // refresh stars on cards
         });
     }
 
@@ -1565,7 +1553,7 @@
         if(u) { document.getElementById('authPages').style.display = 'none'; document.getElementById('loader').style.display = 'flex'; setTimeout(() => checkDevice(u.uid), 1000); }
         else { document.getElementById('authPages').style.display = 'flex'; document.getElementById('mainApp').style.display = 'none'; document.getElementById('loader').style.display = 'none'; }
     });
-    window.onload = () => { updateUIText(); };
+    window.onload = () => { updateUIText(); updateFavoritesSet(); };
 </script>
 </body>
 </html>
