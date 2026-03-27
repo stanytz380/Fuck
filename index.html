@@ -1229,7 +1229,6 @@
     }
 
     function viewAllCategory(catName) {
-        // Show all channels and movies of this category in a separate view? For simplicity, we just show a toast.
         showToast(`Showing ${catName} category`);
         // Optionally we could navigate to a filtered view, but user can use the Channels/Movies pages.
     }
@@ -1477,8 +1476,6 @@
         if (page === 'channels') renderAllChannels();
         if (page === 'movies') renderAllMovies();
     }
-
-    function viewAll(type) { if(type === 'channels') nav('channels', document.querySelector('.nav-item[onclick*="channels"]')); else nav('movies', document.querySelector('.nav-item[onclick*="movies"]')); }
 
     // Carousel
     function loadCarousel() {
