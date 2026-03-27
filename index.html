@@ -327,7 +327,7 @@
             transition: opacity 0.6s ease;
         }
         .carousel-slide.active { opacity: 1; }
-        .carousel-slide img, .carousel-slide video {
+        .carousel-slide img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -795,9 +795,9 @@
 
     <!-- Home Page -->
     <div id="home" class="page active">
-        <!-- Carousel (top) -->
+        <!-- Carousel (sliding images) -->
         <div class="carousel-container ios-card" id="carousel"></div>
-        <!-- Share Buttons (below carousel) -->
+        <!-- Share Buttons -->
         <div class="share-section ios-card">
             <div class="share-title"><i class="fas fa-share-alt"></i><span>Share STANY MIN TV</span></div>
             <div class="share-buttons">
@@ -951,7 +951,7 @@
     // Global variables
     let currentUser = null;
     let userIsExpired = false;
-    let allData = { channels: [], movies: [], genres: [], ads: [], bettingTips: [], generalTips: [], downloads: [] };
+    let allData = { channels: [], movies: [], genres: [], carousel: [], bettingTips: [], generalTips: [], downloads: [] };
     let player = null;
     let deviceId = localStorage.getItem('did') || 'dev_' + Date.now();
     localStorage.setItem('did', deviceId);
@@ -1045,7 +1045,7 @@
         db.ref('channels').on('value', s => { allData.channels = []; s.forEach(c => allData.channels.push({ id: c.key, type: 'channel', ...c.val() })); displayChannels(allData.channels); updateCategoryTags(); });
         db.ref('movies').on('value', s => { allData.movies = []; s.forEach(m => allData.movies.push({ id: m.key, type: 'movie', ...m.val() })); displayMovies(allData.movies); updateCategoryTags(); });
         db.ref('genres').on('value', s => { allData.genres = []; s.forEach(g => allData.genres.push({ id: g.key, name: g.val().name })); updateCategoryTags(); });
-        db.ref('ads').on('value', s => { allData.ads = []; s.forEach(a => allData.ads.push(a.val())); loadCarousel(); });
+        db.ref('carousel').on('value', s => { allData.carousel = []; s.forEach(slide => allData.carousel.push({ id: slide.key, ...slide.val() })); loadCarousel(); });
     }
 
     function displayChannels(channels) { document.getElementById('chanGrid').innerHTML = channels.map(ch => createCard(ch)).join(''); }
@@ -1209,20 +1209,23 @@
     }
     function viewAll(type) { if(type === 'channels') document.getElementById('movGrid').parentElement.scrollIntoView({ behavior: 'smooth' }); else document.getElementById('movGrid').scrollIntoView({ behavior: 'smooth' }); }
 
-    // Carousel
+    // Carousel (from carousel node)
     function loadCarousel() {
         const container = document.getElementById('carousel');
-        if(!allData.ads.length) { container.innerHTML = '<div style="display:flex; align-items:center; justify-content:center; height:100%;">No ads</div>'; return; }
+        if(!allData.carousel.length) { container.innerHTML = '<div style="display:flex; align-items:center; justify-content:center; height:100%;">No slides</div>'; return; }
         container.innerHTML = '';
         let index = 0;
-        allData.ads.forEach((ad, i) => {
-            const slide = document.createElement('div');
-            slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
-            if(ad.type === 'image') slide.innerHTML = `<img src="${ad.url}"><div class="carousel-overlay"><div class="carousel-title">${ad.header}</div><div class="carousel-desc">${ad.footer}</div></div>`;
-            else if(ad.type === 'video') slide.innerHTML = `<video autoplay muted loop style="width:100%; height:100%; object-fit:cover;"><source src="${ad.url}" type="video/mp4"></video><div class="carousel-overlay"><div class="carousel-title">${ad.header}</div><div class="carousel-desc">${ad.footer}</div></div>`;
-            else if(ad.type === 'slider' && ad.images) slide.innerHTML = `<img src="${ad.images[0]}"><div class="carousel-overlay"><div class="carousel-title">${ad.header}</div><div class="carousel-desc">${ad.footer}</div></div>`;
-            slide.onclick = () => { if(ad.link) window.open(ad.link, '_blank'); };
-            container.appendChild(slide);
+        allData.carousel.forEach((slide, i) => {
+            const slideDiv = document.createElement('div');
+            slideDiv.className = 'carousel-slide' + (i === 0 ? ' active' : '');
+            slideDiv.innerHTML = `
+                <img src="${slide.imageURL}" onerror="this.src='https://via.placeholder.com/800x400?text=Image+Not+Found'">
+                <div class="carousel-overlay">
+                    <div class="carousel-title">${slide.title || ''}</div>
+                    <div class="carousel-desc">${slide.description || ''}</div>
+                </div>
+            `;
+            container.appendChild(slideDiv);
         });
         startCarouselInterval(appSettings.carouselInterval || 5000);
     }
