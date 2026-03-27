@@ -465,7 +465,7 @@
             cursor: pointer;
         }
         
-        /* 2 Column Grid Layout - Cards side by side */
+        /* 2 Column Grid Layout */
         .content-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -1278,15 +1278,15 @@
 </div>
 
 <script>
-    // Disable right-click
+    // Disable right-click and developer tools
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function(e) {
-        if(e.keyCode == 123) { return false; } // F12
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){ return false; } // Ctrl+Shift+I
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)){ return false; } // Ctrl+Shift+C
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){ return false; } // Ctrl+Shift+J
-        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){ return false; } // Ctrl+U
-        if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)){ return false; } // Ctrl+S
+        if(e.keyCode == 123) { return false; }
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)){ return false; }
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)){ return false; }
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)){ return false; }
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)){ return false; }
+        if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)){ return false; }
     }
 
     const firebaseConfig = {
@@ -1707,4 +1707,3 @@
 </script>
 </body>
 </html>
-
