@@ -6,31 +6,25 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
-    
     <meta property="og:title" content="STANY MIN TV - Premium Entertainment">
     <meta property="og:description" content="Watch Live TV, Movies, Sports and more. Premium streaming experience with DRM protection.">
     <meta property="og:image" content="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
     <meta property="og:url" content="https://stanytv.onrender.com">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="STANY MIN TV">
-    
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="STANY MIN TV - Premium Entertainment">
     <meta name="twitter:description" content="Watch Live TV, Movies, Sports and more. Premium streaming experience.">
     <meta name="twitter:image" content="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
-    
     <title>STANY MIN TV - Premium Entertainment</title>
-
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/video.js@8.6.1/dist/video-js.min.css" rel="stylesheet">
     <link href="https://unpkg.com/videojs-contrib-eme@4.1.0/dist/videojs-eme.css" rel="stylesheet">
-
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.7.0/dist/shaka-player.compiled.min.js"></script>
-
     <style>
         :root {
             --ios-bg: #000000;
@@ -241,8 +235,6 @@
             backdrop-filter: blur(10px);
         }
         .search-input:focus { border-color: var(--ios-blue); }
-        
-        /* Sidebar Navigation */
         .sidebar-overlay {
             position: fixed;
             top: 0;
@@ -314,7 +306,6 @@
             color: var(--ios-text-secondary);
             text-align: center;
         }
-        
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -375,7 +366,6 @@
             color: var(--ios-text);
         }
         .more-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.15); }
-        
         .share-section {
             margin: 20px 20px 0;
             padding: 24px;
@@ -467,8 +457,7 @@
             font-weight: 500;
             cursor: pointer;
         }
-        
-        /* Horizontal Scroll Layout - 2 cards per column stacked vertically */
+        /* --- FIX: Only 2 cards visible per screen (1 column, 2 cards stacked) --- */
         .horizontal-scroll-container {
             display: flex;
             overflow-x: auto;
@@ -484,12 +473,16 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            min-width: calc(50% - 8px);
-            max-width: calc(50% - 8px);
+            min-width: 100%;          /* Each column takes full width -> shows only 2 cards total */
+            max-width: 100%;
             scroll-snap-align: start;
         }
+        /* For larger screens, keep same behavior: 2 cards per view, not 4 */
         @media (min-width: 768px) {
-            .scroll-column { min-width: calc(25% - 12px); max-width: calc(25% - 12px); }
+            .scroll-column {
+                min-width: 100%;
+                max-width: 100%;
+            }
         }
         .content-card {
             position: relative;
@@ -906,14 +899,6 @@
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--ios-gray); border-radius: 3px; }
-        body.small-cards .content-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        body.large-cards .content-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        body.small-font { font-size: 12px; }
-        body.large-font { font-size: 18px; }
-        @media (max-width: 480px) {
-            body.small-cards .content-grid { gap: 8px; }
-            body.large-cards .content-grid { gap: 16px; }
-        }
         .favorite-star {
             position: absolute;
             top: 12px;
@@ -935,24 +920,6 @@
             font-size: 18px;
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
-        .favorite-star:active { transform: scale(0.9); }
-        .drm-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-        }
-        .drm-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-top-color: var(--ios-blue);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        /* Admin Panel Styles */
         .admin-panel {
             margin: 20px;
             padding: 24px;
@@ -983,12 +950,6 @@
             font-size: 15px;
             outline: none;
         }
-        .admin-form input:focus { border-color: var(--ios-blue); }
-        .admin-form .form-row {
-            display: flex;
-            gap: 12px;
-        }
-        .admin-form .form-row > * { flex: 1; }
         .admin-btn {
             background: var(--ios-green);
             color: white;
@@ -1016,11 +977,7 @@
             margin-bottom: 8px;
             border: 1px solid var(--ios-border);
         }
-        .admin-channel-item .channel-info { flex: 1; }
-        .admin-channel-item .channel-name { font-weight: 600; font-size: 14px; }
-        .admin-channel-item .channel-url { font-size: 11px; color: var(--ios-gray); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
-        .admin-channel-item .channel-actions { display: flex; gap: 8px; }
-        .admin-channel-item .btn-delete {
+        .btn-delete {
             background: var(--ios-red);
             color: white;
             border: none;
@@ -1028,701 +985,90 @@
             height: 32px;
             border-radius: 8px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
     </style>
 </head>
 <body>
-
-<div id="loader">
-    <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" class="loader-logo">
-    <div class="ios-spinner"></div>
-</div>
-
+<div id="loader"><img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" class="loader-logo"><div class="ios-spinner"></div></div>
 <div id="toast"><i class="fas fa-check-circle"></i><span id="toastMessage">Notification</span></div>
-
-<div id="authPages" class="auth-screen">
-    <div class="auth-container">
-        <div id="loginPage">
-            <div class="auth-logo">
-                <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" alt="Logo">
-                <h1 class="auth-title">STANY MIN TV</h1>
-                <p class="auth-subtitle">Welcome Back</p>
-            </div>
-            <div class="language-selector">
-                <div class="language-label">Select Language</div>
-                <div class="language-options">
-                    <div class="language-option active" data-lang="en" onclick="changeLanguage('en')">English</div>
-                    <div class="language-option" data-lang="sw" onclick="changeLanguage('sw')">Kiswahili</div>
-                    <div class="language-option" data-lang="fr" onclick="changeLanguage('fr')">Français</div>
-                </div>
-            </div>
-            <input type="email" id="lemail" class="ios-input" placeholder="Email">
-            <input type="password" id="lpass" class="ios-input" placeholder="Password">
-            <button class="ios-button ios-button-large" onclick="login()">Sign In</button>
-            <p style="text-align: center; margin-top: 24px; color: var(--ios-text-secondary);">
-                Don't have an account?
-                <span style="color: var(--ios-blue); cursor: pointer;" onclick="showRegister()">Sign Up</span>
-            </p>
-        </div>
-        <div id="regPage" style="display:none;">
-            <div class="auth-logo">
-                <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" alt="Logo">
-                <h1 class="auth-title">Create Account</h1>
-                <p class="auth-subtitle">Join Us Today</p>
-            </div>
-            <div class="language-selector">
-                <div class="language-label">Select Language</div>
-                <div class="language-options">
-                    <div class="language-option active" data-lang="en" onclick="changeLanguage('en')">English</div>
-                    <div class="language-option" data-lang="sw" onclick="changeLanguage('sw')">Kiswahili</div>
-                    <div class="language-option" data-lang="fr" onclick="changeLanguage('fr')">Français</div>
-                </div>
-            </div>
-            <input type="text" id="rname" class="ios-input" placeholder="Full Name">
-            <input type="email" id="remail" class="ios-input" placeholder="Email">
-            <input type="password" id="rpass" class="ios-input" placeholder="Password">
-            <button class="ios-button ios-button-large" onclick="register()">Create Account</button>
-            <p style="text-align: center; margin-top: 24px; color: var(--ios-text-secondary);">
-                Already have an account?
-                <span style="color: var(--ios-blue); cursor: pointer;" onclick="showLogin()">Sign In</span>
-            </p>
-        </div>
-    </div>
-</div>
-
-<div id="mainApp" style="display:none;">
-    <div class="header">
-        <div class="header-logo">
-            <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" alt="Logo">
-            <div class="header-title">STANY MIN TV</div>
-        </div>
-        <div class="header-actions">
-            <div class="header-icon" onclick="toggleSearch()"><i class="fas fa-search"></i></div>
-            <div class="header-icon" onclick="showNotifications()"><i class="fas fa-bell"></i></div>
-            <div class="header-icon" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
-        </div>
-    </div>
-    
-    <!-- Sidebar -->
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" alt="Logo">
-            <div class="title">STANY MIN TV</div>
-            <div class="sidebar-close" onclick="toggleSidebar()"><i class="fas fa-times"></i></div>
-        </div>
-        <div class="sidebar-menu">
-            <a class="sidebar-item active" onclick="nav('home', this); toggleSidebar();"><i class="fas fa-home"></i><span class="label">Home</span></a>
-            <a class="sidebar-item" href="https://wa.me/255787069580" target="_blank" onclick="toggleSidebar();"><i class="fab fa-whatsapp"></i><span class="label">WhatsApp</span></a>
-            <a class="sidebar-item" href="sms:+255787069580" onclick="toggleSidebar();"><i class="fas fa-sms"></i><span class="label">SMS</span></a>
-            <a class="sidebar-item" href="https://t.me/Stanytz076" target="_blank" onclick="toggleSidebar();"><i class="fab fa-telegram-plane"></i><span class="label">Telegram</span></a>
-            <a class="sidebar-item" onclick="nav('profile', this); toggleSidebar();"><i class="fas fa-user"></i><span class="label">My Account</span></a>
-            <a class="sidebar-item" onclick="nav('channels', this); toggleSidebar();"><i class="fas fa-tv"></i><span class="label">Channels</span></a>
-            <a class="sidebar-item" onclick="nav('movies', this); toggleSidebar();"><i class="fas fa-film"></i><span class="label">Movies</span></a>
-            <a class="sidebar-item" onclick="nav('favorites', this); toggleSidebar();"><i class="fas fa-heart"></i><span class="label">Favorites</span></a>
-            <a class="sidebar-item" onclick="nav('admin', this); toggleSidebar();" id="adminLink" style="display:none;"><i class="fas fa-cog"></i><span class="label">Admin Panel</span></a>
-        </div>
-        <div class="sidebar-footer">© 2024 STANY MIN TV</div>
-    </div>
-    
-    <div class="search-bar" id="searchBar">
-        <div class="search-input-wrapper">
-            <i class="fas fa-search search-icon-left"></i>
-            <input type="text" class="search-input" id="searchInput" placeholder="Search..." onkeyup="globalSearch()">
-        </div>
-    </div>
-
-    <div id="home" class="page active">
-        <div class="carousel-container ios-card" id="carousel"></div>
-        <div class="share-section ios-card">
-            <div class="share-title"><i class="fas fa-share-alt"></i><span>Share STANY MIN TV</span></div>
-            <div class="share-buttons">
-                <button class="share-button share-whatsapp" onclick="shareApp('whatsapp')"><i class="fab fa-whatsapp"></i></button>
-                <button class="share-button share-facebook" onclick="shareApp('facebook')"><i class="fab fa-facebook-f"></i></button>
-                <button class="share-button share-twitter" onclick="shareApp('twitter')"><i class="fab fa-twitter"></i></button>
-                <button class="share-button share-telegram" onclick="shareApp('telegram')"><i class="fab fa-telegram-plane"></i></button>
-                <button class="share-button share-copy" onclick="copyLink()"><i class="fas fa-link"></i></button>
-            </div>
-        </div>
-        <div id="homeContent"></div>
-    </div>
-
-    <div id="channels" class="page">
-        <div class="section-header">
-            <h2 class="section-title">All Live Channels</h2>
-            <span class="see-all" onclick="viewAllCategory('All Channels')">See All</span>
-        </div>
-        <div class="horizontal-scroll-container" id="allChannelsGrid"></div>
-    </div>
-
-    <div id="movies" class="page">
-        <div class="section-header">
-            <h2 class="section-title">All Movies</h2>
-            <span class="see-all" onclick="viewAllCategory('All Movies')">See All</span>
-        </div>
-        <div class="horizontal-scroll-container" id="allMoviesGrid"></div>
-    </div>
-
-    <div id="watchlist" class="page">
-        <h2 class="section-title" style="margin:20px;">Watch History</h2>
-        <div id="watchlistContent" style="padding:20px;"></div>
-    </div>
-
-    <div id="favorites" class="page">
-        <h2 class="section-title" style="margin:20px;">My Favorites</h2>
-        <div id="favoritesContent" style="padding:20px;"></div>
-    </div>
-
-    <div id="downloads" class="page">
-        <h2 class="section-title" style="margin:20px;">Downloads</h2>
-        <div id="dlContent" style="padding:20px;"></div>
-    </div>
-
-    <div id="tips" class="page">
-        <h2 class="section-title" style="margin:20px;">Betting Tips</h2>
-        <div id="bettingTipsContent" class="tips-container"></div>
-        <h2 class="section-title" style="margin:28px 20px 16px;">Tips & Guides</h2>
-        <div id="generalTipsContent" class="tips-container"></div>
-    </div>
-
-    <div id="bot" class="page">
-        <div class="chat-container">
-            <div class="chat-header">
-                <div class="back-chat" onclick="closeChat()"><i class="fas fa-arrow-left"></i></div>
-                <h3>Support Chat</h3>
-            </div>
-            <div class="chat-messages" id="chatBox">
-                <div class="chat-message admin">Welcome! How can we help you today?</div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
-                <button class="chat-send" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
-    </div>
-
-    <div id="profile" class="page">
-        <div class="profile-header">
-            <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" class="profile-avatar">
-            <div class="profile-name" id="pName">User</div>
-            <div class="profile-email" id="pEmail">email@example.com</div>
-            <div class="profile-badge" id="pDays">7 days left</div>
-        </div>
-        <div class="menu-section">
-            <div class="menu-item" onclick="quickRefresh()">
-                <div class="menu-left"><div class="menu-icon"><i class="fas fa-sync-alt"></i></div><span class="menu-text">Refresh</span></div>
-                <i class="fas fa-chevron-right menu-chevron"></i>
-            </div>
-            <div class="menu-item" onclick="showLanguageSettings()">
-                <div class="menu-left"><div class="menu-icon"><i class="fas fa-language"></i></div><span class="menu-text">Language</span></div>
-                <i class="fas fa-chevron-right menu-chevron"></i>
-            </div>
-        </div>
-        <div class="menu-section">
-            <div class="menu-item" onclick="showLogoutConfirm()">
-                <div class="menu-left"><div class="menu-icon" style="color:var(--ios-red);"><i class="fas fa-sign-out-alt"></i></div><span class="menu-text" style="color:var(--ios-red);">Logout</span></div>
-                <i class="fas fa-chevron-right menu-chevron"></i>
-            </div>
-        </div>
-    </div>
-
-    <div id="admin" class="page">
-        <div class="admin-panel">
-            <div class="admin-title"><i class="fas fa-plus-circle"></i> Add New Channel</div>
-            <form class="admin-form" id="addChannelForm" onsubmit="addChannel(event)">
-                <input type="text" id="chName" placeholder="Channel Name" required>
-                <input type="url" id="chImage" placeholder="Image URL" required>
-                <input type="url" id="chMpd" placeholder="MPD Stream URL (optional)">
-                <input type="text" id="chLicense" placeholder="License URL (for DRM)">
-                <input type="text" id="chKidKey" placeholder="KID:KEY (format: kid:key)">
-                <input type="text" id="chGenre" placeholder="Genre/Category">
-                <button type="submit" class="admin-btn">Save Channel</button>
-            </form>
-            <div class="admin-channels-list" id="adminChannelsList"></div>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="nav('home', this)"><i class="fas fa-home nav-icon"></i><span class="nav-label">Home</span></div>
-        <div class="nav-item" onclick="nav('channels', this)"><i class="fas fa-tv nav-icon"></i><span class="nav-label">Channels</span></div>
-        <div class="nav-item" onclick="nav('movies', this)"><i class="fas fa-film nav-icon"></i><span class="nav-label">Movies</span></div>
-        <div class="nav-item" onclick="nav('favorites', this)"><i class="fas fa-heart nav-icon"></i><span class="nav-label">Favs</span></div>
-        <div class="more-btn" onclick="toggleSidebar()"><i class="fas fa-ellipsis-h"></i></div>
-    </div>
-</div>
-
-<div id="logoutModal" class="modal">
-    <div class="modal-content" style="position:relative;">
-        <div class="modal-close" onclick="cancelLogout()"><i class="fas fa-times"></i></div>
-        <div style="text-align:center; margin-bottom:24px;"><i class="fas fa-sign-out-alt" style="font-size:48px; color:var(--ios-red);"></i></div>
-        <h3 class="modal-title">Logout</h3>
-        <p class="modal-text">Are you sure you want to logout?</p>
-        <button class="ios-button" onclick="confirmLogout()" style="margin-bottom:12px; background:var(--ios-red);">Yes, Logout</button>
-        <button class="ios-button ios-button-secondary" onclick="cancelLogout()">Cancel</button>
-    </div>
-</div>
-
-<div id="detailModal" class="modal">
-    <div class="modal-content" style="position:relative;">
-        <div class="modal-close" onclick="closeDetailModal()"><i class="fas fa-times"></i></div>
-        <img id="dImg" style="width:100%; height:220px; object-fit:cover; border-radius:16px; margin-bottom:20px;">
-        <h3 class="modal-title" id="dTitle"></h3>
-        <p class="modal-text" id="dDesc" style="text-align:left;"></p>
-        <div class="share-section" style="margin:20px 0;">
-            <div class="share-title"><i class="fas fa-share-alt"></i><span>Share This</span></div>
-            <div class="share-buttons">
-                <button class="share-button share-whatsapp" onclick="shareContent('whatsapp')"><i class="fab fa-whatsapp"></i></button>
-                <button class="share-button share-facebook" onclick="shareContent('facebook')"><i class="fab fa-facebook-f"></i></button>
-                <button class="share-button share-twitter" onclick="shareContent('twitter')"><i class="fab fa-twitter"></i></button>
-                <button class="share-button share-copy" onclick="copyContentLink()"><i class="fas fa-link"></i></button>
-            </div>
-        </div>
-        <div class="flex-between gap-2">
-            <button class="ios-button" id="dBtnDownload" style="margin-bottom:12px; background:var(--ios-green);">Download</button>
-            <button class="ios-button" id="dBtnWatch">Watch Now</button>
-        </div>
-    </div>
-</div>
-
-<div id="playerModal" class="modal" style="padding:0; background:#000;">
-    <div style="width:100%; height:100%; position:relative;">
-        <div class="modal-close" onclick="closePlayer()" style="top:20px; right:20px; background:rgba(0,0,0,0.6); z-index: 1001;"><i class="fas fa-times"></i></div>
-        <video id="videoJS" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls preload="auto" data-setup='{}' style="width:100%;height:100%;"></video>
-        <div id="shakaContainer" style="width:100%;height:100%;display:none;"></div>
-    </div>
-</div>
-
+<div id="authPages" class="auth-screen"><div class="auth-container"><div id="loginPage"><div class="auth-logo"><img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg"><h1 class="auth-title">STANY MIN TV</h1><p class="auth-subtitle">Welcome Back</p></div><div class="language-selector"><div class="language-label">Select Language</div><div class="language-options"><div class="language-option active" data-lang="en" onclick="changeLanguage('en')">English</div><div class="language-option" data-lang="sw" onclick="changeLanguage('sw')">Kiswahili</div><div class="language-option" data-lang="fr" onclick="changeLanguage('fr')">Français</div></div></div><input type="email" id="lemail" class="ios-input" placeholder="Email"><input type="password" id="lpass" class="ios-input" placeholder="Password"><button class="ios-button" onclick="login()">Sign In</button><p style="text-align:center;margin-top:24px;color:var(--ios-text-secondary);">Don't have an account? <span style="color:var(--ios-blue);cursor:pointer;" onclick="showRegister()">Sign Up</span></p></div><div id="regPage" style="display:none;"><div class="auth-logo"><img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg"><h1 class="auth-title">Create Account</h1><p class="auth-subtitle">Join Us Today</p></div><div class="language-selector"><div class="language-label">Select Language</div><div class="language-options"><div class="language-option active" data-lang="en" onclick="changeLanguage('en')">English</div><div class="language-option" data-lang="sw" onclick="changeLanguage('sw')">Kiswahili</div><div class="language-option" data-lang="fr" onclick="changeLanguage('fr')">Français</div></div></div><input type="text" id="rname" class="ios-input" placeholder="Full Name"><input type="email" id="remail" class="ios-input" placeholder="Email"><input type="password" id="rpass" class="ios-input" placeholder="Password"><button class="ios-button" onclick="register()">Create Account</button><p style="text-align:center;margin-top:24px;color:var(--ios-text-secondary);">Already have an account? <span style="color:var(--ios-blue);cursor:pointer;" onclick="showLogin()">Sign In</span></p></div></div></div>
+<div id="mainApp" style="display:none;"><div class="header"><div class="header-logo"><img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg"><div class="header-title">STANY MIN TV</div></div><div class="header-actions"><div class="header-icon" onclick="toggleSearch()"><i class="fas fa-search"></i></div><div class="header-icon" onclick="showNotifications()"><i class="fas fa-bell"></i></div><div class="header-icon" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div></div></div><div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div><div class="sidebar" id="sidebar"><div class="sidebar-header"><img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg"><div class="title">STANY MIN TV</div><div class="sidebar-close" onclick="toggleSidebar()"><i class="fas fa-times"></i></div></div><div class="sidebar-menu"><a class="sidebar-item active" onclick="nav('home', this); toggleSidebar();"><i class="fas fa-home"></i><span class="label">Home</span></a><a class="sidebar-item" href="https://wa.me/255787069580" target="_blank" onclick="toggleSidebar();"><i class="fab fa-whatsapp"></i><span class="label">WhatsApp</span></a><a class="sidebar-item" href="sms:+255787069580" onclick="toggleSidebar();"><i class="fas fa-sms"></i><span class="label">SMS</span></a><a class="sidebar-item" href="https://t.me/Stanytz076" target="_blank" onclick="toggleSidebar();"><i class="fab fa-telegram-plane"></i><span class="label">Telegram</span></a><a class="sidebar-item" onclick="nav('profile', this); toggleSidebar();"><i class="fas fa-user"></i><span class="label">My Account</span></a><a class="sidebar-item" onclick="nav('channels', this); toggleSidebar();"><i class="fas fa-tv"></i><span class="label">Channels</span></a><a class="sidebar-item" onclick="nav('movies', this); toggleSidebar();"><i class="fas fa-film"></i><span class="label">Movies</span></a><a class="sidebar-item" onclick="nav('favorites', this); toggleSidebar();"><i class="fas fa-heart"></i><span class="label">Favorites</span></a><a class="sidebar-item" onclick="nav('admin', this); toggleSidebar();" id="adminLink" style="display:none;"><i class="fas fa-cog"></i><span class="label">Admin Panel</span></a></div><div class="sidebar-footer">© 2024 STANY MIN TV</div></div><div class="search-bar" id="searchBar"><div class="search-input-wrapper"><i class="fas fa-search search-icon-left"></i><input type="text" class="search-input" id="searchInput" placeholder="Search..." onkeyup="globalSearch()"></div></div><div id="home" class="page active"><div class="carousel-container ios-card" id="carousel"></div><div class="share-section ios-card"><div class="share-title"><i class="fas fa-share-alt"></i><span>Share STANY MIN TV</span></div><div class="share-buttons"><button class="share-button share-whatsapp" onclick="shareApp('whatsapp')"><i class="fab fa-whatsapp"></i></button><button class="share-button share-facebook" onclick="shareApp('facebook')"><i class="fab fa-facebook-f"></i></button><button class="share-button share-twitter" onclick="shareApp('twitter')"><i class="fab fa-twitter"></i></button><button class="share-button share-telegram" onclick="shareApp('telegram')"><i class="fab fa-telegram-plane"></i></button><button class="share-button share-copy" onclick="copyLink()"><i class="fas fa-link"></i></button></div></div><div id="homeContent"></div></div><div id="channels" class="page"><div class="section-header"><h2 class="section-title">All Live Channels</h2><span class="see-all" onclick="viewAllCategory('All Channels')">See All</span></div><div class="horizontal-scroll-container" id="allChannelsGrid"></div></div><div id="movies" class="page"><div class="section-header"><h2 class="section-title">All Movies</h2><span class="see-all" onclick="viewAllCategory('All Movies')">See All</span></div><div class="horizontal-scroll-container" id="allMoviesGrid"></div></div><div id="watchlist" class="page"><h2 class="section-title" style="margin:20px;">Watch History</h2><div id="watchlistContent" style="padding:20px;"></div></div><div id="favorites" class="page"><h2 class="section-title" style="margin:20px;">My Favorites</h2><div id="favoritesContent" style="padding:20px;"></div></div><div id="downloads" class="page"><h2 class="section-title" style="margin:20px;">Downloads</h2><div id="dlContent" style="padding:20px;"></div></div><div id="tips" class="page"><h2 class="section-title" style="margin:20px;">Betting Tips</h2><div id="bettingTipsContent" class="tips-container"></div><h2 class="section-title" style="margin:28px 20px 16px;">Tips & Guides</h2><div id="generalTipsContent" class="tips-container"></div></div><div id="bot" class="page"><div class="chat-container"><div class="chat-header"><div class="back-chat" onclick="closeChat()"><i class="fas fa-arrow-left"></i></div><h3>Support Chat</h3></div><div class="chat-messages" id="chatBox"><div class="chat-message admin">Welcome! How can we help you today?</div></div><div class="chat-input-area"><input type="text" class="chat-input" id="chatInput" placeholder="Type a message..."><button class="chat-send" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button></div></div></div><div id="profile" class="page"><div class="profile-header"><img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" class="profile-avatar"><div class="profile-name" id="pName">User</div><div class="profile-email" id="pEmail">email@example.com</div><div class="profile-badge" id="pDays">7 days left</div></div><div class="menu-section"><div class="menu-item" onclick="quickRefresh()"><div class="menu-left"><div class="menu-icon"><i class="fas fa-sync-alt"></i></div><span class="menu-text">Refresh</span></div><i class="fas fa-chevron-right menu-chevron"></i></div><div class="menu-item" onclick="showLanguageSettings()"><div class="menu-left"><div class="menu-icon"><i class="fas fa-language"></i></div><span class="menu-text">Language</span></div><i class="fas fa-chevron-right menu-chevron"></i></div></div><div class="menu-section"><div class="menu-item" onclick="showLogoutConfirm()"><div class="menu-left"><div class="menu-icon" style="color:var(--ios-red);"><i class="fas fa-sign-out-alt"></i></div><span class="menu-text" style="color:var(--ios-red);">Logout</span></div><i class="fas fa-chevron-right menu-chevron"></i></div></div></div><div id="admin" class="page"><div class="admin-panel"><div class="admin-title"><i class="fas fa-plus-circle"></i> Add New Channel</div><form class="admin-form" id="addChannelForm" onsubmit="addChannel(event)"><input type="text" id="chName" placeholder="Channel Name" required><input type="url" id="chImage" placeholder="Image URL" required><input type="url" id="chMpd" placeholder="MPD Stream URL (optional)"><input type="text" id="chLicense" placeholder="License URL (for DRM)"><input type="text" id="chKidKey" placeholder="KID:KEY (format: kid:key)"><input type="text" id="chGenre" placeholder="Genre/Category"><button type="submit" class="admin-btn">Save Channel</button></form><div class="admin-channels-list" id="adminChannelsList"></div></div></div><div class="bottom-nav"><div class="nav-item active" onclick="nav('home', this)"><i class="fas fa-home nav-icon"></i><span class="nav-label">Home</span></div><div class="nav-item" onclick="nav('channels', this)"><i class="fas fa-tv nav-icon"></i><span class="nav-label">Channels</span></div><div class="nav-item" onclick="nav('movies', this)"><i class="fas fa-film nav-icon"></i><span class="nav-label">Movies</span></div><div class="nav-item" onclick="nav('favorites', this)"><i class="fas fa-heart nav-icon"></i><span class="nav-label">Favs</span></div><div class="more-btn" onclick="toggleSidebar()"><i class="fas fa-ellipsis-h"></i></div></div></div>
+<div id="logoutModal" class="modal"><div class="modal-content" style="position:relative;"><div class="modal-close" onclick="cancelLogout()"><i class="fas fa-times"></i></div><div style="text-align:center;margin-bottom:24px;"><i class="fas fa-sign-out-alt" style="font-size:48px;color:var(--ios-red);"></i></div><h3 class="modal-title">Logout</h3><p class="modal-text">Are you sure you want to logout?</p><button class="ios-button" onclick="confirmLogout()" style="margin-bottom:12px;background:var(--ios-red);">Yes, Logout</button><button class="ios-button ios-button-secondary" onclick="cancelLogout()">Cancel</button></div></div>
+<div id="detailModal" class="modal"><div class="modal-content" style="position:relative;"><div class="modal-close" onclick="closeDetailModal()"><i class="fas fa-times"></i></div><img id="dImg" style="width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:20px;"><h3 class="modal-title" id="dTitle"></h3><p class="modal-text" id="dDesc" style="text-align:left;"></p><div class="share-section" style="margin:20px 0;"><div class="share-title"><i class="fas fa-share-alt"></i><span>Share This</span></div><div class="share-buttons"><button class="share-button share-whatsapp" onclick="shareContent('whatsapp')"><i class="fab fa-whatsapp"></i></button><button class="share-button share-facebook" onclick="shareContent('facebook')"><i class="fab fa-facebook-f"></i></button><button class="share-button share-twitter" onclick="shareContent('twitter')"><i class="fab fa-twitter"></i></button><button class="share-button share-copy" onclick="copyContentLink()"><i class="fas fa-link"></i></button></div></div><div style="display:flex;gap:12px;"><button class="ios-button" id="dBtnDownload" style="background:var(--ios-green);">Download</button><button class="ios-button" id="dBtnWatch">Watch Now</button></div></div></div>
+<div id="playerModal" class="modal" style="padding:0;background:#000;"><div style="width:100%;height:100%;position:relative;"><div class="modal-close" onclick="closePlayer()" style="top:20px;right:20px;background:rgba(0,0,0,0.6);z-index:1001;"><i class="fas fa-times"></i></div><video id="videoJS" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls preload="auto" data-setup='{}' style="width:100%;height:100%;"></video><div id="shakaContainer" style="width:100%;height:100%;display:none;"></div></div></div>
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyAGQqAiYCnWR7X8XkxEXCGu19PU45qXDnc",
-        authDomain: "stanyappstore.firebaseapp.com",
-        projectId: "stanyappstore",
-        storageBucket: "stanyappstore.firebasestorage.app",
-        messagingSenderId: "735017831251",
-        appId: "1:735017831251:web:9fa4184ef141349fb9afa6",
-        measurementId: "G-EM3RTMBKTN"
-    };
+    const firebaseConfig = { apiKey: "AIzaSyAGQqAiYCnWR7X8XkxEXCGu19PU45qXDnc", authDomain: "stanyappstore.firebaseapp.com", projectId: "stanyappstore", storageBucket: "stanyappstore.firebasestorage.app", messagingSenderId: "735017831251", appId: "1:735017831251:web:9fa4184ef141349fb9afa6", measurementId: "G-EM3RTMBKTN" };
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
-
+    const auth = firebase.auth(), db = firebase.database();
     let currentUser = null, userIsExpired = false;
     let allData = { channels: [], movies: [], genres: [], carousel: [], bettingTips: [], generalTips: [], downloads: [] };
-    let player = null, shakaPlayer = null;
-    let deviceId = localStorage.getItem('did') || 'dev_' + Date.now();
+    let player = null, shakaPlayer = null, deviceId = localStorage.getItem('did') || 'dev_' + Date.now();
     localStorage.setItem('did', deviceId);
-    let currentLang = localStorage.getItem('language') || 'en';
-    let currentDetailItem = null;
+    let currentLang = localStorage.getItem('language') || 'en', currentDetailItem = null;
     let appSettings = { cardSize: 'medium', fontSize: 'medium', carouselInterval: 5000, lockedChannels: [], freeChannels: [], channelScripts: {} };
-
-    const translations = {
-        en: { shareApp: 'Share STANY MIN TV', welcomeChat: 'Welcome! How can we help you today?', typeMessage: 'Type a message...', refresh: 'Refresh', language: 'Language', logout: 'Logout', confirmLogout: 'Are you sure you want to logout?', yesLogout: 'Yes, Logout', cancel: 'Cancel', shareThis: 'Share This', watchNow: 'Watch Now', navHome: 'Home', navChannels: 'Channels', navMovies: 'Movies', navWatchlist: 'History', navFavorites: 'Favorites', navDownloads: 'Downloads', navTips: 'Tips', navChat: 'Chat', navProfile: 'Profile', search: 'Search...', noDownloads: 'No downloads yet' },
-        sw: { shareApp: 'Shiriki STANY MIN TV', welcomeChat: 'Karibu! Tunaweza kukusaidia vipi leo?', typeMessage: 'Andika ujumbe...', refresh: 'Onyesha Upya', language: 'Lugha', logout: 'Toka', confirmLogout: 'Una uhakika unataka kutoka?', yesLogout: 'Ndio, Toka', cancel: 'Ghairi', shareThis: 'Shiriki Hii', watchNow: 'Tazama Sasa', navHome: 'Nyumbani', navChannels: 'Vituo', navMovies: 'Filamu', navWatchlist: 'Historia', navFavorites: 'Vipendwa', navDownloads: 'Pakua', navTips: 'Vidokezo', navChat: 'Msaada', navProfile: 'Mimi', search: 'Tafuta...', noDownloads: 'Hakuna vilivyopakuliwa' },
-        fr: { shareApp: 'Partager STANY MIN TV', welcomeChat: 'Bienvenue! Comment pouvons-nous vous aider?', typeMessage: 'Écrivez un message...', refresh: 'Rafraîchir', language: 'Langue', logout: 'Déconnexion', confirmLogout: 'Êtes-vous sûr de vouloir vous déconnecter?', yesLogout: 'Oui, Déconnexion', cancel: 'Annuler', shareThis: 'Partager', watchNow: 'Regarder', navHome: 'Accueil', navChannels: 'Chaînes', navMovies: 'Films', navWatchlist: 'Historique', navFavorites: 'Favoris', navDownloads: 'Télécharger', navTips: 'Conseils', navChat: 'Chat', navProfile: 'Profil', search: 'Rechercher...', noDownloads: 'Aucun téléchargement' }
-    };
-    
-    function updateUIText() {
-        document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if(translations[currentLang][key]) el.textContent = translations[currentLang][key]; });
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { const key = el.getAttribute('data-i18n-placeholder'); if(translations[currentLang][key]) el.placeholder = translations[currentLang][key]; });
-        document.querySelectorAll('.language-option').forEach(opt => opt.classList.toggle('active', opt.getAttribute('data-lang') === currentLang));
-    }
-    
+    let favoritesSet = new Set();
+    const translations = { en: {}, sw: {}, fr: {} };
     function changeLanguage(lang) { currentLang = lang; localStorage.setItem('language', lang); updateUIText(); showToast('Language updated'); }
+    function updateUIText() { document.querySelectorAll('.language-option').forEach(opt => opt.classList.toggle('active', opt.getAttribute('data-lang') === currentLang)); }
     function showRegister() { document.getElementById('loginPage').style.display = 'none'; document.getElementById('regPage').style.display = 'block'; }
     function showLogin() { document.getElementById('regPage').style.display = 'none'; document.getElementById('loginPage').style.display = 'block'; }
-    function login() {
-        const email = document.getElementById('lemail').value, pass = document.getElementById('lpass').value;
-        if(!email || !pass) { showToast('Please enter email and password'); return; }
-        auth.signInWithEmailAndPassword(email, pass).catch(e => showToast(e.message));
-    }
-    function register() {
-        const name = document.getElementById('rname').value, email = document.getElementById('remail').value, pass = document.getElementById('rpass').value;
-        if(!name || !email || !pass) { showToast('Please fill all fields'); return; }
-        auth.createUserWithEmailAndPassword(email, pass)
-            .then(user => db.ref('users/'+user.user.uid).set({ name, email, language: currentLang, activeDeviceId: deviceId, registeredAt: Date.now(), accessExpiry: Date.now() + (7*24*60*60*1000) }))
-            .then(() => showToast('Registration successful'))
-            .catch(e => showToast(e.message));
-    }
-    function checkDevice(uid) {
-        db.ref('users/'+uid).once('value').then(snap => {
-            const u = snap.val();
-            if(!u || u.isBlocked) { auth.signOut(); showToast('Account blocked or not found'); return; }
-            if(!u.activeDeviceId || u.activeDeviceId === deviceId) initializeApp(uid, u);
-            else { showToast('Device not authorized'); auth.signOut(); }
-        }).catch(err => { showToast('Error loading user data'); auth.signOut(); });
-    }
-    function initializeApp(uid, userData) {
-        currentUser = { uid: uid, ...userData };
-        userIsExpired = userData.accessExpiry && userData.accessExpiry < Date.now();
-        if(userData.language) { currentLang = userData.language; updateUIText(); }
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        document.getElementById('pName').textContent = userData.name || 'User';
-        document.getElementById('pEmail').textContent = userData.email;
-        const days = userData.accessExpiry ? Math.ceil((userData.accessExpiry - Date.now())/(1000*60*60*24)) : 0;
-        document.getElementById('pDays').textContent = userIsExpired ? 'Expired' : days + ' days left';
-        if(userData.isAdmin) document.getElementById('adminLink').style.display = 'flex';
-        loadEssentialData();
-        loadDownloads();
-        loadGeneralTips();
-        loadBettingTips();
-        loadAppSettings();
-        listenChat();
-        loadWatchlist();
-        loadFavorites();
-        showToast('Welcome to STANY MIN TV');
-    }
-    function loadAppSettings() {
-        db.ref('appSettings').on('value', s => {
-            if(s.exists()) { appSettings = { ...appSettings, ...s.val() }; applyAppSettings(); }
-        });
-    }
-    function applyAppSettings() {
-        document.body.classList.remove('small-cards', 'large-cards');
-        if(appSettings.cardSize === 'small') document.body.classList.add('small-cards');
-        else if(appSettings.cardSize === 'large') document.body.classList.add('large-cards');
-        document.body.classList.remove('small-font', 'large-font');
-        if(appSettings.fontSize === 'small') document.body.classList.add('small-font');
-        else if(appSettings.fontSize === 'large') document.body.classList.add('large-font');
-        if(appSettings.carouselInterval) {
-            if(window.carouselInterval) clearInterval(window.carouselInterval);
-            if(document.querySelectorAll('.carousel-slide').length > 1) startCarouselInterval(appSettings.carouselInterval);
-        }
-    }
-    function isChannelLocked(channelId) {
-        if (appSettings.freeChannels && appSettings.freeChannels.includes(channelId)) return false;
-        if (appSettings.lockedChannels && appSettings.lockedChannels.includes(channelId)) return true;
-        return false;
-    }
-    function loadEssentialData() {
-        db.ref('channels').on('value', s => { allData.channels = []; s.forEach(c => allData.channels.push({ id: c.key, type: 'channel', ...c.val() })); updateAll(); loadAdminChannels(); });
-        db.ref('movies').on('value', s => { allData.movies = []; s.forEach(m => allData.movies.push({ id: m.key, type: 'movie', ...m.val() })); updateAll(); });
-        db.ref('genres').on('value', s => { allData.genres = []; s.forEach(g => allData.genres.push({ id: g.key, name: g.val().name })); updateAll(); });
-        db.ref('carousel').on('value', s => { allData.carousel = []; s.forEach(slide => allData.carousel.push({ id: slide.key, ...slide.val() })); loadCarousel(); });
-    }
-    function updateAll() { renderHomePage(); renderAllChannels(); renderAllMovies(); }
-    function renderHomePage() {
-        const container = document.getElementById('homeContent');
-        if (!container) return;
-        container.innerHTML = '';
-        const categoryMap = new Map();
-        const azamChannels = allData.channels.filter(ch => {
-            const cats = ch.categories && Array.isArray(ch.categories) ? ch.categories : (ch.genre ? [ch.genre] : []);
-            return cats.some(cat => cat.toLowerCase().includes('azam'));
-        });
-        if (azamChannels.length > 0) categoryMap.set('Azam tv', { channels: azamChannels, movies: [] });
-        allData.genres.forEach(genre => { if (!categoryMap.has(genre.name)) categoryMap.set(genre.name, { channels: [], movies: [] }); });
-        categoryMap.set('Uncategorized', { channels: [], movies: [] });
-        allData.channels.forEach(ch => {
-            if (azamChannels.includes(ch)) return;
-            const cats = ch.categories && Array.isArray(ch.categories) ? ch.categories : (ch.genre ? [ch.genre] : []);
-            if (cats.length === 0) categoryMap.get('Uncategorized').channels.push(ch);
-            else cats.forEach(cat => { if (!categoryMap.has(cat)) categoryMap.set(cat, { channels: [], movies: [] }); categoryMap.get(cat).channels.push(ch); });
-        });
-        allData.movies.forEach(m => {
-            const cats = m.genre && Array.isArray(m.genre) ? m.genre : (m.genre ? [m.genre] : []);
-            if (cats.length === 0) categoryMap.get('Uncategorized').movies.push(m);
-            else cats.forEach(cat => { if (!categoryMap.has(cat)) categoryMap.set(cat, { channels: [], movies: [] }); categoryMap.get(cat).movies.push(m); });
-        });
-        for (let [catName, items] of categoryMap) {
-            if (items.channels.length === 0 && items.movies.length === 0) continue;
-            const section = document.createElement('div');
-            section.className = 'category-section';
-            section.innerHTML = `<div class="category-header"><h3>${catName}</h3><span class="see-all" onclick="viewAllCategory('${catName}')">See All</span></div>`;
-            if (items.channels.length > 0) {
-                const channelsDiv = document.createElement('div');
-                channelsDiv.className = 'horizontal-scroll-container';
-                const columns = [];
-                for(let i=0; i<items.channels.length; i+=2) columns.push(items.channels.slice(i,i+2));
-                channelsDiv.innerHTML = columns.map(col => `<div class="scroll-column">${col.map(ch => createCard(ch, true)).join('')}</div>`).join('');
-                section.appendChild(channelsDiv);
-            }
-            if (items.movies.length > 0) {
-                const moviesDiv = document.createElement('div');
-                moviesDiv.className = 'horizontal-scroll-container';
-                const columns = [];
-                for(let i=0; i<items.movies.length; i+=2) columns.push(items.movies.slice(i,i+2));
-                moviesDiv.innerHTML = columns.map(col => `<div class="scroll-column">${col.map(m => createCard(m, false)).join('')}</div>`).join('');
-                section.appendChild(moviesDiv);
-            }
-            container.appendChild(section);
-        }
-    }
-    function viewAllCategory(catName) {
-        showToast(`Showing ${catName} category`);
-        if (catName.toLowerCase().includes('channel') || catName === 'Azam tv') nav('channels', document.querySelector('.nav-item[onclick*="channels"]'));
-        else nav('movies', document.querySelector('.nav-item[onclick*="movies"]'));
-    }
-    function renderAllChannels() {
-        const grid = document.getElementById('allChannelsGrid');
-        if (grid) {
-            const columns = [];
-            for(let i=0; i<allData.channels.length; i+=2) columns.push(allData.channels.slice(i,i+2));
-            grid.innerHTML = columns.map(col => `<div class="scroll-column">${col.map(ch => createCard(ch, true)).join('')}</div>`).join('');
-        }
-    }
-    function renderAllMovies() {
-        const grid = document.getElementById('allMoviesGrid');
-        if (grid) {
-            const columns = [];
-            for(let i=0; i<allData.movies.length; i+=2) columns.push(allData.movies.slice(i,i+2));
-            grid.innerHTML = columns.map(col => `<div class="scroll-column">${col.map(m => createCard(m, false)).join('')}</div>`).join('');
-        }
-    }
-    function createCard(item, isChannel) {
-        let isLocked = false;
-        if (isChannel) isLocked = userIsExpired || isChannelLocked(item.id);
-        else isLocked = userIsExpired && item.access === 'VIP';
-        const poster = item.posterURL || item.logo || 'https://via.placeholder.com/300x450';
-        const title = item.name || item.title || 'Untitled';
-        let badge = '';
-        if (isChannel && !isLocked) badge = '<div class="live-badge"><i class="fas fa-circle" style="font-size: 8px; margin-right: 4px; color: #ff3b30;"></i> LIVE</div>';
-        let playButton = '';
-        if (!isChannel && !isLocked) playButton = `<div class="play-button" onclick="event.stopPropagation(); handleClick('${item.type}','${item.id}',false)"><i class="fas fa-play"></i></div>`;
-        const favStar = currentUser ? `<div class="favorite-star" onclick="event.stopPropagation(); toggleFavorite('${item.type}','${item.id}')"><i class="fas ${isFavoriteSync(item.id) ? 'fa-star' : 'fa-star-o'}"></i></div>` : '';
-        return `<div class="content-card" onclick="handleClick('${item.type}','${item.id}',${isLocked})">${badge}${playButton}${favStar}${isLocked ? '<div class="locked-overlay"><i class="fas fa-lock lock-icon"></i></div>' : ''}<img src="${poster}" onerror="this.src='https://via.placeholder.com/300x450'"><div class="content-overlay"><div class="content-title">${title}</div></div></div>`;
-    }
-    function handleClick(type, id, locked) {
-        if (locked) { showToast('Content locked or subscription expired'); return; }
-        const item = type === 'channel' ? allData.channels.find(x => x.id === id) : allData.movies.find(x => x.id === id);
-        if (!item) return;
-        currentDetailItem = item;
-        document.getElementById('dImg').src = item.posterURL || item.logo || 'https://via.placeholder.com/500x300';
-        document.getElementById('dTitle').textContent = item.name || item.title;
-        document.getElementById('dDesc').textContent = item.description || 'No description';
-        document.getElementById('dBtnWatch').onclick = () => { closeDetailModal(); playContent(item); };
-        document.getElementById('dBtnDownload').onclick = () => { downloadItem(item); closeDetailModal(); };
-        document.getElementById('detailModal').style.display = 'flex';
-    }
-    function playContent(item) {
-        const url = item.m3u8Link || item.movieURL || item.streamUrl || item.mpdUrl;
-        const drmToken = item.drmToken || item.token;
-        const licenseUrl = item.licenseUrl || item.licenseURL;
-        const kidKey = item.kidKey;
-        if (!url) { showToast('No stream URL available'); return; }
-        document.getElementById('playerModal').style.display = 'flex';
-        document.getElementById('videoJS').style.display = 'none';
-        document.getElementById('shakaContainer').style.display = 'block';
-        if (item.mpdUrl || url.includes('.mpd') || (licenseUrl && kidKey)) {
-            playShakaDRM(url, licenseUrl, kidKey, drmToken);
-        } else {
-            playRegularContent(url);
-        }
-        if (currentUser) db.ref(`userWatchHistory/${currentUser.uid}/${item.id}`).set({ id: item.id, type: item.type, name: item.name || item.title, poster: item.posterURL || item.logo, timestamp: Date.now() });
-        if (item.type === 'channel' && appSettings.channelScripts && appSettings.channelScripts[item.id]) { try { eval(appSettings.channelScripts[item.id]); } catch(e) { console.warn('Channel script error:', e); } }
-    }
-    async function playShakaDRM(url, licenseUrl, kidKey, token) {
-        showToast('Loading DRM protected content...');
-        const videoEl = document.getElementById('videoJS');
-        const container = document.getElementById('shakaContainer');
-        container.innerHTML = '<div class="drm-loading"><div class="drm-spinner"></div></div>';
-        container.appendChild(videoEl);
-        videoEl.style.display = 'block';
-        if (!shaka.Player.supportsBasicPlayback()) { showToast('DRM playback not supported on this device'); return; }
-        if (shakaPlayer) { await shakaPlayer.destroy(); shakaPlayer = null; }
-        shakaPlayer = new shaka.Player(videoEl);
-        shakaPlayer.configure({ drm: { servers: { 'com.widevine.alpha': licenseUrl, 'com.playready': licenseUrl } } });
-        if (token) shakaPlayer.getNetworkingEngine().registerRequestFilter((type, request) => { if (type === shaka.net.NetworkingEngine.RequestType.LICENSE) { request.headers['Authorization'] = 'Bearer ' + token; } });
-        try {
-            let manifestUri = url;
-            if (kidKey) {
-                const [kid, key] = kidKey.split(':');
-                if (kid && key) {
-                    shakaPlayer.configure({ drm: { clearKeys: { [kid]: key } } });
-                }
-            }
-            await shakaPlayer.load(manifestUri);
-            videoEl.play().catch(e => console.error('Playback error:', e));
-            container.querySelector('.drm-loading')?.remove();
-        } catch (e) {
-            console.error('Shaka Player error:', e);
-            showToast('DRM playback failed: ' + e.message);
-            container.querySelector('.drm-loading')?.remove();
-            closePlayer();
-        }
-    }
-    function playRegularContent(url) {
-        const videoEl = document.getElementById('videoJS');
-        const container = document.getElementById('shakaContainer');
-        container.innerHTML = '';
-        container.style.display = 'none';
-        videoEl.style.display = 'block';
-        if (!player) {
-            player = videojs('videoJS', { fluid: true, autoplay: true, controls: true, responsive: true, html5: { vhs: { overrideNative: true, enableLowInitialPlaylist: true, smoothQualityChange: true } } });
-            if (player.httpSourceSelector) player.httpSourceSelector();
-        }
-        const isMPD = url.includes('.mpd'), isM3U8 = url.includes('.m3u8');
-        let type = 'video/mp4';
-        if (isM3U8) type = 'application/x-mpegURL';
-        else if (isMPD) type = 'application/dash+xml';
-        player.src({ src: url, type: type });
-        player.play();
-    }
-    function downloadItem(item) {
-        if (!currentUser || item.type === 'channel') { showToast('Channels cannot be downloaded'); return; }
-        const downloadData = { id: item.id, type: item.type, name: item.name || item.title, poster: item.posterURL || item.logo, url: item.m3u8Link || item.movieURL, downloadedAt: Date.now() };
-        db.ref(`userDownloads/${currentUser.uid}/${item.id}`).set(downloadData).then(() => { showToast('Downloaded successfully'); loadDownloads(); });
-    }
-    function loadDownloads() {
-        if (!currentUser) return;
-        db.ref(`userDownloads/${currentUser.uid}`).on('value', snap => {
-            const container = document.getElementById('dlContent');
-            container.innerHTML = '';
-            if (!snap.exists()) { container.innerHTML = '<div style="text-align:center; color:var(--ios-text-secondary);"><i class="fas fa-download" style="font-size:48px; margin-bottom:16px;"></i><p>No downloads yet</p></div>'; return; }
-            snap.forEach(d => {
-                const item = d.val();
-                container.innerHTML += `<div class="download-item"><div style="flex:1;"><div style="font-weight:600;">${item.name}</div><small style="color:var(--ios-text-secondary);">${item.type}</small></div><div><button class="ios-button" style="padding:8px 16px; width:auto;" onclick="playDownloaded('${item.url}')">Watch</button><button class="ios-button ios-button-secondary" style="padding:8px 16px; width:auto; margin-left:8px;" onclick="removeDownload('${d.key}')">Delete</button></div></div>`;
-            });
-        });
-    }
-    function playDownloaded(url) { document.getElementById('playerModal').style.display = 'flex'; if(!player) player = videojs('videoJS', { fluid: true, autoplay: true }); const isM3U8 = url.includes('.m3u8'); player.src({ src: url, type: isM3U8 ? 'application/x-mpegURL' : 'video/mp4' }); player.play(); }
-    function removeDownload(id) { if(confirm('Delete this download?')) db.ref(`userDownloads/${currentUser.uid}/${id}`).remove(); }
-    function loadGeneralTips() {
-        db.ref('tips').on('value', snap => {
-            const container = document.getElementById('generalTipsContent');
-            container.innerHTML = '';
-            if(!snap.exists()) { container.innerHTML = '<div class="tip-card">No tips available</div>'; return; }
-            snap.forEach(tip => { const t = tip.val(); container.innerHTML += `<div class="tip-card"><div class="tip-title"><i class="fas fa-lightbulb"></i> ${t.title}</div><div class="tip-content">${t.content}</div></div>`; });
-        });
-    }
-    function loadBettingTips() {
-        db.ref('bettingTips').on('value', snap => {
-            const container = document.getElementById('bettingTipsContent');
-            container.innerHTML = '';
-            if(!snap.exists()) { container.innerHTML = '<div class="tip-card">No betting tips yet</div>'; return; }
-            snap.forEach(tip => {
-                const t = tip.val();
-                let statusClass = '';
-                switch(t.status) { case 'upcoming': statusClass = 'status-upcoming'; break; case 'completed': statusClass = 'status-completed'; break; case 'successful': statusClass = 'status-successful'; break; case 'failed': statusClass = 'status-failed'; break; }
-                let codesHtml = '';
-                if(t.bookingCodes && Array.isArray(t.bookingCodes)) t.bookingCodes.forEach(code => codesHtml += `<span class="booking-code-item">${code.platform}: ${code.code}</span>`);
-                container.innerHTML += `<div class="betting-tip-card"><div class="betting-tip-header"><span class="${statusClass}">${t.status.toUpperCase()}</span><span>${new Date(t.createdAt).toLocaleDateString()}</span></div><div class="betting-tip-teams">${t.team1} vs ${t.team2}</div><div class="betting-tip-title">${t.title}</div><div class="betting-tip-prediction">${t.prediction}</div><div class="betting-tip-odds">Odds: ${t.odds}</div>${t.stake ? `<div><strong>Stake:</strong> ${t.stake}</div>` : ''}${t.result ? `<div><strong>Result:</strong> ${t.result}</div>` : ''}${t.description ? `<div>${t.description}</div>` : ''}<div>${codesHtml}</div>${t.bookmakerLink ? `<div><a href="${t.bookmakerLink}" target="_blank" style="color:var(--ios-blue);">Bet Now</a></div>` : ''}</div>`;
-            });
-        });
-    }
-    function loadWatchlist() {
-        if (!currentUser) return;
-        db.ref(`userWatchHistory/${currentUser.uid}`).orderByChild('timestamp').limitToLast(50).on('value', snap => {
-            const container = document.getElementById('watchlistContent');
-            if (!container) return;
-            container.innerHTML = '';
-            if (!snap.exists()) { container.innerHTML = '<div style="text-align:center; color:var(--ios-text-secondary);"><i class="fas fa-history" style="font-size:48px; margin-bottom:16px;"></i><p>No watch history yet</p></div>'; return; }
-            const items = [];
-            snap.forEach(item => items.push(item.val()));
-            items.reverse().forEach(item => { container.innerHTML += `<div class="download-item"><div style="flex:1;"><div style="font-weight:600;">${item.name}</div><small style="color:var(--ios-text-secondary);">${item.type}</small><div style="font-size:0.7em; color:var(--ios-gray);">${new Date(item.timestamp).toLocaleString()}</div></div><div><button class="ios-button" style="padding:8px 16px; width:auto;" onclick="playFromWatchlist('${item.id}','${item.type}')">Watch</button></div></div>`; });
-        });
-    }
-    function playFromWatchlist(id, type) { const item = type === 'channel' ? allData.channels.find(x => x.id === id) : allData.movies.find(x => x.id === id); if (item) playContent(item); else showToast('Content not found'); }
-    function loadFavorites() {
-        if (!currentUser) return;
-        db.ref(`userFavorites/${currentUser.uid}`).on('value', snap => {
-            const container = document.getElementById('favoritesContent');
-            if (!container) return;
-            container.innerHTML = '';
-            if (!snap.exists()) { container.innerHTML = '<div style="text-align:center; color:var(--ios-text-secondary);"><i class="fas fa-heart" style="font-size:48px; margin-bottom:16px;"></i><p>No favorites yet</p></div>'; return; }
-            snap.forEach(fav => {
-                const itemId = fav.key;
-                const item = allData.channels.find(x => x.id === itemId) || allData.movies.find(x => x.id === itemId);
-                if (item) container.innerHTML += `<div class="download-item"><div style="flex:1;"><div style="font-weight:600;">${item.name || item.title}</div><small style="color:var(--ios-text-secondary);">${item.type}</small></div><div><button class="ios-button" style="padding:8px 16px; width:auto;" onclick="playFromFavorite('${item.id}','${item.type}')">Watch</button><button class="ios-button ios-button-secondary" style="padding:8px 16px; width:auto; margin-left:8px;" onclick="removeFavorite('${item.id}')">Remove</button></div></div>`;
-                else db.ref(`userFavorites/${currentUser.uid}/${itemId}`).remove();
-            });
-        });
-    }
-    function playFromFavorite(id, type) { const item = type === 'channel' ? allData.channels.find(x => x.id === id) : allData.movies.find(x => x.id === id); if (item) playContent(item); }
-    function removeFavorite(id) { if (currentUser) db.ref(`userFavorites/${currentUser.uid}/${id}`).remove(); }
-    let favoritesSet = new Set();
-    function updateFavoritesSet() { if (!currentUser) return; db.ref(`userFavorites/${currentUser.uid}`).once('value', snap => { favoritesSet.clear(); snap.forEach(f => favoritesSet.add(f.key)); }); }
-    function isFavoriteSync(id) { return favoritesSet.has(id); }
-    function toggleFavorite(type, id) {
-        if (!currentUser) { showToast('Please login to add favorites'); return; }
-        const favRef = db.ref(`userFavorites/${currentUser.uid}/${id}`);
-        favRef.once('value', snap => {
-            if (snap.exists()) { favRef.remove(); showToast('Removed from favorites'); favoritesSet.delete(id); }
-            else { favRef.set({ type: type, addedAt: Date.now() }); showToast('Added to favorites'); favoritesSet.add(id); }
-            updateFavoritesSet();
-            if (document.getElementById('favorites').style.display !== 'none') loadFavorites();
-            updateAll();
-        });
-    }
-    function listenChat() { if(!currentUser) return; db.ref(`stanyBotMessages/${currentUser.uid}`).on('value', snap => { const container = document.getElementById('chatBox'); container.innerHTML = ''; const msgs = []; snap.forEach(msg => msgs.push(msg.val())); msgs.sort((a,b) => a.timestamp - b.timestamp); msgs.forEach(msg => { const div = document.createElement('div'); div.className = `chat-message ${msg.sender === 'user' ? 'user' : 'admin'}`; div.textContent = msg.text; container.appendChild(div); }); container.scrollTop = container.scrollHeight; }); }
-    function sendChat() { const text = document.getElementById('chatInput').value.trim(); if(!text || !currentUser) return; db.ref(`stanyBotMessages/${currentUser.uid}`).push({ text, sender: 'user', timestamp: Date.now() }); document.getElementById('chatInput').value = ''; }
-    function closeChat() { nav('home', document.querySelector('.nav-item[onclick*="home"]')); }
-    function toggleSidebar() { const sidebar = document.getElementById('sidebar'); const overlay = document.getElementById('sidebarOverlay'); sidebar.classList.toggle('active'); overlay.classList.toggle('active'); }
-    function nav(page, el) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(page).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
-        if(el) { if(el.classList) el.classList.add('active'); const sidebarItem = document.querySelector(`.sidebar-item[onclick*="${page}"]`); if(sidebarItem) sidebarItem.classList.add('active'); }
-        if (page === 'downloads') loadDownloads();
-        if (page === 'tips') { loadGeneralTips(); loadBettingTips(); }
-        if (page === 'watchlist') loadWatchlist();
-        if (page === 'favorites') loadFavorites();
-        if (page === 'home') renderHomePage();
-        if (page === 'channels') renderAllChannels();
-        if (page === 'movies') renderAllMovies();
-        if(window.innerWidth < 768) { const sidebar = document.getElementById('sidebar'); const overlay = document.getElementById('sidebarOverlay'); sidebar.classList.remove('active'); overlay.classList.remove('active'); }
-    }
-    function loadCarousel() {
-        const container = document.getElementById('carousel');
-        if(!allData.carousel.length) { container.innerHTML = '<div style="display:flex; align-items:center; justify-content:center; height:100%;">No slides</div>'; return; }
-        container.innerHTML = '';
-        let index = 0;
-        allData.carousel.forEach((slide, i) => {
-            const slideDiv = document.createElement('div');
-            slideDiv.className = 'carousel-slide' + (i === 0 ? ' active' : '');
-            slideDiv.innerHTML = `<img src="${slide.imageURL}" onerror="this.src='https://via.placeholder.com/800x400?text=Image+Not+Found'"><div class="carousel-overlay"><div class="carousel-title">${slide.title || ''}</div><div class="carousel-desc">${slide.description || ''}</div></div>`;
-            container.appendChild(slideDiv);
-        });
-        startCarouselInterval(appSettings.carouselInterval || 5000);
-    }
-    function startCarouselInterval(interval) { if(window.carouselInterval) clearInterval(window.carouselInterval); window.carouselInterval = setInterval(() => { const slides = document.querySelectorAll('.carousel-slide'); if(slides.length === 0) return; let activeIndex = -1; slides.forEach((s, idx) => { if(s.classList.contains('active')) activeIndex = idx; }); if(activeIndex === -1) return; slides[activeIndex].classList.remove('active'); const nextIndex = (activeIndex + 1) % slides.length; slides[nextIndex].classList.add('active'); }, interval); }
-    function shareApp(platform) { const url = encodeURIComponent(window.location.href); const text = encodeURIComponent(' Watch STANY MIN TV - Premium Live TV, Movies & Sports!\n📺 DRM Protected Streams\n🔥 Best Entertainment Experience'); let shareUrl = ''; if(platform === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`; else if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; else if(platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; else if(platform === 'telegram') shareUrl = `https://t.me/share/url?url=${url}&text=${text}`; window.open(shareUrl, '_blank'); }
-    function shareContent(platform) { if (!currentDetailItem) return; const url = encodeURIComponent(window.location.href); const text = encodeURIComponent(`🎬 ${currentDetailItem.name || currentDetailItem.title}\nWatch on STANY MIN TV`); let shareUrl = ''; if(platform === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`; else if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; else if(platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; window.open(shareUrl, '_blank'); }
-    function copyLink() { navigator.clipboard.writeText(window.location.href); showToast('Link copied to clipboard'); }
-    function copyContentLink() { copyLink(); }
-    function toggleSearch() { const bar = document.getElementById('searchBar'); bar.style.display = bar.style.display === 'none' ? 'block' : 'none'; if(bar.style.display === 'block') document.getElementById('searchInput').focus(); }
-    function globalSearch() { const query = document.getElementById('searchInput').value.toLowerCase(); if (!query) { renderAllChannels(); renderAllMovies(); return; } const filteredChannels = allData.channels.filter(c => c.name?.toLowerCase().includes(query)); const filteredMovies = allData.movies.filter(m => m.title?.toLowerCase().includes(query)); document.getElementById('allChannelsGrid').innerHTML = filteredChannels.map(ch => createCard(ch, true)).join(''); document.getElementById('allMoviesGrid').innerHTML = filteredMovies.map(m => createCard(m, false)).join(''); }
-    function showNotifications() { showToast('No new notifications'); }
-    function showLanguageSettings() { document.querySelector('.language-selector').scrollIntoView({ behavior: 'smooth' }); }
-    function quickRefresh() { updateAll(); showToast('Refreshed'); }
-    function showLogoutConfirm() { document.getElementById('logoutModal').style.display = 'flex'; }
-    function cancelLogout() { document.getElementById('logoutModal').style.display = 'none'; }
-    function confirmLogout() { auth.signOut(); document.getElementById('logoutModal').style.display = 'none'; showToast('Logged out'); window.location.reload(); }
-    function closeDetailModal() { document.getElementById('detailModal').style.display = 'none'; }
-    function closePlayer() { document.getElementById('playerModal').style.display = 'none'; if(player) { player.pause(); player.src([]); } if(shakaPlayer) { shakaPlayer.destroy(); shakaPlayer = null; } document.getElementById('videoJS').style.display = 'block'; document.getElementById('shakaContainer').style.display = 'none'; }
-    function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
-    
-    // Admin Functions
-    function loadAdminChannels() {
-        if(!currentUser?.isAdmin) return;
-        const list = document.getElementById('adminChannelsList');
-        if(!list) return;
-        list.innerHTML = allData.channels.map(ch => `<div class="admin-channel-item"><div class="channel-info"><div class="channel-name">${ch.name}</div><div class="channel-url">${ch.mpdUrl || ch.m3u8Link || ''}</div></div><div class="channel-actions"><button class="btn-delete" onclick="deleteChannel('${ch.id}')"><i class="fas fa-trash"></i></button></div></div>`).join('');
-    }
-    function addChannel(e) {
-        e.preventDefault();
-        if(!currentUser?.isAdmin) { showToast('Admin access required'); return; }
-        const name = document.getElementById('chName').value;
-        const image = document.getElementById('chImage').value;
-        const mpd = document.getElementById('chMpd').value;
-        const license = document.getElementById('chLicense').value;
-        const kidKey = document.getElementById('chKidKey').value;
-        const genre = document.getElementById('chGenre').value;
-        const newChannel = { name, logo: image, posterURL: image, mpdUrl: mpd, licenseUrl: license, kidKey: kidKey, genre: genre || 'Uncategorized', type: 'channel', createdAt: Date.now() };
-        db.ref('channels').push(newChannel).then(() => { showToast('Channel added successfully'); document.getElementById('addChannelForm').reset(); loadAdminChannels(); }).catch(err => showToast('Error: ' + err.message));
-    }
-    function deleteChannel(id) {
-        if(!confirm('Delete this channel?')) return;
-        if(!currentUser?.isAdmin) { showToast('Admin access required'); return; }
-        db.ref('channels/'+id).remove().then(() => { showToast('Channel deleted'); loadAdminChannels(); }).catch(err => showToast('Error: ' + err.message));
-    }
-    
-    auth.onAuthStateChanged(u => { if(u) { document.getElementById('authPages').style.display = 'none'; document.getElementById('loader').style.display = 'flex'; setTimeout(() => checkDevice(u.uid), 1000); } else { document.getElementById('authPages').style.display = 'flex'; document.getElementById('mainApp').style.display = 'none'; document.getElementById('loader').style.display = 'none'; } });
-    window.onload = () => { updateUIText(); updateFavoritesSet(); };
+    function login() { const email = document.getElementById('lemail').value, pass = document.getElementById('lpass').value; if(!email||!pass){showToast('Please enter email and password');return;} auth.signInWithEmailAndPassword(email,pass).catch(e=>showToast(e.message)); }
+    function register() { const name=document.getElementById('rname').value, email=document.getElementById('remail').value, pass=document.getElementById('rpass').value; if(!name||!email||!pass){showToast('Fill all fields');return;} auth.createUserWithEmailAndPassword(email,pass).then(user=>db.ref('users/'+user.user.uid).set({name,email,language:currentLang,activeDeviceId:deviceId,registeredAt:Date.now(),accessExpiry:Date.now()+(7*24*60*60*1000)})).then(()=>showToast('Registration successful')).catch(e=>showToast(e.message)); }
+    function checkDevice(uid) { db.ref('users/'+uid).once('value').then(snap=>{ const u=snap.val(); if(!u||u.isBlocked){auth.signOut();showToast('Account blocked');return;} if(!u.activeDeviceId||u.activeDeviceId===deviceId) initializeApp(uid,u); else{showToast('Device not authorized');auth.signOut();} }).catch(()=>{showToast('Error loading user');auth.signOut();}); }
+    function initializeApp(uid,userData){ currentUser={uid,...userData}; userIsExpired=userData.accessExpiry&&userData.accessExpiry<Date.now(); if(userData.language){currentLang=userData.language;updateUIText();} document.getElementById('loader').style.display='none'; document.getElementById('mainApp').style.display='block'; document.getElementById('pName').textContent=userData.name||'User'; document.getElementById('pEmail').textContent=userData.email; const days=userData.accessExpiry?Math.ceil((userData.accessExpiry-Date.now())/(1000*60*60*24)):0; document.getElementById('pDays').textContent=userIsExpired?'Expired':days+' days left'; if(userData.isAdmin) document.getElementById('adminLink').style.display='flex'; loadEssentialData(); loadDownloads(); loadGeneralTips(); loadBettingTips(); loadAppSettings(); listenChat(); loadWatchlist(); loadFavorites(); updateFavoritesSet(); showToast('Welcome to STANY MIN TV'); }
+    function loadAppSettings(){ db.ref('appSettings').on('value',s=>{ if(s.exists()){appSettings={...appSettings,...s.val()};} }); }
+    function isChannelLocked(channelId){ if(appSettings.freeChannels&&appSettings.freeChannels.includes(channelId)) return false; if(appSettings.lockedChannels&&appSettings.lockedChannels.includes(channelId)) return true; return false; }
+    function loadEssentialData(){ db.ref('channels').on('value',s=>{allData.channels=[];s.forEach(c=>allData.channels.push({id:c.key,type:'channel',...c.val()})); updateAll(); loadAdminChannels();}); db.ref('movies').on('value',s=>{allData.movies=[];s.forEach(m=>allData.movies.push({id:m.key,type:'movie',...m.val()})); updateAll();}); db.ref('genres').on('value',s=>{allData.genres=[];s.forEach(g=>allData.genres.push({id:g.key,name:g.val().name}));}); db.ref('carousel').on('value',s=>{allData.carousel=[];s.forEach(slide=>allData.carousel.push({id:slide.key,...slide.val()})); loadCarousel();}); }
+    function updateAll(){ renderHomePage(); renderAllChannels(); renderAllMovies(); }
+    function renderHomePage(){ const container=document.getElementById('homeContent'); if(!container)return; container.innerHTML=''; const categoryMap=new Map(); const azamChannels=allData.channels.filter(ch=>{ const cats=ch.categories&&Array.isArray(ch.categories)?ch.categories:(ch.genre?[ch.genre]:[]); return cats.some(cat=>cat.toLowerCase().includes('azam')); }); if(azamChannels.length>0) categoryMap.set('Azam tv',{channels:azamChannels,movies:[]}); allData.genres.forEach(genre=>{if(!categoryMap.has(genre.name)) categoryMap.set(genre.name,{channels:[],movies:[]});}); categoryMap.set('Uncategorized',{channels:[],movies:[]}); allData.channels.forEach(ch=>{ if(azamChannels.includes(ch))return; const cats=ch.categories&&Array.isArray(ch.categories)?ch.categories:(ch.genre?[ch.genre]:[]); if(cats.length===0) categoryMap.get('Uncategorized').channels.push(ch); else cats.forEach(cat=>{ if(!categoryMap.has(cat)) categoryMap.set(cat,{channels:[],movies:[]}); categoryMap.get(cat).channels.push(ch); }); }); allData.movies.forEach(m=>{ const cats=m.genre&&Array.isArray(m.genre)?m.genre:(m.genre?[m.genre]:[]); if(cats.length===0) categoryMap.get('Uncategorized').movies.push(m); else cats.forEach(cat=>{ if(!categoryMap.has(cat)) categoryMap.set(cat,{channels:[],movies:[]}); categoryMap.get(cat).movies.push(m); }); }); for(let [catName,items] of categoryMap){ if(items.channels.length===0&&items.movies.length===0) continue; const section=document.createElement('div'); section.className='category-section'; section.innerHTML=`<div class="category-header"><h3>${catName}</h3><span class="see-all" onclick="viewAllCategory('${catName}')">See All</span></div>`; if(items.channels.length>0){ const channelsDiv=document.createElement('div'); channelsDiv.className='horizontal-scroll-container'; const columns=[]; for(let i=0;i<items.channels.length;i+=2) columns.push(items.channels.slice(i,i+2)); channelsDiv.innerHTML=columns.map(col=>`<div class="scroll-column">${col.map(ch=>createCard(ch,true)).join('')}</div>`).join(''); section.appendChild(channelsDiv); } if(items.movies.length>0){ const moviesDiv=document.createElement('div'); moviesDiv.className='horizontal-scroll-container'; const columns=[]; for(let i=0;i<items.movies.length;i+=2) columns.push(items.movies.slice(i,i+2)); moviesDiv.innerHTML=columns.map(col=>`<div class="scroll-column">${col.map(m=>createCard(m,false)).join('')}</div>`).join(''); section.appendChild(moviesDiv); } container.appendChild(section); } }
+    function viewAllCategory(catName){ showToast(`Showing ${catName} category`); if(catName.toLowerCase().includes('channel')||catName==='Azam tv') nav('channels', document.querySelector('.nav-item[onclick*="channels"]')); else nav('movies', document.querySelector('.nav-item[onclick*="movies"]')); }
+    function renderAllChannels(){ const grid=document.getElementById('allChannelsGrid'); if(grid){ const columns=[]; for(let i=0;i<allData.channels.length;i+=2) columns.push(allData.channels.slice(i,i+2)); grid.innerHTML=columns.map(col=>`<div class="scroll-column">${col.map(ch=>createCard(ch,true)).join('')}</div>`).join(''); } }
+    function renderAllMovies(){ const grid=document.getElementById('allMoviesGrid'); if(grid){ const columns=[]; for(let i=0;i<allData.movies.length;i+=2) columns.push(allData.movies.slice(i,i+2)); grid.innerHTML=columns.map(col=>`<div class="scroll-column">${col.map(m=>createCard(m,false)).join('')}</div>`).join(''); } }
+    function createCard(item,isChannel){ let isLocked=false; if(isChannel) isLocked=userIsExpired||isChannelLocked(item.id); else isLocked=userIsExpired&&item.access==='VIP'; const poster=item.posterURL||item.logo||'https://via.placeholder.com/300x450'; const title=item.name||item.title||'Untitled'; let badge=''; if(isChannel&&!isLocked) badge='<div class="live-badge"><i class="fas fa-circle" style="font-size:8px;margin-right:4px;color:#ff3b30;"></i> LIVE</div>'; let playButton=''; if(!isChannel&&!isLocked) playButton=`<div class="play-button" onclick="event.stopPropagation(); handleClick('${item.type}','${item.id}',false)"><i class="fas fa-play"></i></div>`; const favStar=currentUser?`<div class="favorite-star" onclick="event.stopPropagation(); toggleFavorite('${item.type}','${item.id}')"><i class="fas ${favoritesSet.has(item.id)?'fa-star':'fa-star-o'}"></i></div>`:''; return `<div class="content-card" onclick="handleClick('${item.type}','${item.id}',${isLocked})">${badge}${playButton}${favStar}${isLocked?'<div class="locked-overlay"><i class="fas fa-lock lock-icon"></i></div>':''}<img src="${poster}" onerror="this.src='https://via.placeholder.com/300x450'"><div class="content-overlay"><div class="content-title">${title}</div></div></div>`; }
+    function handleClick(type,id,locked){ if(locked){showToast('Content locked or subscription expired');return;} const item=type==='channel'?allData.channels.find(x=>x.id===id):allData.movies.find(x=>x.id===id); if(!item)return; currentDetailItem=item; document.getElementById('dImg').src=item.posterURL||item.logo||'https://via.placeholder.com/500x300'; document.getElementById('dTitle').textContent=item.name||item.title; document.getElementById('dDesc').textContent=item.description||'No description'; document.getElementById('dBtnWatch').onclick=()=>{ closeDetailModal(); playContent(item); }; document.getElementById('dBtnDownload').onclick=()=>{ downloadItem(item); closeDetailModal(); }; document.getElementById('detailModal').style.display='flex'; }
+    function playContent(item){ const url=item.m3u8Link||item.movieURL||item.streamUrl||item.mpdUrl; const licenseUrl=item.licenseUrl||item.licenseURL; const kidKey=item.kidKey; if(!url){showToast('No stream URL');return;} document.getElementById('playerModal').style.display='flex'; document.getElementById('videoJS').style.display='none'; document.getElementById('shakaContainer').style.display='block'; if(item.mpdUrl||url.includes('.mpd')||(licenseUrl&&kidKey)){ playShakaDRM(url,licenseUrl,kidKey); }else{ playRegularContent(url); } if(currentUser) db.ref(`userWatchHistory/${currentUser.uid}/${item.id}`).set({id,type:item.type,name:item.name||item.title,poster:item.posterURL||item.logo,timestamp:Date.now()}); }
+    async function playShakaDRM(url,licenseUrl,kidKey){ showToast('Loading DRM content...'); const videoEl=document.getElementById('videoJS'); const container=document.getElementById('shakaContainer'); container.innerHTML='<div class="drm-loading"><div class="drm-spinner"></div></div>'; container.appendChild(videoEl); videoEl.style.display='block'; if(!shaka.Player.supportsBasicPlayback()){showToast('DRM not supported');return;} if(shakaPlayer){await shakaPlayer.destroy();shakaPlayer=null;} shakaPlayer=new shaka.Player(videoEl); shakaPlayer.configure({drm:{servers:{'com.widevine.alpha':licenseUrl,'com.playready':licenseUrl}}}); try{ let manifestUri=url; if(kidKey){const [kid,key]=kidKey.split(':'); if(kid&&key){shakaPlayer.configure({drm:{clearKeys:{[kid]:key}}});}} await shakaPlayer.load(manifestUri); videoEl.play(); container.querySelector('.drm-loading')?.remove(); }catch(e){console.error(e);showToast('DRM playback failed');container.querySelector('.drm-loading')?.remove();closePlayer();} }
+    function playRegularContent(url){ const videoEl=document.getElementById('videoJS'); const container=document.getElementById('shakaContainer'); container.innerHTML=''; container.style.display='none'; videoEl.style.display='block'; if(!player){player=videojs('videoJS',{fluid:true,autoplay:true,controls:true,responsive:true,html5:{vhs:{overrideNative:true,enableLowInitialPlaylist:true,smoothQualityChange:true}}});} const isM3U8=url.includes('.m3u8'); player.src({src:url,type:isM3U8?'application/x-mpegURL':'video/mp4'}); player.play(); }
+    function downloadItem(item){ if(!currentUser||item.type==='channel'){showToast('Channels cannot be downloaded');return;} const downloadData={id:item.id,type:item.type,name:item.name||item.title,poster:item.posterURL||item.logo,url:item.m3u8Link||item.movieURL,downloadedAt:Date.now()}; db.ref(`userDownloads/${currentUser.uid}/${item.id}`).set(downloadData).then(()=>{showToast('Downloaded');loadDownloads();}); }
+    function loadDownloads(){ if(!currentUser)return; db.ref(`userDownloads/${currentUser.uid}`).on('value',snap=>{ const c=document.getElementById('dlContent'); c.innerHTML=''; if(!snap.exists()){c.innerHTML='<div style="text-align:center;color:var(--ios-text-secondary);"><i class="fas fa-download" style="font-size:48px;margin-bottom:16px;"></i><p>No downloads</p></div>';return;} snap.forEach(d=>{const val=d.val(); c.innerHTML+=`<div class="download-item"><div style="flex:1;"><div style="font-weight:600;">${val.name}</div><small>${val.type}</small></div><div><button class="ios-button" style="padding:8px 16px;width:auto;" onclick="playDownloaded('${val.url}')">Watch</button><button class="ios-button ios-button-secondary" style="padding:8px 16px;width:auto;margin-left:8px;" onclick="removeDownload('${d.key}')">Delete</button></div></div>`;}); }); }
+    function playDownloaded(url){ document.getElementById('playerModal').style.display='flex'; if(!player)player=videojs('videoJS',{fluid:true,autoplay:true}); const isM3U8=url.includes('.m3u8'); player.src({src:url,type:isM3U8?'application/x-mpegURL':'video/mp4'}); player.play(); }
+    function removeDownload(id){ if(confirm('Delete?')) db.ref(`userDownloads/${currentUser.uid}/${id}`).remove(); }
+    function loadGeneralTips(){ db.ref('tips').on('value',snap=>{ const container=document.getElementById('generalTipsContent'); container.innerHTML=''; if(!snap.exists()){container.innerHTML='<div class="tip-card">No tips</div>';return;} snap.forEach(tip=>{const t=tip.val(); container.innerHTML+=`<div class="tip-card"><div class="tip-title"><i class="fas fa-lightbulb"></i> ${t.title}</div><div class="tip-content">${t.content}</div></div>`;}); }); }
+    function loadBettingTips(){ db.ref('bettingTips').on('value',snap=>{ const container=document.getElementById('bettingTipsContent'); container.innerHTML=''; if(!snap.exists()){container.innerHTML='<div class="tip-card">No betting tips</div>';return;} snap.forEach(tip=>{const t=tip.val(); let statusClass=''; if(t.status==='upcoming')statusClass='status-upcoming'; else if(t.status==='completed')statusClass='status-completed'; else if(t.status==='successful')statusClass='status-successful'; else if(t.status==='failed')statusClass='status-failed'; let codesHtml=''; if(t.bookingCodes&&Array.isArray(t.bookingCodes)) t.bookingCodes.forEach(code=>codesHtml+=`<span class="booking-code-item">${code.platform}: ${code.code}</span>`); container.innerHTML+=`<div class="betting-tip-card"><div class="betting-tip-header"><span class="${statusClass}">${t.status.toUpperCase()}</span><span>${new Date(t.createdAt).toLocaleDateString()}</span></div><div class="betting-tip-teams">${t.team1} vs ${t.team2}</div><div class="betting-tip-title">${t.title}</div><div class="betting-tip-prediction">${t.prediction}</div><div class="betting-tip-odds">Odds: ${t.odds}</div>${t.stake?`<div><strong>Stake:</strong> ${t.stake}</div>`:''}${t.result?`<div><strong>Result:</strong> ${t.result}</div>`:''}${t.description?`<div>${t.description}</div>`:''}<div>${codesHtml}</div>${t.bookmakerLink?`<div><a href="${t.bookmakerLink}" target="_blank" style="color:var(--ios-blue);">Bet Now</a></div>`:''}</div>`;}); }); }
+    function loadWatchlist(){ if(!currentUser)return; db.ref(`userWatchHistory/${currentUser.uid}`).orderByChild('timestamp').limitToLast(50).on('value',snap=>{ const container=document.getElementById('watchlistContent'); if(!container)return; container.innerHTML=''; if(!snap.exists()){container.innerHTML='<div style="text-align:center;color:var(--ios-text-secondary);"><i class="fas fa-history" style="font-size:48px;margin-bottom:16px;"></i><p>No history</p></div>';return;} const items=[]; snap.forEach(item=>items.push(item.val())); items.reverse().forEach(item=>{ container.innerHTML+=`<div class="download-item"><div style="flex:1;"><div style="font-weight:600;">${item.name}</div><small>${item.type}</small><div style="font-size:0.7em;">${new Date(item.timestamp).toLocaleString()}</div></div><div><button class="ios-button" style="padding:8px 16px;width:auto;" onclick="playFromWatchlist('${item.id}','${item.type}')">Watch</button></div></div>`;}); }); }
+    function playFromWatchlist(id,type){ const item=type==='channel'?allData.channels.find(x=>x.id===id):allData.movies.find(x=>x.id===id); if(item)playContent(item); else showToast('Not found'); }
+    function loadFavorites(){ if(!currentUser)return; db.ref(`userFavorites/${currentUser.uid}`).on('value',snap=>{ const container=document.getElementById('favoritesContent'); if(!container)return; container.innerHTML=''; if(!snap.exists()){container.innerHTML='<div style="text-align:center;color:var(--ios-text-secondary);"><i class="fas fa-heart" style="font-size:48px;margin-bottom:16px;"></i><p>No favorites</p></div>';return;} snap.forEach(fav=>{ const itemId=fav.key; const item=allData.channels.find(x=>x.id===itemId)||allData.movies.find(x=>x.id===itemId); if(item) container.innerHTML+=`<div class="download-item"><div style="flex:1;"><div style="font-weight:600;">${item.name||item.title}</div><small>${item.type}</small></div><div><button class="ios-button" style="padding:8px 16px;width:auto;" onclick="playFromFavorite('${item.id}','${item.type}')">Watch</button><button class="ios-button ios-button-secondary" style="padding:8px 16px;width:auto;margin-left:8px;" onclick="removeFavorite('${item.id}')">Remove</button></div></div>`; else db.ref(`userFavorites/${currentUser.uid}/${itemId}`).remove(); }); }); }
+    function playFromFavorite(id,type){ const item=type==='channel'?allData.channels.find(x=>x.id===id):allData.movies.find(x=>x.id===id); if(item)playContent(item); }
+    function removeFavorite(id){ if(currentUser) db.ref(`userFavorites/${currentUser.uid}/${id}`).remove(); }
+    function updateFavoritesSet(){ if(!currentUser)return; db.ref(`userFavorites/${currentUser.uid}`).once('value',snap=>{ favoritesSet.clear(); snap.forEach(f=>favoritesSet.add(f.key)); }); }
+    function toggleFavorite(type,id){ if(!currentUser){showToast('Login to add favorites');return;} const favRef=db.ref(`userFavorites/${currentUser.uid}/${id}`); favRef.once('value',snap=>{ if(snap.exists()){favRef.remove();showToast('Removed from favorites');favoritesSet.delete(id);} else{favRef.set({type,addedAt:Date.now()});showToast('Added to favorites');favoritesSet.add(id);} updateFavoritesSet(); if(document.getElementById('favorites').style.display!=='none') loadFavorites(); updateAll(); }); }
+    function listenChat(){ if(!currentUser)return; db.ref(`stanyBotMessages/${currentUser.uid}`).on('value',snap=>{ const container=document.getElementById('chatBox'); container.innerHTML=''; const msgs=[]; snap.forEach(msg=>msgs.push(msg.val())); msgs.sort((a,b)=>a.timestamp-b.timestamp); msgs.forEach(msg=>{ const div=document.createElement('div'); div.className=`chat-message ${msg.sender==='user'?'user':'admin'}`; div.textContent=msg.text; container.appendChild(div); }); container.scrollTop=container.scrollHeight; }); }
+    function sendChat(){ const text=document.getElementById('chatInput').value.trim(); if(!text||!currentUser)return; db.ref(`stanyBotMessages/${currentUser.uid}`).push({text,sender:'user',timestamp:Date.now()}); document.getElementById('chatInput').value=''; }
+    function closeChat(){ nav('home', document.querySelector('.nav-item[onclick*="home"]')); }
+    function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('active'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
+    function nav(page,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(page).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active')); if(el){if(el.classList)el.classList.add('active'); const sidebarItem=document.querySelector(`.sidebar-item[onclick*="${page}"]`); if(sidebarItem)sidebarItem.classList.add('active');} if(page==='downloads') loadDownloads(); if(page==='tips'){loadGeneralTips();loadBettingTips();} if(page==='watchlist') loadWatchlist(); if(page==='favorites') loadFavorites(); if(page==='home') renderHomePage(); if(page==='channels') renderAllChannels(); if(page==='movies') renderAllMovies(); if(window.innerWidth<768){document.getElementById('sidebar').classList.remove('active');document.getElementById('sidebarOverlay').classList.remove('active');} }
+    function loadCarousel(){ const container=document.getElementById('carousel'); if(!allData.carousel.length){container.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;">No slides</div>';return;} container.innerHTML=''; allData.carousel.forEach((slide,i)=>{ const div=document.createElement('div'); div.className='carousel-slide'+(i===0?' active':''); div.innerHTML=`<img src="${slide.imageURL}" onerror="this.src='https://via.placeholder.com/800x400?text=Image+Not+Found'"><div class="carousel-overlay"><div class="carousel-title">${slide.title||''}</div><div class="carousel-desc">${slide.description||''}</div></div>`; container.appendChild(div); }); startCarouselInterval(appSettings.carouselInterval||5000); }
+    function startCarouselInterval(interval){ if(window.carouselInterval)clearInterval(window.carouselInterval); window.carouselInterval=setInterval(()=>{ const slides=document.querySelectorAll('.carousel-slide'); if(slides.length===0)return; let activeIndex=-1; slides.forEach((s,idx)=>{if(s.classList.contains('active'))activeIndex=idx;}); if(activeIndex===-1)return; slides[activeIndex].classList.remove('active'); slides[(activeIndex+1)%slides.length].classList.add('active'); },interval); }
+    function shareApp(platform){ const url=encodeURIComponent(window.location.href); const text=encodeURIComponent(' Watch STANY MIN TV - Premium Live TV, Movies & Sports!\n📺 DRM Protected Streams\n🔥 Best Entertainment Experience'); let shareUrl=''; if(platform==='whatsapp') shareUrl=`https://wa.me/?text=${text}%20${url}`; else if(platform==='facebook') shareUrl=`https://www.facebook.com/sharer/sharer.php?u=${url}`; else if(platform==='twitter') shareUrl=`https://twitter.com/intent/tweet?text=${text}&url=${url}`; else if(platform==='telegram') shareUrl=`https://t.me/share/url?url=${url}&text=${text}`; window.open(shareUrl,'_blank'); }
+    function shareContent(platform){ if(!currentDetailItem)return; const url=encodeURIComponent(window.location.href); const text=encodeURIComponent(`🎬 ${currentDetailItem.name||currentDetailItem.title}\nWatch on STANY MIN TV`); let shareUrl=''; if(platform==='whatsapp') shareUrl=`https://wa.me/?text=${text}%20${url}`; else if(platform==='facebook') shareUrl=`https://www.facebook.com/sharer/sharer.php?u=${url}`; else if(platform==='twitter') shareUrl=`https://twitter.com/intent/tweet?text=${text}&url=${url}`; window.open(shareUrl,'_blank'); }
+    function copyLink(){ navigator.clipboard.writeText(window.location.href); showToast('Link copied'); }
+    function copyContentLink(){ copyLink(); }
+    function toggleSearch(){ const bar=document.getElementById('searchBar'); bar.style.display=bar.style.display==='none'?'block':'none'; if(bar.style.display==='block') document.getElementById('searchInput').focus(); }
+    function globalSearch(){ const q=document.getElementById('searchInput').value.toLowerCase(); if(!q){renderAllChannels();renderAllMovies();return;} const filteredChannels=allData.channels.filter(c=>c.name?.toLowerCase().includes(q)); const filteredMovies=allData.movies.filter(m=>m.title?.toLowerCase().includes(q)); document.getElementById('allChannelsGrid').innerHTML=filteredChannels.map(ch=>createCard(ch,true)).join(''); document.getElementById('allMoviesGrid').innerHTML=filteredMovies.map(m=>createCard(m,false)).join(''); }
+    function showNotifications(){ showToast('No new notifications'); }
+    function showLanguageSettings(){ document.querySelector('.language-selector').scrollIntoView({behavior:'smooth'}); }
+    function quickRefresh(){ updateAll(); showToast('Refreshed'); }
+    function showLogoutConfirm(){ document.getElementById('logoutModal').style.display='flex'; }
+    function cancelLogout(){ document.getElementById('logoutModal').style.display='none'; }
+    function confirmLogout(){ auth.signOut(); document.getElementById('logoutModal').style.display='none'; showToast('Logged out'); window.location.reload(); }
+    function closeDetailModal(){ document.getElementById('detailModal').style.display='none'; }
+    function closePlayer(){ document.getElementById('playerModal').style.display='none'; if(player){player.pause();player.src([]);} if(shakaPlayer){shakaPlayer.destroy();shakaPlayer=null;} document.getElementById('videoJS').style.display='block'; document.getElementById('shakaContainer').style.display='none'; }
+    function showToast(msg){ const t=document.getElementById('toast'); document.getElementById('toastMessage').textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+    function loadAdminChannels(){ if(!currentUser?.isAdmin)return; const list=document.getElementById('adminChannelsList'); if(!list)return; list.innerHTML=allData.channels.map(ch=>`<div class="admin-channel-item"><div class="channel-info"><div class="channel-name">${ch.name}</div><div class="channel-url">${ch.mpdUrl||ch.m3u8Link||''}</div></div><div class="channel-actions"><button class="btn-delete" onclick="deleteChannel('${ch.id}')"><i class="fas fa-trash"></i></button></div></div>`).join(''); }
+    function addChannel(e){ e.preventDefault(); if(!currentUser?.isAdmin){showToast('Admin access required');return;} const name=document.getElementById('chName').value; const image=document.getElementById('chImage').value; const mpd=document.getElementById('chMpd').value; const license=document.getElementById('chLicense').value; const kidKey=document.getElementById('chKidKey').value; const genre=document.getElementById('chGenre').value; db.ref('channels').push({name,logo:image,posterURL:image,mpdUrl:mpd,licenseUrl:license,kidKey,genre:genre||'Uncategorized',type:'channel',createdAt:Date.now()}).then(()=>{showToast('Channel added'); document.getElementById('addChannelForm').reset(); loadAdminChannels();}).catch(err=>showToast('Error: '+err.message)); }
+    function deleteChannel(id){ if(!confirm('Delete?'))return; if(!currentUser?.isAdmin){showToast('Admin required');return;} db.ref('channels/'+id).remove().then(()=>{showToast('Deleted');loadAdminChannels();}).catch(err=>showToast('Error: '+err.message)); }
+    auth.onAuthStateChanged(u=>{ if(u){ document.getElementById('authPages').style.display='none'; document.getElementById('loader').style.display='flex'; setTimeout(()=>checkDevice(u.uid),1000); } else{ document.getElementById('authPages').style.display='flex'; document.getElementById('mainApp').style.display='none'; document.getElementById('loader').style.display='none'; } });
+    window.onload=()=>{ updateUIText(); updateFavoritesSet(); };
 </script>
 </body>
 </html>
