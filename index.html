@@ -4,15 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#0a0a0a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>STANY MIN TV - Premium Entertainment</title>
-    <meta name="description" content="Watch the latest movies, live channels, and exclusive content on STANY MIN TV. Stream in HD.">
+    <meta name="description" content="Watch movies, live channels, and exclusive content on STANY MIN TV.">
     <meta name="author" content="Stany Min">
     <meta property="og:title" content="STANY MIN TV">
     <meta property="og:image" content="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
     <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -26,7 +29,7 @@
             overflow-x: hidden;
             min-height: 100vh;
         }
-        /* ===== PIN LOCK - FIXED OVERLAY ===== */
+        /* PIN LOCK OVERLAY - full screen, no background content visible */
         .pin-overlay {
             position: fixed;
             top: 0;
@@ -40,7 +43,6 @@
             align-items: center;
             flex-direction: column;
             gap: 1.5rem;
-            transition: opacity 0.3s ease;
         }
         .pin-overlay.hidden {
             display: none;
@@ -103,7 +105,11 @@
         .pin-key.empty {
             visibility: hidden;
         }
-        /* ===== REST OF STYLES (same as before, but ensure main content starts below) ===== */
+        /* Main app container */
+        #mainApp {
+            display: none;
+        }
+        /* Header */
         header {
             display: flex;
             justify-content: space-between;
@@ -668,7 +674,7 @@
 <div class="toast-wrap" id="toastWrap"></div>
 
 <!-- MAIN APP (initially hidden until PIN cleared) -->
-<div id="mainApp" style="display: none;">
+<div id="mainApp">
     <header>
         <button class="header-icon" id="settingsBtn"><i class="fas fa-user"></i></button>
         <div class="logo">STANY MIN TV</div>
@@ -782,6 +788,7 @@
     let enteredPin = "", pinLength = 4;
     let typewriterInterval = null;
     let currentPage = 'home';
+    let chatListener = null;
 
     // ===== HELPER FUNCTIONS =====
     function showToast(msg, type = 'info') {
@@ -904,20 +911,30 @@
         auth.signOut().then(() => showToast('Logged out', 'success'));
     }
 
-    // ===== MOVIE LOADING (SIMPLIFIED DEMO) =====
+    // ===== MOVIE LOADING & RENDERING =====
     async function loadMovies() {
         const snap = await db.ref('movies').once('value');
         const data = snap.val();
-        if (!data) return;
+        if (!data) { allMovies = []; return; }
         allMovies = Object.keys(data).map(k => ({ id: k, ...data[k] }));
         renderHomeRows();
+        renderSlider();
+        loadDynamicCategories();
     }
     function renderHomeRows() {
         const recent = [...allMovies].sort((a,b)=> (b.created_at||0)-(a.created_at||0)).slice(0,12);
         const top = [...allMovies].sort((a,b)=> (b.rating||0)-(a.rating||0)).slice(0,12);
-        document.getElementById('recentMovies').innerHTML = recent.map(m => `<div class="movie-poster-card" data-movie-id="${m.id}"><img src="${m.poster_url||'https://via.placeholder.com/120x180'}" onerror="this.src='https://via.placeholder.com/120x180'"><div class="poster-rating">⭐ ${m.rating?.toFixed(1)||'0'}</div><div class="poster-title">${m.title||'Untitled'}</div></div>`).join('');
-        document.getElementById('topRatedMovies').innerHTML = top.map(m => `<div class="movie-poster-card" data-movie-id="${m.id}"><img src="${m.poster_url||'https://via.placeholder.com/120x180'}" onerror="this.src='https://via.placeholder.com/120x180'"><div class="poster-rating">⭐ ${m.rating?.toFixed(1)||'0'}</div><div class="poster-title">${m.title||'Untitled'}</div></div>`).join('');
+        document.getElementById('recentMovies').innerHTML = recent.map(m => createMovieCard(m)).join('');
+        document.getElementById('topRatedMovies').innerHTML = top.map(m => createMovieCard(m)).join('');
         attachMovieClickEvents();
+    }
+    function createMovieCard(movie) {
+        const poster = movie.poster_url || 'https://via.placeholder.com/120x180/1a1a1a/666?text=No+Poster';
+        return `<div class="movie-poster-card" data-movie-id="${movie.id}">
+            <img src="${poster}" onerror="this.src='https://via.placeholder.com/120x180/1a1a1a/666?text=Error'">
+            <div class="poster-rating">⭐ ${movie.rating?.toFixed(1) || '0'}</div>
+            <div class="poster-title">${movie.title || 'Untitled'}</div>
+        </div>`;
     }
     function attachMovieClickEvents() {
         document.querySelectorAll('.movie-poster-card').forEach(card => {
@@ -933,21 +950,241 @@
         document.getElementById('homePage').style.display = 'none';
         document.getElementById('chatPage').classList.remove('show');
         document.getElementById('settingsPage').classList.remove('show');
-        // populate details (simplified)
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        // populate details
         document.getElementById('dBackdrop').src = currentMovieData.backdrop_url || '';
         document.getElementById('dPoster').src = currentMovieData.poster_url || '';
         document.getElementById('dTitleTypewriter').textContent = currentMovieData.title || '';
         const infoGrid = document.getElementById('infoDetailGrid');
-        infoGrid.innerHTML = `<div class="info-d-card"><div class="info-d-icon"><i class="fas fa-star"></i></div><div class="info-d-label">Rating</div><div class="info-d-value">⭐ ${currentMovieData.rating||0}</div></div>
-                              <div class="info-d-card"><div class="info-d-icon"><i class="fas fa-calendar"></i></div><div class="info-d-label">Year</div><div class="info-d-value">${currentMovieData.release_year||''}</div></div>
-                              <div class="info-d-card"><div class="info-d-icon"><i class="fas fa-clock"></i></div><div class="info-d-label">Runtime</div><div class="info-d-value">${currentMovieData.runtime||''} min</div></div>`;
+        infoGrid.innerHTML = `
+            <div class="info-d-card"><div class="info-d-icon"><i class="fas fa-star"></i></div><div class="info-d-label">Rating</div><div class="info-d-value">⭐ ${currentMovieData.rating||0}</div></div>
+            <div class="info-d-card"><div class="info-d-icon"><i class="fas fa-calendar"></i></div><div class="info-d-label">Year</div><div class="info-d-value">${currentMovieData.release_year||''}</div></div>
+            <div class="info-d-card"><div class="info-d-icon"><i class="fas fa-clock"></i></div><div class="info-d-label">Runtime</div><div class="info-d-value">${currentMovieData.runtime||''} min</div></div>`;
         document.getElementById('dStoryline').textContent = currentMovieData.storyline || '';
         // Cast
         const castScroll = document.getElementById('castScroll');
         if (currentMovieData.cast && currentMovieData.cast.length) {
             castScroll.innerHTML = currentMovieData.cast.map(c => `<div class="cast-card"><img src="${c.profile_image||'https://via.placeholder.com/80'}" onerror="this.src='https://via.placeholder.com/80'"><div class="cast-actor">${c.name}</div><div class="cast-character">${c.character||''}</div></div>`).join('');
         } else castScroll.innerHTML = '<div class="empty-state">No cast info</div>';
+        // Load similar
+        loadSimilarMovies();
+        // Load comments
+        loadComments(id);
+        // Set download button
+        const downloadBtn = document.getElementById('downloadBtn');
+        downloadBtn.onclick = () => {
+            if (currentMovieData.movie_links) {
+                const links = currentMovieData.movie_links;
+                const quality = confirm('Choose quality:\n1080p\n720p\n480p') ? 
+                    (prompt('Enter quality (1080p, 720p, 480p):') || '').toLowerCase() : '';
+                if (links[quality]) window.open(links[quality], '_blank');
+                else showToast('Link not available', 'error');
+            } else showToast('No download links', 'error');
+        };
+        // Trailer
+        const trailerBtn = document.getElementById('openTrailerBtn');
+        trailerBtn.onclick = () => {
+            if (currentMovieData.trailer_url) window.open(currentMovieData.trailer_url, '_blank');
+            else showToast('No trailer available', 'error');
+        };
+        // Play movie (if direct link in 1080p)
+        const playBtn = document.getElementById('playMovieBtn');
+        playBtn.onclick = () => {
+            if (currentMovieData.movie_links && currentMovieData.movie_links['1080p']) {
+                window.open(currentMovieData.movie_links['1080p'], '_blank');
+            } else showToast('No playable link', 'error');
+        };
     }
+    async function loadSimilarMovies() {
+        const similarContainer = document.getElementById('similarScroll');
+        const similar = allMovies.filter(m => m.id !== currentMovieId && (m.genres?.some(g => currentMovieData.genres?.includes(g)) || m.categories?.some(c => currentMovieData.categories?.includes(c)))).slice(0,12);
+        if (similar.length === 0) { document.getElementById('similarSection').style.display = 'none'; return; }
+        similarContainer.innerHTML = similar.map(m => `<div class="similar-card" data-movie-id="${m.id}"><img src="${m.poster_url||'https://via.placeholder.com/110x165'}" onerror="this.src='https://via.placeholder.com/110x165'"><p>${m.title}</p></div>`).join('');
+        document.querySelectorAll('.similar-card').forEach(card => {
+            card.onclick = () => openMovieDetails(card.dataset.movieId);
+        });
+    }
+    function loadComments(movieId) {
+        const ref = db.ref(`comments/${movieId}`);
+        ref.on('value', snap => {
+            const comments = snap.val();
+            const container = document.getElementById('commentsList');
+            const count = document.getElementById('commentCount');
+            if (!comments) { container.innerHTML = '<div class="empty-state">No comments yet</div>'; count.textContent = '0'; return; }
+            const arr = Object.values(comments).sort((a,b)=>b.timestamp-a.timestamp);
+            count.textContent = arr.length;
+            container.innerHTML = arr.map(c => `<div class="comment-card"><img class="comment-avatar" src="${c.user_photo||'https://via.placeholder.com/36'}" onerror="this.src='https://via.placeholder.com/36'"><div class="comment-body"><div class="comment-username">${c.username||'Anonymous'}</div><div class="comment-text">${escapeHtml(c.comment_text)}</div><div class="comment-time">${formatTime(c.timestamp)}</div></div></div>`).join('');
+        });
+    }
+    function postComment() {
+        if (!currentUser) { showToast('Sign in to comment', 'error'); return; }
+        const text = document.getElementById('commentText').value.trim();
+        if (!text) return;
+        db.ref(`comments/${currentMovieId}`).push({
+            user_id: currentUser.uid,
+            username: currentUser.displayName || 'User',
+            user_photo: currentUser.photoURL || '',
+            comment_text: text,
+            timestamp: Date.now()
+        });
+        document.getElementById('commentText').value = '';
+        showToast('Comment posted', 'success');
+    }
+    function updateCommentInput() {
+        const container = document.getElementById('commentInputArea');
+        if (currentUser) {
+            container.innerHTML = `<textarea id="commentText" placeholder="Write a comment..."></textarea><button class="comment-post-btn" onclick="postComment()">Post</button>`;
+        } else {
+            container.innerHTML = `<div class="comment-login-prompt"><i class="fas fa-lock"></i> <a href="#" onclick="googleSignIn()">Sign in</a> to comment</div>`;
+        }
+    }
+
+    // ===== SLIDER =====
+    function renderSlider() {
+        const movies = allMovies.filter(m => m.backdrop_url).slice(0,6);
+        const wrapper = document.getElementById('sliderWrapper');
+        const dots = document.getElementById('sliderDots');
+        if (!movies.length) { wrapper.innerHTML = '<div class="slide"><div style="height:200px;display:flex;align-items:center;justify-content:center;background:#111;">No movies</div></div>'; dots.innerHTML = ''; return; }
+        wrapper.innerHTML = movies.map((m, i) => `<div class="slide" data-movie-id="${m.id}"><img src="${m.backdrop_url}" onerror="this.src='https://via.placeholder.com/800x400'"><div class="slide-overlay"><div class="slide-info"><h3>${m.title}</h3><p>⭐ ${m.rating?.toFixed(1)||'0'} · ${m.release_year||''}</p></div></div></div>`).join('');
+        dots.innerHTML = movies.map((_,i) => `<div class="s-dot ${i===0?'active':''}" data-slide-index="${i}"></div>`).join('');
+        currentSlide = 0;
+        startAutoSlide(movies.length);
+        attachSliderEvents(movies.length);
+        // attach slide clicks
+        document.querySelectorAll('.slide').forEach(slide => {
+            slide.onclick = () => openMovieDetails(slide.dataset.movieId);
+        });
+    }
+    function startAutoSlide(total) {
+        if (slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(() => {
+            currentSlide = (currentSlide + 1) % total;
+            updateSlider();
+        }, 5000);
+    }
+    function updateSlider() {
+        const wrapper = document.getElementById('sliderWrapper');
+        wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+        document.querySelectorAll('.s-dot').forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+    }
+    function attachSliderEvents(total) {
+        const wrapper = document.getElementById('sliderWrapper');
+        let startX = 0;
+        wrapper.addEventListener('touchstart', e => startX = e.touches[0].clientX, {passive:true});
+        wrapper.addEventListener('touchend', e => {
+            const diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) currentSlide = (currentSlide + 1) % total;
+                else currentSlide = (currentSlide - 1 + total) % total;
+                updateSlider();
+                if (slideInterval) { clearInterval(slideInterval); startAutoSlide(total); }
+            }
+        });
+        document.querySelectorAll('.s-dot').forEach(dot => {
+            dot.onclick = () => {
+                currentSlide = parseInt(dot.dataset.slideIndex);
+                updateSlider();
+                clearInterval(slideInterval);
+                startAutoSlide(total);
+            };
+        });
+    }
+    async function loadDynamicCategories() {
+        const snap = await db.ref('categories').once('value');
+        const cats = snap.val();
+        const container = document.getElementById('dynamicCategories');
+        if (!cats) { container.innerHTML = ''; return; }
+        let html = '';
+        for (const key in cats) {
+            const catName = cats[key].name;
+            const moviesInCat = allMovies.filter(m => m.categories && m.categories.includes(catName));
+            if (!moviesInCat.length) continue;
+            html += `<div class="category-section">
+                <div class="category-header"><h2>📂 ${catName}</h2><button class="see-all" data-seeall="category_${catName}">See All</button></div>
+                <div class="movie-row" data-category="${catName}">${moviesInCat.slice(0,12).map(createMovieCard).join('')}</div>
+            </div>`;
+        }
+        container.innerHTML = html;
+        document.querySelectorAll('.movie-row[data-category]').forEach(row => attachMovieClickEvents(row));
+        document.querySelectorAll('.see-all').forEach(btn => {
+            btn.onclick = () => openSeeAll(btn.dataset.seeall);
+        });
+    }
+    function openSeeAll(type) {
+        let movies = [];
+        if (type === 'recent') movies = [...allMovies].sort((a,b)=> (b.created_at||0)-(a.created_at||0));
+        else if (type === 'toprated') movies = [...allMovies].sort((a,b)=> (b.rating||0)-(a.rating||0));
+        else if (type.startsWith('category_')) {
+            const cat = type.replace('category_','');
+            movies = allMovies.filter(m => m.categories && m.categories.includes(cat));
+        }
+        // simple see-all page (we just show modal-like)
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.right = '0';
+        modal.style.bottom = '0';
+        modal.style.background = 'rgba(0,0,0,0.9)';
+        modal.style.zIndex = '1000';
+        modal.style.overflowY = 'auto';
+        modal.style.padding = '1rem';
+        modal.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;"><h2>${type === 'recent' ? 'Recent Movies' : type === 'toprated' ? 'Top Rated' : type.replace('category_','')}</h2><button style="background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer;" onclick="this.parentElement.parentElement.remove()">&times;</button></div><div class="movie-grid-full">${movies.map(createMovieCard).join('')}</div>`;
+        document.body.appendChild(modal);
+        attachMovieClickEvents();
+        modal.querySelector('.movie-grid-full').querySelectorAll('.movie-poster-card').forEach(card => {
+            card.onclick = () => { openMovieDetails(card.dataset.movieId); modal.remove(); };
+        });
+    }
+
+    // ===== CHAT =====
+    function loadChatMessages() {
+        if (chatListener) db.ref('global_chat').off('value', chatListener);
+        const ref = db.ref('global_chat').limitToLast(50);
+        chatListener = ref.on('value', snap => {
+            const msgs = snap.val();
+            const container = document.getElementById('chatMessages');
+            if (!msgs) { container.innerHTML = '<div class="empty-state">No messages</div>'; return; }
+            const arr = Object.values(msgs).sort((a,b)=>a.timestamp-b.timestamp);
+            container.innerHTML = arr.map(m => `<div class="chat-msg ${m.user_id === currentUser?.uid ? 'sent' : 'received'}"><div>${escapeHtml(m.text)}</div><div class="msg-meta"><span>${m.username||'User'}</span><span>${new Date(m.timestamp).toLocaleTimeString()}</span></div></div>`).join('');
+            container.scrollTop = container.scrollHeight;
+        });
+    }
+    function sendChat() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        if (!currentUser) { showToast('Sign in to chat', 'error'); return; }
+        db.ref('global_chat').push({ user_id: currentUser.uid, username: currentUser.displayName || 'User', text, timestamp: Date.now() });
+        input.value = '';
+    }
+
+    // ===== SETTINGS (PIN) =====
+    function setupPin() {
+        const newPin = prompt('Set a 4-6 digit PIN:');
+        if (newPin && /^\d{4,6}$/.test(newPin)) {
+            localStorage.setItem('appPin', newPin);
+            localStorage.setItem('appLockEnabled', 'true');
+            document.getElementById('appLockToggle').checked = true;
+            document.getElementById('setPinRow').classList.remove('hidden');
+            showToast('PIN set!', 'success');
+        } else if (newPin) showToast('Invalid PIN (4-6 digits)', 'error');
+    }
+    function toggleAppLock() {
+        if (document.getElementById('appLockToggle').checked) {
+            setupPin();
+        } else {
+            localStorage.removeItem('appPin');
+            localStorage.setItem('appLockEnabled', 'false');
+            document.getElementById('setPinRow').classList.add('hidden');
+            showToast('App lock disabled', 'success');
+            document.getElementById('pinOverlay').classList.add('hidden');
+            document.getElementById('mainApp').style.display = 'block';
+        }
+    }
+
+    // ===== PAGE NAVIGATION =====
     function goHome() {
         document.getElementById('detailsPage').classList.remove('show');
         document.getElementById('homePage').style.display = 'block';
@@ -976,48 +1213,10 @@
         document.querySelector('[data-page="settings"]').classList.add('active');
         currentPage = 'settings';
     }
-    function loadChatMessages() {
-        const ref = db.ref('global_chat').limitToLast(50);
-        ref.on('value', snap => {
-            const msgs = snap.val();
-            const container = document.getElementById('chatMessages');
-            if (!msgs) { container.innerHTML = '<div class="empty-state">No messages</div>'; return; }
-            const arr = Object.values(msgs).sort((a,b)=>a.timestamp-b.timestamp);
-            container.innerHTML = arr.map(m => `<div class="chat-msg ${m.user_id === currentUser?.uid ? 'sent' : 'received'}"><div>${m.text}</div><div class="msg-meta"><span>${m.username||'User'}</span><span>${new Date(m.timestamp).toLocaleTimeString()}</span></div></div>`).join('');
-            container.scrollTop = container.scrollHeight;
-        });
-    }
-    function sendChat() {
-        const input = document.getElementById('chatInput');
-        const text = input.value.trim();
-        if (!text) return;
-        if (!currentUser) { showToast('Sign in to chat', 'error'); return; }
-        db.ref('global_chat').push({ user_id: currentUser.uid, username: currentUser.displayName || 'User', text, timestamp: Date.now() });
-        input.value = '';
-    }
-    function setupPin() {
-        const newPin = prompt('Set a 4-6 digit PIN:');
-        if (newPin && /^\d{4,6}$/.test(newPin)) {
-            localStorage.setItem('appPin', newPin);
-            localStorage.setItem('appLockEnabled', 'true');
-            document.getElementById('appLockToggle').checked = true;
-            document.getElementById('setPinRow').classList.remove('hidden');
-            showToast('PIN set!', 'success');
-        } else if (newPin) showToast('Invalid PIN (4-6 digits)', 'error');
-    }
-    function toggleAppLock() {
-        if (document.getElementById('appLockToggle').checked) {
-            setupPin();
-        } else {
-            localStorage.removeItem('appPin');
-            localStorage.setItem('appLockEnabled', 'false');
-            document.getElementById('setPinRow').classList.add('hidden');
-            showToast('App lock disabled', 'success');
-            // remove overlay if visible
-            document.getElementById('pinOverlay').classList.add('hidden');
-            document.getElementById('mainApp').style.display = 'block';
-        }
-    }
+
+    // ===== UTILITY =====
+    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    function formatTime(ts) { if(!ts) return ''; const diff = Date.now() - ts; const mins = Math.floor(diff/60000); if(mins<1) return 'Just now'; if(mins<60) return mins+'m ago'; const hours = Math.floor(mins/60); if(hours<24) return hours+'h ago'; const days = Math.floor(hours/24); if(days<7) return days+'d ago'; return new Date(ts).toLocaleDateString(); }
 
     // ===== INIT =====
     window.addEventListener('DOMContentLoaded', () => {
@@ -1025,8 +1224,13 @@
         checkPinLock();
         auth.onAuthStateChanged(user => {
             updateProfileUI(user);
-            if (user) loadMovies();
-            else loadMovies(); // still load for guest
+            if (user) {
+                loadMovies();
+                loadChatMessages();
+            } else {
+                loadMovies(); // still load movies for guest
+                loadChatMessages();
+            }
         });
         document.getElementById('shareBtn').onclick = openShare;
         document.getElementById('shareSettingsBtn').onclick = openShare;
@@ -1048,6 +1252,24 @@
         document.getElementById('chatSendBtn').onclick = sendChat;
         document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key === 'Enter') sendChat(); });
         loadMovies();
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', e => {
+            const query = e.target.value.toLowerCase();
+            const results = allMovies.filter(m => m.title && m.title.toLowerCase().includes(query));
+            const container = document.getElementById('searchResults');
+            if (!query) { container.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>Search for movies</p></div>'; return; }
+            if (!results.length) { container.innerHTML = '<div class="empty-state">No movies found</div>'; return; }
+            container.innerHTML = results.map(m => `<div class="search-result-item" data-movie-id="${m.id}"><img src="${m.poster_url||'https://via.placeholder.com/55x82'}" onerror="this.src='https://via.placeholder.com/55x82'"><div class="search-result-info"><h4>${m.title}</h4><p>⭐ ${m.rating?.toFixed(1)||'0'} · ${m.release_year||''}</p></div></div>`).join('');
+            document.querySelectorAll('.search-result-item').forEach(item => {
+                item.onclick = () => { openMovieDetails(item.dataset.movieId); document.getElementById('searchOverlay').classList.remove('show'); };
+            });
+        });
+        // read more
+        document.getElementById('readMoreBtn').onclick = () => {
+            const el = document.getElementById('dStoryline');
+            el.classList.toggle('expanded');
+            document.getElementById('readMoreBtn').textContent = el.classList.contains('expanded') ? 'Show Less' : 'Read More';
+        };
     });
 </script>
 </body>
