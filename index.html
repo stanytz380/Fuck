@@ -30,7 +30,7 @@
     <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.7.0/dist/shaka-player.compiled.min.js"></script>
 
     <style>
-        /* ===== GLOBAL STYLES (STANY MIN TV + NH BOX LAYOUT) ===== */
+        /* ===== GLOBAL STYLES ===== */
         :root {
             --ios-bg: #000000;
             --ios-card: rgba(28, 28, 30, 0.65);
@@ -49,357 +49,210 @@
             --glass-blur: blur(20px) saturate(180%);
             --shadow-ios: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-            font-family: 'SF Pro Display', 'Inter', -apple-system, sans-serif;
-        }
-        body {
-            background: var(--ios-bg);
-            color: var(--ios-text);
-            min-height: 100vh;
-            overflow-x: hidden;
-            padding-bottom: 100px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; font-family: 'SF Pro Display', 'Inter', -apple-system, sans-serif; }
+        body { background: var(--ios-bg); color: var(--ios-text); min-height: 100vh; overflow-x: hidden; padding-bottom: 100px; }
         .ios-glass { background: var(--ios-glass); backdrop-filter: var(--glass-blur); border: 1px solid var(--ios-border); }
         .ios-card { background: var(--ios-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--ios-border); border-radius: 20px; }
 
-        /* Loader */
-        #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* ===== BUTTONS (FIXED: Was Missing) ===== */
+        .ios-button {
             width: 100%;
-            height: 100%;
-            background: var(--ios-bg);
-            z-index: 99999;
+            padding: 16px 24px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            gap: 24px;
+            justify-content: center;
+            gap: 8px;
+        }
+        .ios-button:active { transform: scale(0.98); opacity: 0.95; }
+        .ios-button-large { padding: 18px; font-size: 18px; }
+        .ios-button-secondary {
+            background: var(--ios-glass);
+            border: 1px solid var(--ios-border);
+            color: var(--ios-text);
+        }
+        .ios-button-secondary:active { background: rgba(255,255,255,0.15); }
+        .ios-button[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+        /* ===== LOADER ===== */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--ios-bg); z-index: 99999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 24px;
         }
         .loader-logo {
-            width: 100px;
-            height: 100px;
-            border-radius: 28px;
-            object-fit: cover;
-            box-shadow: 0 0 40px rgba(10, 132, 255, 0.3);
-            animation: pulse 2s ease-in-out infinite;
+            width: 100px; height: 100px; border-radius: 28px; object-fit: cover;
+            box-shadow: 0 0 40px rgba(10, 132, 255, 0.3); animation: pulse 2s ease-in-out infinite;
         }
         .ios-spinner {
-            width: 44px;
-            height: 44px;
-            border: 3px solid var(--ios-glass);
-            border-top-color: var(--ios-blue);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            width: 44px; height: 44px; border: 3px solid var(--ios-glass);
+            border-top-color: var(--ios-blue); border-radius: 50%; animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
 
-        /* Auth screen */
+        /* ===== AUTH SCREEN ===== */
         .auth-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--ios-bg);
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 24px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--ios-bg); z-index: 10000;
+            display: flex; justify-content: center; align-items: center; padding: 40px 24px;
         }
         .auth-container { width: 100%; max-width: 420px; }
         .auth-logo { text-align: center; margin-bottom: 40px; }
         .auth-logo img {
-            width: 120px;
-            height: 120px;
-            border-radius: 32px;
-            object-fit: cover;
-            box-shadow: 0 0 40px rgba(10, 132, 255, 0.3);
-            margin-bottom: 16px;
+            width: 120px; height: 120px; border-radius: 32px; object-fit: cover;
+            box-shadow: 0 0 40px rgba(10, 132, 255, 0.3); margin-bottom: 16px;
         }
         .auth-title {
-            font-size: 34px;
-            font-weight: 700;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 34px; font-weight: 700;
+            background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
         }
         .auth-subtitle { color: var(--ios-text-secondary); font-size: 17px; }
         .ios-input {
-            width: 100%;
-            padding: 18px 20px;
-            background: var(--ios-glass);
-            border: 1px solid var(--ios-border);
-            border-radius: 14px;
-            color: var(--ios-text);
-            font-size: 17px;
-            margin-bottom: 16px;
-            outline: none;
-            backdrop-filter: blur(10px);
+            width: 100%; padding: 18px 20px; background: var(--ios-glass);
+            border: 1px solid var(--ios-border); border-radius: 14px;
+            color: var(--ios-text); font-size: 17px; margin-bottom: 16px;
+            outline: none; backdrop-filter: blur(10px);
         }
         .ios-input:focus { border-color: var(--ios-blue); box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15); }
         .language-selector { margin-bottom: 24px; }
         .language-label { color: var(--ios-text-secondary); font-size: 13px; margin-bottom: 8px; text-transform: uppercase; }
         .language-options { display: flex; gap: 12px; flex-wrap: wrap; }
         .language-option {
-            padding: 10px 20px;
-            background: var(--ios-glass);
-            border: 2px solid var(--ios-border);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 15px;
-            font-weight: 500;
+            padding: 10px 20px; background: var(--ios-glass); border: 2px solid var(--ios-border);
+            border-radius: 12px; cursor: pointer; transition: all 0.3s; font-size: 15px; font-weight: 500;
         }
         .language-option.active { border-color: var(--ios-blue); background: rgba(10, 132, 255, 0.2); color: var(--ios-blue); }
 
-        /* Header */
+        /* ===== HEADER ===== */
         .header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 16px 20px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 1000; padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--ios-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
         }
         .header-logo { display: flex; align-items: center; gap: 12px; }
         .header-logo img { width: 40px; height: 40px; border-radius: 12px; object-fit: cover; }
         .header-title {
-            font-size: 22px;
-            font-weight: 700;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 22px; font-weight: 700;
+            background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .header-actions { display: flex; gap: 16px; }
         .header-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: var(--ios-glass);
-            border: 1px solid var(--ios-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: var(--ios-text);
-            font-size: 18px;
+            width: 40px; height: 40px; border-radius: 12px;
+            background: var(--ios-glass); border: 1px solid var(--ios-border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s; color: var(--ios-text); font-size: 18px;
         }
         .header-icon:active { transform: scale(0.92); background: rgba(255, 255, 255, 0.15); }
 
-        /* Search bar */
-        .search-bar {
-            margin: 16px 20px;
-            position: relative;
-            display: none;
-        }
+        /* ===== SEARCH BAR ===== */
+        .search-bar { margin: 16px 20px; position: relative; display: none; }
         .search-input-wrapper { position: relative; }
         .search-icon-left {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--ios-gray);
-            font-size: 16px;
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: var(--ios-gray); font-size: 16px;
         }
         .search-input {
-            width: 100%;
-            padding: 14px 20px 14px 48px;
-            background: var(--ios-glass);
-            border: 1px solid var(--ios-border);
-            border-radius: 14px;
-            color: var(--ios-text);
-            font-size: 16px;
-            outline: none;
-            backdrop-filter: blur(10px);
+            width: 100%; padding: 14px 20px 14px 48px; background: var(--ios-glass);
+            border: 1px solid var(--ios-border); border-radius: 14px;
+            color: var(--ios-text); font-size: 16px; outline: none; backdrop-filter: blur(10px);
         }
         .search-input:focus { border-color: var(--ios-blue); }
 
-        /* Sidebar (same as original) */
+        /* ===== SIDEBAR ===== */
         .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 9999;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 9999;
+            display: none; opacity: 0; transition: opacity 0.3s;
         }
         .sidebar-overlay.active { display: block; opacity: 1; }
         .sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100%;
-            background: var(--ios-card-solid);
-            border-right: 1px solid var(--ios-border);
-            z-index: 10000;
-            transition: left 0.3s ease;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
+            position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+            background: var(--ios-card-solid); border-right: 1px solid var(--ios-border);
+            z-index: 10000; transition: left 0.3s ease; padding: 20px;
+            display: flex; flex-direction: column;
         }
         .sidebar.active { left: 0; }
         .sidebar-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--ios-border);
-            margin-bottom: 20px;
+            display: flex; align-items: center; gap: 12px;
+            padding-bottom: 20px; border-bottom: 1px solid var(--ios-border); margin-bottom: 20px;
         }
         .sidebar-header img { width: 40px; height: 40px; border-radius: 12px; }
         .sidebar-header .title { font-size: 18px; font-weight: 700; }
         .sidebar-close {
-            margin-left: auto;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: var(--ios-glass);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            margin-left: auto; width: 36px; height: 36px; border-radius: 10px;
+            background: var(--ios-glass); display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
         .sidebar-menu { flex: 1; display: flex; flex-direction: column; gap: 8px; }
         .sidebar-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--ios-text);
-            text-decoration: none;
+            display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+            border-radius: 14px; cursor: pointer; transition: all 0.2s;
+            color: var(--ios-text); text-decoration: none;
         }
         .sidebar-item:hover, .sidebar-item.active { background: rgba(255,255,255,0.1); }
         .sidebar-item i { width: 24px; text-align: center; color: var(--ios-blue); }
         .sidebar-item .label { font-size: 16px; font-weight: 500; }
         .sidebar-footer {
-            padding-top: 20px;
-            border-top: 1px solid var(--ios-border);
-            font-size: 12px;
-            color: var(--ios-text-secondary);
-            text-align: center;
+            padding-top: 20px; border-top: 1px solid var(--ios-border);
+            font-size: 12px; color: var(--ios-text-secondary); text-align: center;
         }
 
-        /* Bottom navigation (fixed) */
+        /* ===== BOTTOM NAVIGATION ===== */
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(30px) saturate(180%);
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(30px) saturate(180%);
             border-top: 1px solid var(--ios-border);
             padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
-            z-index: 10000;
-            overflow-x: auto;
-            white-space: nowrap;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            z-index: 10000; overflow-x: auto; white-space: nowrap;
+            display: flex; justify-content: space-between; align-items: center;
             scrollbar-width: none;
         }
         .bottom-nav::-webkit-scrollbar { display: none; }
         .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 12px;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex: 1;
-            max-width: 80px;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            padding: 8px 12px; border-radius: 16px; cursor: pointer;
+            transition: all 0.3s; flex: 1; max-width: 80px; min-width: 60px;
         }
         .nav-item:active { transform: scale(0.92); }
         .nav-item.active { background: rgba(10, 132, 255, 0.15); }
-        .nav-icon {
-            font-size: 22px;
-            color: var(--ios-text-secondary);
-            transition: all 0.3s;
-        }
+        .nav-icon { font-size: 20px; color: var(--ios-text-secondary); transition: all 0.3s; }
         .nav-item.active .nav-icon { color: var(--ios-blue); transform: scale(1.1); }
         .nav-label {
-            font-size: 10px;
-            font-weight: 500;
-            color: var(--ios-text-secondary);
-            transition: all 0.3s;
-            text-align: center;
+            font-size: 9px; font-weight: 500; color: var(--ios-text-secondary);
+            transition: all 0.3s; text-align: center;
         }
         .nav-item.active .nav-label { color: var(--ios-blue); font-weight: 600; }
         .more-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            background: var(--ios-glass);
-            border: 1px solid var(--ios-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 20px;
-            color: var(--ios-text);
+            width: 44px; height: 44px; border-radius: 14px;
+            background: var(--ios-glass); border: 1px solid var(--ios-border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 20px; color: var(--ios-text);
         }
         .more-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.15); }
 
-        /* Share section */
+        /* ===== SHARE SECTION ===== */
         .share-section {
-            margin: 20px 20px 0;
-            padding: 24px;
-            border-radius: 24px;
-            overflow: hidden;
-            background: var(--ios-card);
-            border: 1px solid var(--ios-border);
+            margin: 20px 20px 0; padding: 24px; border-radius: 24px;
+            overflow: hidden; background: var(--ios-card); border: 1px solid var(--ios-border);
         }
         .share-title {
-            font-size: 13px;
-            color: var(--ios-text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 13px; color: var(--ios-text-secondary); text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
         }
-        .share-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
+        .share-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
         .share-button {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            font-size: 24px;
+            width: 52px; height: 52px; border-radius: 16px; display: flex;
+            align-items: center; justify-content: center; color: white; cursor: pointer;
+            transition: all 0.3s; border: none; font-size: 24px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         }
         .share-button:active { transform: scale(0.9) rotate(-5deg); }
@@ -410,651 +263,462 @@
         .share-copy { background: var(--ios-card-solid); }
 
         /* ===== NH BOX SLIDER ===== */
-        .slider-section {
-            padding: 0.8rem 1rem;
-            margin-top: 0;
-        }
+        .slider-section { padding: 0.8rem 1rem; margin-top: 0; }
         .slider-container {
-            position: relative;
-            width: 100%;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative; width: 100%; border-radius: 24px;
+            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .slider-wrapper {
-            display: flex;
-            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+            display: flex; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
             height: 200px;
         }
         .slide {
-            min-width: 100%;
-            height: 100%;
-            position: relative;
-            cursor: pointer;
+            min-width: 100%; height: 100%; position: relative; cursor: pointer;
         }
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
         .slide-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 60%;
+            position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
             background: linear-gradient(to top, rgba(10,10,10,0.95), transparent);
-            display: flex;
-            align-items: flex-end;
-            padding: 1rem;
+            display: flex; align-items: flex-end; padding: 1rem;
         }
         .slide-info h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1.1rem; font-weight: 600;
             text-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
-        .slide-info p {
-            font-size: 0.8rem;
-            color: #ccc;
-        }
+        .slide-info p { font-size: 0.8rem; color: #ccc; }
         .slider-dots {
-            display: flex;
-            justify-content: center;
-            gap: 0.4rem;
-            margin-top: 0.8rem;
+            display: flex; justify-content: center; gap: 0.4rem; margin-top: 0.8rem;
         }
         .s-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            cursor: pointer;
-            transition: all 0.3s;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.3s;
         }
-        .s-dot.active {
-            background: #FF0000;
-            width: 24px;
-            border-radius: 4px;
-        }
+        .s-dot.active { background: #FF0000; width: 24px; border-radius: 4px; }
 
-        /* ===== NH BOX CARDS LAYOUT (2‑COLUMN VERTICAL STACK) ===== */
-        .category-section {
-            margin-bottom: 28px;
-        }
+        /* ===== CATEGORY SECTIONS ===== */
+        .category-section { margin-bottom: 28px; }
         .category-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 20px 12px;
-            padding-left: 4px;
-            border-left: 4px solid var(--ios-blue);
+            display: flex; justify-content: space-between; align-items: center;
+            margin: 20px 20px 12px; padding-left: 4px; border-left: 4px solid var(--ios-blue);
         }
-        .category-header h3 {
-            font-size: 20px;
-            font-weight: 700;
+        .category-header h3 { font-size: 20px; font-weight: 700; }
+        .see-all {
+            color: var(--ios-blue); font-size: 14px; font-weight: 500; cursor: pointer;
         }
+        .see-all:active { opacity: 0.8; }
         .horizontal-scroll-container {
-            display: flex;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: 0 20px 16px;
-            gap: 16px;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
+            display: flex; overflow-x: auto; overflow-y: hidden;
+            padding: 0 20px 16px; gap: 16px; scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; scrollbar-width: none;
         }
         .horizontal-scroll-container::-webkit-scrollbar { display: none; }
         .scroll-column {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            min-width: calc(50% - 8px);
-            max-width: calc(50% - 8px);
+            display: flex; flex-direction: column; gap: 16px;
+            min-width: calc(50% - 8px); max-width: calc(50% - 8px);
             scroll-snap-align: start;
         }
         @media (min-width: 768px) {
             .scroll-column { min-width: calc(25% - 12px); max-width: calc(25% - 12px); }
         }
+
+        /* ===== CONTENT CARD ===== */
         .content-card {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s;
-            aspect-ratio: 2/3;
-            background: var(--ios-card-solid);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            position: relative; border-radius: 20px; overflow: hidden;
+            cursor: pointer; transition: all 0.3s; aspect-ratio: 2/3;
+            background: var(--ios-card-solid); box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .content-card:active { transform: scale(0.96); }
         .content-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;
         }
+        .content-card:hover img { transform: scale(1.05); }
         .content-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 12px;
+            position: absolute; bottom: 0; left: 0; right: 0; padding: 12px;
             background: linear-gradient(transparent, rgba(0,0,0,0.85));
         }
         .content-title {
-            font-size: 16px;
-            font-weight: 700;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 16px; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .live-badge {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: var(--ios-red);
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            z-index: 2;
+            position: absolute; top: 12px; left: 12px; background: var(--ios-red);
+            color: white; font-size: 12px; font-weight: bold; padding: 4px 8px;
+            border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 2;
         }
         .play-button {
-            position: absolute;
-            bottom: 50%;
-            right: 12px;
-            transform: translateY(50%);
-            width: 40px;
-            height: 40px;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(4px);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.2s;
-            z-index: 2;
-            opacity: 0;
+            position: absolute; bottom: 50%; right: 12px; transform: translateY(50%);
+            width: 40px; height: 40px; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 18px; cursor: pointer; transition: all 0.2s;
+            z-index: 2; opacity: 0;
         }
-        .content-card:hover .play-button,
-        .content-card:active .play-button {
-            opacity: 1;
-        }
+        .content-card:hover .play-button, .content-card:active .play-button { opacity: 1; }
         .play-button i { margin-left: 2px; }
         .locked-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
             border-radius: 16px;
         }
         .lock-icon { font-size: 32px; color: white; }
         .favorite-star {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 3;
-            transition: 0.2s;
+            position: absolute; top: 12px; right: 12px;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 3; transition: 0.2s;
         }
         .favorite-star i {
-            color: #ffd700;
-            font-size: 18px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            color: #ffd700; font-size: 18px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
+        .favorite-star:active { transform: scale(0.9); }
 
-        /* Details page (simplified from original) */
+        /* ===== DETAILS PAGE ===== */
         .details-page {
-            display: none;
-            min-height: 100vh;
-            padding-bottom: 70px;
+            display: none; min-height: 100vh; padding-bottom: 70px;
             background: #0a0a0a;
         }
         .details-page.show { display: block; }
         .detail-backdrop { position: relative; width: 100%; height: 260px; }
         .detail-backdrop img { width: 100%; height: 100%; object-fit: cover; }
         .backdrop-grad {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
+            position: absolute; bottom: 0; left: 0; right: 0; height: 100px;
             background: linear-gradient(to top, #0a0a0a, transparent);
         }
         .poster-3d-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: -110px;
-            position: relative;
-            z-index: 10;
-            padding: 0 1rem;
+            display: flex; flex-direction: column; align-items: center;
+            margin-top: -110px; position: relative; z-index: 10; padding: 0 1rem;
         }
         .poster-3d-card img {
-            width: 180px;
-            height: 270px;
-            object-fit: cover;
-            border-radius: 18px;
+            width: 180px; height: 270px; object-fit: cover; border-radius: 18px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.8);
         }
-        .title-typewriter-area {
-            text-align: center;
-            padding: 0.8rem 1rem 0;
-        }
-        .title-typewriter {
-            font-size: 1.4rem;
-            font-weight: 700;
-        }
+        .title-typewriter-area { text-align: center; padding: 0.8rem 1rem 0; }
+        .title-typewriter { font-size: 1.4rem; font-weight: 700; }
         .info-detail-grid {
-            display: grid;
-            grid-template-columns: repeat(3,1fr);
-            gap: 0.5rem;
-            padding: 1rem;
+            display: grid; grid-template-columns: repeat(3,1fr); gap: 0.5rem; padding: 1rem;
         }
         .info-d-card {
-            background: rgba(255,255,255,0.04);
-            padding: 0.6rem;
-            border-radius: 10px;
-            text-align: center;
+            background: rgba(255,255,255,0.04); padding: 0.6rem;
+            border-radius: 10px; text-align: center;
         }
-        .detail-actions {
-            display: flex;
-            gap: 0.6rem;
-            padding: 0.5rem 1rem;
-        }
+        .info-d-icon { font-size: 1.2rem; margin-bottom: 4px; color: var(--ios-blue); }
+        .info-d-label { font-size: 0.7rem; color: var(--ios-gray); }
+        .info-d-value { font-size: 0.85rem; font-weight: 600; }
+        .detail-actions { display: flex; gap: 0.6rem; padding: 0.5rem 1rem; }
         .btn-action {
-            flex: 1;
-            padding: 0.75rem;
-            border-radius: 12px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
+            flex: 1; padding: 0.75rem; border-radius: 12px; font-weight: 600;
+            border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
         .btn-trailer { background: linear-gradient(135deg,#FF0000,#CC0000); color: #fff; }
         .btn-play-movie { background: linear-gradient(135deg,#1a8a1a,#0d6b0d); color: #fff; }
         .btn-download { background: rgba(255,255,255,0.06); color: #fff; }
+        .btn-action:active { transform: scale(0.98); }
+        .detail-section { padding: 0 1rem; margin: 1rem 0; }
+        .detail-section-title {
+            font-size: 1.1rem; font-weight: 700; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
         .cast-scroll, .similar-scroll {
-            display: flex;
-            gap: 0.8rem;
-            overflow-x: auto;
-            padding: 0.5rem 0;
+            display: flex; gap: 0.8rem; overflow-x: auto; padding: 0.5rem 0;
         }
-        .cast-card {
-            min-width: 95px;
-            text-align: center;
-        }
+        .cast-card { min-width: 95px; text-align: center; }
         .cast-card img {
-            width: 80px;
-            height: 80px;
-            border-radius: 14px;
-            object-fit: cover;
+            width: 80px; height: 80px; border-radius: 14px; object-fit: cover;
         }
+        .cast-actor { font-size: 0.8rem; font-weight: 600; margin-top: 6px; }
+        .cast-character { font-size: 0.7rem; color: var(--ios-gray); }
         .storyline-text {
-            font-size: 0.9rem;
-            line-height: 1.7;
-            color: #bbb;
-            max-height: 120px;
-            overflow: hidden;
+            font-size: 0.9rem; line-height: 1.7; color: #bbb;
+            max-height: 120px; overflow: hidden;
         }
         .storyline-text.expanded { max-height: 1000px; }
         .read-more-btn {
-            color: #FF0000;
-            background: none;
-            border: none;
-            cursor: pointer;
-            margin-top: 0.4rem;
+            color: #FF0000; background: none; border: none; cursor: pointer;
+            margin-top: 0.4rem; font-weight: 500;
         }
-        .similar-card {
-            min-width: 110px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
+        .similar-card { min-width: 110px; cursor: pointer; transition: transform 0.3s; }
         .similar-card:hover { transform: scale(1.05); }
         .similar-card img {
-            width: 110px;
-            height: 165px;
-            border-radius: 10px;
-            object-fit: cover;
+            width: 110px; height: 165px; border-radius: 10px; object-fit: cover;
         }
         .similar-card p {
-            font-size: 0.75rem;
-            margin-top: 0.3rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 0.75rem; margin-top: 0.3rem; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
         }
         .comment-input-area textarea {
-            width: 100%;
-            padding: 0.8rem;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            color: #fff;
-            resize: none;
+            width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+            color: #fff; resize: none; font-size: 0.9rem;
         }
         .comment-post-btn {
-            background: linear-gradient(135deg,#FF0000,#CC0000);
-            color: #fff;
-            border: none;
-            padding: 0.6rem 1.5rem;
-            border-radius: 10px;
-            cursor: pointer;
-            float: right;
-            margin-top: 0.5rem;
+            background: linear-gradient(135deg,#FF0000,#CC0000); color: #fff;
+            border: none; padding: 0.6rem 1.5rem; border-radius: 10px;
+            cursor: pointer; float: right; margin-top: 0.5rem; font-weight: 500;
         }
         .comments-list { clear: both; margin-top: 1rem; }
         .comment-card {
-            display: flex;
-            gap: 0.8rem;
-            padding: 0.9rem 0;
+            display: flex; gap: 0.8rem; padding: 0.9rem 0;
             border-bottom: 1px solid rgba(255,255,255,0.04);
         }
-        .comment-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+        .comment-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
         .comment-username { font-size: 0.85rem; font-weight: 600; color: #eee; }
         .comment-text { font-size: 0.85rem; color: #bbb; word-wrap: break-word; }
         .comment-time { font-size: 0.72rem; color: #555; margin-top: 0.3rem; }
         .comment-login-prompt {
-            text-align: center;
-            padding: 1.5rem;
-            background: rgba(255,255,255,0.03);
+            text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.03);
             border-radius: 12px;
         }
-
-        /* Chat page */
-        .chat-page {
-            display: none;
-            min-height: 100vh;
-            flex-direction: column;
+        .empty-state {
+            text-align: center; padding: 2rem; color: var(--ios-gray);
         }
+
+        /* ===== CHAT PAGE ===== */
+        .chat-page { display: none; min-height: 100vh; flex-direction: column; }
         .chat-page.show { display: flex; }
+        .chat-container {
+            height: calc(100vh - 200px); display: flex; flex-direction: column;
+            margin: 20px; border-radius: 24px; overflow: hidden;
+            background: var(--ios-card); border: 1px solid var(--ios-border);
+        }
+        .chat-header {
+            padding: 16px; background: var(--ios-card-solid);
+            border-bottom: 1px solid var(--ios-border);
+        }
+        .chat-header h3 { font-size: 1.1rem; font-weight: 600; }
         .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
+            flex: 1; overflow-y: auto; padding: 1rem; display: flex;
+            flex-direction: column; gap: 0.8rem;
         }
         .chat-msg {
-            max-width: 80%;
-            padding: 0.7rem 1rem;
-            border-radius: 16px;
+            max-width: 80%; padding: 0.7rem 1rem; border-radius: 16px;
+            font-size: 0.9rem; line-height: 1.4;
         }
         .chat-msg.sent {
-            align-self: flex-end;
-            background: linear-gradient(135deg,#FF0000,#CC0000);
+            align-self: flex-end; background: linear-gradient(135deg,#FF0000,#CC0000);
         }
         .chat-msg.received {
-            align-self: flex-start;
-            background: rgba(255,255,255,0.08);
+            align-self: flex-start; background: rgba(255,255,255,0.08);
         }
-        .chat-input-bar {
-            display: flex;
-            gap: 0.5rem;
-            padding: 0.8rem 1rem;
-            border-top: 1px solid rgba(255,255,255,0.06);
+        .chat-input-area {
+            display: flex; gap: 12px; padding: 16px;
+            background: var(--ios-card-solid); border-top: 1px solid var(--ios-border);
         }
-        .chat-input-bar input {
-            flex: 1;
-            padding: 0.7rem 1rem;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 25px;
-            color: #fff;
+        .chat-input {
+            flex: 1; padding: 12px 16px; background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 25px;
+            color: #fff; font-size: 0.95rem; outline: none;
         }
-        .chat-send-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg,#FF0000,#CC0000);
-            border: none;
-            color: #fff;
-            cursor: pointer;
+        .chat-input:focus { border-color: var(--ios-blue); }
+        .chat-send {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: linear-gradient(135deg,#FF0000,#CC0000); border: none;
+            color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
         }
+        .chat-send:active { transform: scale(0.92); }
 
-        /* Settings page */
-        .settings-page {
-            display: none;
-            min-height: 100vh;
-            padding-bottom: 70px;
-        }
+        /* ===== SETTINGS/PROFILE PAGE ===== */
+        .settings-page { display: none; min-height: 100vh; padding-bottom: 70px; }
         .settings-page.show { display: block; }
-        .settings-section {
-            background: rgba(255,255,255,0.04);
-            border-radius: 14px;
-            padding: 1.2rem;
-            margin: 1rem;
+        .profile-header {
+            margin: 20px; padding: 32px; border-radius: 28px; text-align: center;
+            background: var(--ios-card); border: 1px solid var(--ios-border);
         }
-        .profile-row {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            margin-bottom: 1rem;
+        .profile-avatar {
+            width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+            margin-bottom: 16px; border: 3px solid var(--ios-blue);
         }
-        .profile-photo {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            object-fit: cover;
+        .profile-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+        .profile-email { color: var(--ios-gray); font-size: 0.9rem; margin-bottom: 8px; }
+        .profile-badge {
+            display: inline-block; padding: 6px 16px; background: rgba(10,132,255,0.15);
+            border-radius: 20px; font-size: 0.85rem; font-weight: 500; color: var(--ios-blue);
         }
-        .setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.7rem 0;
+        .menu-section {
+            margin: 0 20px 24px; border-radius: 20px;
+            background: var(--ios-card); border: 1px solid var(--ios-border);
+            overflow: hidden;
+        }
+        .menu-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px 20px; cursor: pointer; transition: background 0.2s;
             border-bottom: 1px solid rgba(255,255,255,0.03);
         }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item:active { background: rgba(255,255,255,0.08); }
+        .menu-left { display: flex; align-items: center; gap: 14px; }
+        .menu-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(255,255,255,0.08); display: flex;
+            align-items: center; justify-content: center; font-size: 16px;
+        }
+        .menu-text { font-size: 16px; font-weight: 500; }
+        .menu-chevron { color: var(--ios-gray); font-size: 14px; }
+        .setting-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .setting-row:last-child { border-bottom: none; }
+        .setting-desc { font-size: 0.75rem; color: var(--ios-gray); margin-top: 4px; }
         .toggle {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 26px;
+            position: relative; display: inline-block; width: 48px; height: 26px;
         }
         .toggle input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #333;
-            border-radius: 26px;
-            transition: 0.3s;
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background: #333; border-radius: 26px; transition: 0.3s;
         }
         .toggle-slider::before {
-            content: "";
-            position: absolute;
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background: #fff;
-            border-radius: 50%;
-            transition: 0.3s;
+            content: ""; position: absolute; height: 20px; width: 20px;
+            left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.3s;
         }
         .toggle input:checked + .toggle-slider { background: #FF0000; }
         .toggle input:checked + .toggle-slider::before { transform: translateX(22px); }
+        .settings-btn {
+            padding: 0.5rem 1rem; background: rgba(255,0,0,0.1);
+            color: #FF0000; border: 1px solid rgba(255,0,0,0.2);
+            border-radius: 10px; cursor: pointer; font-weight: 500;
+        }
+        .settings-btn:active { opacity: 0.8; }
 
-        /* Toast */
+        /* ===== TOAST NOTIFICATIONS ===== */
         .toast-wrap {
-            position: fixed;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            pointer-events: none;
+            position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+            z-index: 10000; display: flex; flex-direction: column;
+            align-items: center; gap: 0.5rem; pointer-events: none;
         }
         .toast-msg {
-            background: #222;
-            padding: 0.7rem 1.4rem;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            border-left: 3px solid #FF0000;
+            background: #222; padding: 0.7rem 1.4rem; border-radius: 10px;
+            font-size: 0.85rem; border-left: 3px solid #FF0000;
+            display: flex; align-items: center; gap: 8px;
+            animation: slideDown 0.3s ease;
+        }
+        .toast-msg.success { border-left-color: var(--ios-green); }
+        .toast-msg.error { border-left-color: var(--ios-red); }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translate(-50%, -20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
         }
 
-        /* PIN Lock Overlay */
+        /* ===== PIN LOCK OVERLAY ===== */
         .pin-lock-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0a0a0a;
-            z-index: 20000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 1.5rem;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0a0a0a; z-index: 20000;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column; gap: 1.5rem;
         }
-        .pin-lock-overlay.hidden { display: none; }
+        .pin-lock-overlay.hidden { display: none !important; }
         .pin-lock-overlay .lock-icon { font-size: 3rem; color: #FF0000; }
         .pin-lock-overlay h2 { font-size: 1.3rem; font-weight: 600; }
-        .pin-dots {
-            display: flex;
-            gap: 0.8rem;
-            margin: 0.5rem 0;
-        }
+        .pin-lock-overlay p { color: var(--ios-gray); text-align: center; }
+        .pin-dots { display: flex; gap: 0.8rem; margin: 0.5rem 0; }
         .pin-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 2px solid #555;
-            transition: all 0.2s;
+            width: 14px; height: 14px; border-radius: 50%;
+            border: 2px solid #555; transition: all 0.2s;
         }
         .pin-dot.filled {
-            background: #FF0000;
-            border-color: #FF0000;
+            background: #FF0000; border-color: #FF0000;
             box-shadow: 0 0 8px rgba(255,0,0,0.5);
         }
+        .pin-dot.error {
+            border-color: var(--ios-red); animation: shake 0.3s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
         .pin-keypad {
-            display: grid;
-            grid-template-columns: repeat(3,70px);
-            gap: 0.8rem;
-            margin-top: 0.5rem;
+            display: grid; grid-template-columns: repeat(3,70px); gap: 0.8rem; margin-top: 0.5rem;
         }
         .pin-key {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: 600;
-            cursor: pointer;
+            width: 70px; height: 70px; border-radius: 50%;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; font-size: 1.5rem; font-weight: 600; cursor: pointer;
         }
         .pin-key:active { transform: scale(0.92); background: rgba(255,0,0,0.25); }
         .pin-key.backspace { font-size: 1.2rem; }
         .pin-key.empty { visibility: hidden; }
 
-        /* Miscellaneous */
+        /* ===== MODALS ===== */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+            z-index: 20000; justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: var(--ios-card-solid); border-radius: 28px; padding: 32px;
+            max-width: 420px; width: 100%; border: 1px solid var(--ios-border);
+            position: relative; max-height: 90vh; overflow-y: auto;
+        }
+        .modal-title { font-size: 24px; font-weight: 700; margin-bottom: 12px; text-align: center; }
+        .modal-text { color: var(--ios-text-secondary); font-size: 16px; text-align: center; margin-bottom: 28px; }
+        .modal-close {
+            position: absolute; top: 20px; right: 20px; width: 36px; height: 36px;
+            border-radius: 50%; background: var(--ios-glass);
+            border: 1px solid var(--ios-border); display: flex;
+            align-items: center; justify-content: center; cursor: pointer;
+        }
+        .modal-close:active { background: rgba(255,255,255,0.15); }
+
+        /* ===== PAGE TRANSITIONS ===== */
         .page { display: none; animation: fade 0.2s; }
         .page.active { display: block; }
         @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .page-spacer { height: 70px; }
         .hidden { display: none !important; }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            z-index: 20000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .modal-content {
-            background: var(--ios-card-solid);
-            border-radius: 28px;
-            padding: 32px;
-            max-width: 420px;
-            width: 100%;
-            border: 1px solid var(--ios-border);
-        }
-        .modal-title { font-size: 24px; font-weight: 700; margin-bottom: 12px; text-align: center; }
-        .modal-text { color: var(--ios-text-secondary); font-size: 16px; text-align: center; margin-bottom: 28px; }
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--ios-glass);
-            border: 1px solid var(--ios-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
+
+        /* ===== UTILITIES ===== */
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .gap-2 { gap: 0.5rem; }
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 600px) {
             .poster-3d-card img { width: 140px; height: 210px; }
+            .info-detail-grid { grid-template-columns: repeat(2,1fr); }
+            .detail-actions { flex-wrap: wrap; }
+            .btn-action { flex: 1 1 45%; }
+        }
+        @media (max-width: 400px) {
+            .nav-label { display: none; }
+            .nav-icon { font-size: 22px; }
         }
     </style>
 </head>
 <body>
 
+<!-- LOADER -->
 <div id="loader">
-    <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" class="loader-logo">
+    <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" class="loader-logo" alt="STANY MIN TV">
     <div class="ios-spinner"></div>
 </div>
 
+<!-- TOAST CONTAINER -->
 <div class="toast-wrap" id="toastWrap"></div>
 
 <!-- PIN LOCK OVERLAY -->
 <div class="pin-lock-overlay hidden" id="pinLockOverlay">
     <div class="lock-icon"><i class="fas fa-lock"></i></div>
     <h2>Enter PIN</h2>
-    <p>Enter your PIN to unlock</p>
+    <p>Enter your PIN to unlock STANY MIN TV</p>
     <div class="pin-dots" id="pinDots"></div>
     <div class="pin-keypad" id="pinKeypad"></div>
 </div>
 
-<!-- AUTH -->
+<!-- AUTH SCREEN -->
 <div id="authPages" class="auth-screen">
     <div class="auth-container">
+        <!-- Login Form -->
         <div id="loginPage">
             <div class="auth-logo">
-                <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
+                <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" alt="STANY MIN TV">
                 <h1 class="auth-title">STANY MIN TV</h1>
                 <p class="auth-subtitle">Welcome Back</p>
             </div>
@@ -1066,17 +730,21 @@
                     <div class="language-option" data-lang="fr" onclick="changeLanguage('fr')">Français</div>
                 </div>
             </div>
-            <input type="email" id="lemail" class="ios-input" placeholder="Email">
-            <input type="password" id="lpass" class="ios-input" placeholder="Password">
-            <button class="ios-button ios-button-large" onclick="login()">Sign In</button>
+            <input type="email" id="lemail" class="ios-input" placeholder="Email Address" autocomplete="email">
+            <input type="password" id="lpass" class="ios-input" placeholder="Password" autocomplete="current-password">
+            <button class="ios-button ios-button-large" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
             <p style="text-align: center; margin-top: 24px; color: var(--ios-text-secondary);">
                 Don't have an account?
-                <span style="color: var(--ios-blue); cursor: pointer;" onclick="showRegister()">Sign Up</span>
+                <span style="color: var(--ios-blue); cursor: pointer; font-weight: 500;" onclick="showRegister()">Sign Up</span>
             </p>
         </div>
+        
+        <!-- Register Form -->
         <div id="regPage" style="display:none;">
             <div class="auth-logo">
-                <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
+                <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" alt="STANY MIN TV">
                 <h1 class="auth-title">Create Account</h1>
                 <p class="auth-subtitle">Join Us Today</p>
             </div>
@@ -1088,13 +756,15 @@
                     <div class="language-option" data-lang="fr" onclick="changeLanguage('fr')">Français</div>
                 </div>
             </div>
-            <input type="text" id="rname" class="ios-input" placeholder="Full Name">
-            <input type="email" id="remail" class="ios-input" placeholder="Email">
-            <input type="password" id="rpass" class="ios-input" placeholder="Password">
-            <button class="ios-button ios-button-large" onclick="register()">Create Account</button>
+            <input type="text" id="rname" class="ios-input" placeholder="Full Name" autocomplete="name">
+            <input type="email" id="remail" class="ios-input" placeholder="Email Address" autocomplete="email">
+            <input type="password" id="rpass" class="ios-input" placeholder="Password (min 6 chars)" autocomplete="new-password">
+            <button class="ios-button ios-button-large" onclick="register()">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
             <p style="text-align: center; margin-top: 24px; color: var(--ios-text-secondary);">
                 Already have an account?
-                <span style="color: var(--ios-blue); cursor: pointer;" onclick="showLogin()">Sign In</span>
+                <span style="color: var(--ios-blue); cursor: pointer; font-weight: 500;" onclick="showLogin()">Sign In</span>
             </p>
         </div>
     </div>
@@ -1102,15 +772,16 @@
 
 <!-- MAIN APP -->
 <div id="mainApp" style="display:none;">
+    <!-- Header -->
     <div class="header">
         <div class="header-logo">
-            <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
+            <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" alt="Logo">
             <div class="header-title">STANY MIN TV</div>
         </div>
         <div class="header-actions">
-            <div class="header-icon" onclick="toggleSearch()"><i class="fas fa-search"></i></div>
-            <div class="header-icon" onclick="showNotifications()"><i class="fas fa-bell"></i></div>
-            <div class="header-icon" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+            <div class="header-icon" onclick="toggleSearch()" title="Search"><i class="fas fa-search"></i></div>
+            <div class="header-icon" onclick="showNotifications()" title="Notifications"><i class="fas fa-bell"></i></div>
+            <div class="header-icon" onclick="toggleSidebar()" title="Menu"><i class="fas fa-bars"></i></div>
         </div>
     </div>
     
@@ -1118,7 +789,7 @@
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
+            <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" alt="Logo">
             <div class="title">STANY MIN TV</div>
             <div class="sidebar-close" onclick="toggleSidebar()"><i class="fas fa-times"></i></div>
         </div>
@@ -1139,180 +810,268 @@
         <div class="sidebar-footer">© 2025 STANY MIN TV</div>
     </div>
     
+    <!-- Search Bar -->
     <div class="search-bar" id="searchBar">
         <div class="search-input-wrapper">
             <i class="fas fa-search search-icon-left"></i>
-            <input type="text" class="search-input" id="searchInput" placeholder="Search..." onkeyup="globalSearch()">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search channels, movies..." onkeyup="globalSearch()" onfocus="this.select()">
         </div>
     </div>
 
-    <!-- HOME PAGE (NH BOX layout) -->
+    <!-- HOME PAGE -->
     <div id="home" class="page active">
-        <!-- NH BOX Slider -->
+        <!-- Slider -->
         <div class="slider-section">
             <div class="slider-container">
                 <div class="slider-wrapper" id="sliderWrapper"></div>
             </div>
             <div class="slider-dots" id="sliderDots"></div>
         </div>
+        
         <!-- Share Section -->
         <div class="share-section ios-card">
             <div class="share-title"><i class="fas fa-share-alt"></i><span>Share STANY MIN TV</span></div>
             <div class="share-buttons">
-                <button class="share-button share-whatsapp" onclick="shareApp('whatsapp')"><i class="fab fa-whatsapp"></i></button>
-                <button class="share-button share-facebook" onclick="shareApp('facebook')"><i class="fab fa-facebook-f"></i></button>
-                <button class="share-button share-twitter" onclick="shareApp('twitter')"><i class="fab fa-twitter"></i></button>
-                <button class="share-button share-telegram" onclick="shareApp('telegram')"><i class="fab fa-telegram-plane"></i></button>
-                <button class="share-button share-copy" onclick="copyLink()"><i class="fas fa-link"></i></button>
+                <button class="share-button share-whatsapp" onclick="shareApp('whatsapp')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
+                <button class="share-button share-facebook" onclick="shareApp('facebook')" title="Facebook"><i class="fab fa-facebook-f"></i></button>
+                <button class="share-button share-twitter" onclick="shareApp('twitter')" title="Twitter"><i class="fab fa-twitter"></i></button>
+                <button class="share-button share-telegram" onclick="shareApp('telegram')" title="Telegram"><i class="fab fa-telegram-plane"></i></button>
+                <button class="share-button share-copy" onclick="copyLink()" title="Copy Link"><i class="fas fa-link"></i></button>
             </div>
         </div>
-        <!-- Dynamic categories (channels & movies) will be injected here -->
+        
+        <!-- Dynamic Categories -->
         <div id="homeContent"></div>
     </div>
 
-    <!-- Channels Page -->
+    <!-- CHANNELS PAGE -->
     <div id="channels" class="page">
         <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin: 20px 20px 16px;">
-            <h2 class="section-title">All Live Channels</h2>
+            <h2 class="section-title" style="font-size: 20px; font-weight: 700;">All Live Channels</h2>
             <span class="see-all" onclick="viewAllCategory('All Channels')">See All</span>
         </div>
         <div class="horizontal-scroll-container" id="allChannelsGrid"></div>
     </div>
 
-    <!-- Movies Page -->
+    <!-- MOVIES PAGE -->
     <div id="movies" class="page">
         <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin: 20px 20px 16px;">
-            <h2 class="section-title">All Movies</h2>
+            <h2 class="section-title" style="font-size: 20px; font-weight: 700;">All Movies</h2>
             <span class="see-all" onclick="viewAllCategory('All Movies')">See All</span>
         </div>
         <div class="horizontal-scroll-container" id="allMoviesGrid"></div>
     </div>
 
-    <!-- Favorites Page -->
+    <!-- FAVORITES PAGE -->
     <div id="favorites" class="page">
-        <h2 class="section-title" style="margin:20px;">My Favorites</h2>
-        <div id="favoritesContent" style="padding:20px;"></div>
+        <h2 class="section-title" style="margin:20px; font-size: 20px; font-weight: 700;">My Favorites</h2>
+        <div id="favoritesContent" style="padding:0 20px;"></div>
     </div>
 
-    <!-- Downloads Page -->
+    <!-- DOWNLOADS PAGE -->
     <div id="downloads" class="page">
-        <h2 class="section-title" style="margin:20px;">Downloads</h2>
-        <div id="dlContent" style="padding:20px;"></div>
+        <h2 class="section-title" style="margin:20px; font-size: 20px; font-weight: 700;">Downloads</h2>
+        <div id="dlContent" style="padding:0 20px;"></div>
     </div>
 
-    <!-- Tips Page -->
+    <!-- TIPS PAGE -->
     <div id="tips" class="page">
-        <h2 class="section-title" style="margin:20px;">Tips & Guides</h2>
+        <h2 class="section-title" style="margin:20px; font-size: 20px; font-weight: 700;">Tips & Guides</h2>
         <div id="tipsContent" class="tips-container" style="padding:0 20px;"></div>
     </div>
 
-    <!-- Betting Tips Page -->
+    <!-- BETTING TIPS PAGE -->
     <div id="bettingTips" class="page">
-        <h2 class="section-title" style="margin:20px;">Betting Tips</h2>
+        <h2 class="section-title" style="margin:20px; font-size: 20px; font-weight: 700;">Betting Tips</h2>
         <div id="bettingTipsContent" class="tips-container" style="padding:0 20px;"></div>
     </div>
 
-    <!-- Chat Page -->
+    <!-- CHAT PAGE -->
     <div id="chat" class="page">
-        <div class="chat-container" style="height: calc(100vh - 200px); display: flex; flex-direction: column; margin: 20px; border-radius: 24px; overflow: hidden; background: var(--ios-card); border: 1px solid var(--ios-border);">
-            <div class="chat-header" style="padding: 16px; background: var(--ios-card-solid); border-bottom: 1px solid var(--ios-border);">
-                <h3>Support Chat</h3>
+        <div class="chat-container">
+            <div class="chat-header">
+                <h3><i class="fas fa-headset"></i> Support Chat</h3>
             </div>
             <div class="chat-messages" id="chatBox">
-                <div class="chat-msg received">Welcome! How can we help you today?</div>
+                <div class="chat-msg received">👋 Welcome to STANY MIN TV Support! How can we help you today?</div>
             </div>
-            <div class="chat-input-area" style="display: flex; gap: 12px; padding: 16px; background: var(--ios-card-solid); border-top: 1px solid var(--ios-border);">
-                <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendChat()">
                 <button class="chat-send" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
-    <!-- Profile Page -->
+    <!-- PROFILE PAGE -->
     <div id="profile" class="page">
-        <div class="profile-header" style="margin: 20px; padding: 32px; border-radius: 28px; text-align: center; background: var(--ios-card); border: 1px solid var(--ios-border);">
-            <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" class="profile-avatar" style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:16px;">
-            <div class="profile-name" id="pName">User</div>
+        <div class="profile-header">
+            <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" class="profile-avatar" alt="Profile">
+            <div class="profile-name" id="pName">Loading...</div>
             <div class="profile-email" id="pEmail">email@example.com</div>
             <div class="profile-badge" id="pDays">7 days left</div>
         </div>
-        <div class="menu-section" style="margin:0 20px 24px; border-radius:20px; background:var(--ios-card); border:1px solid var(--ios-border); overflow:hidden;">
+        
+        <div class="menu-section">
             <div class="menu-item" onclick="quickRefresh()">
-                <div class="menu-left"><div class="menu-icon"><i class="fas fa-sync-alt"></i></div><span class="menu-text">Refresh</span></div>
+                <div class="menu-left">
+                    <div class="menu-icon"><i class="fas fa-sync-alt"></i></div>
+                    <span class="menu-text">Refresh Data</span>
+                </div>
                 <i class="fas fa-chevron-right menu-chevron"></i>
             </div>
             <div class="menu-item" onclick="showLanguageSettings()">
-                <div class="menu-left"><div class="menu-icon"><i class="fas fa-language"></i></div><span class="menu-text">Language</span></div>
+                <div class="menu-left">
+                    <div class="menu-icon"><i class="fas fa-language"></i></div>
+                    <span class="menu-text">Language</span>
+                </div>
                 <i class="fas fa-chevron-right menu-chevron"></i>
             </div>
         </div>
-        <div class="menu-section" style="margin:0 20px 24px; border-radius:20px; background:var(--ios-card); border:1px solid var(--ios-border);">
-            <div class="setting-row" style="display: flex; justify-content: space-between; align-items: center; padding: 18px 20px;">
-                <div><label>App Lock</label><div class="setting-desc" style="font-size:0.75rem;color:#666;">Lock app with PIN</div></div>
-                <label class="toggle"><input type="checkbox" id="appLockToggle"><span class="toggle-slider"></span></label>
+        
+        <div class="menu-section">
+            <div class="setting-row">
+                <div>
+                    <label style="font-weight: 500;">App Lock</label>
+                    <div class="setting-desc">Lock app with PIN code</div>
+                </div>
+                <label class="toggle">
+                    <input type="checkbox" id="appLockToggle" onchange="toggleAppLock()">
+                    <span class="toggle-slider"></span>
+                </label>
             </div>
             <div class="setting-row hidden" id="setPinRow" style="padding: 12px 20px; justify-content: space-between;">
                 <label>Change PIN</label>
-                <button class="settings-btn" style="width:auto;padding:0.5rem 1rem;background:rgba(255,0,0,0.1);color:#FF0000;border:1px solid rgba(255,0,0,0.2);" onclick="setupPin()">Set PIN</button>
+                <button class="settings-btn" onclick="setupPin()">Set PIN</button>
             </div>
         </div>
+        
         <div class="menu-section">
             <div class="menu-item" onclick="showLogoutConfirm()">
-                <div class="menu-left"><div class="menu-icon" style="color:var(--ios-red);"><i class="fas fa-sign-out-alt"></i></div><span class="menu-text" style="color:var(--ios-red);">Logout</span></div>
+                <div class="menu-left">
+                    <div class="menu-icon" style="color:var(--ios-red);"><i class="fas fa-sign-out-alt"></i></div>
+                    <span class="menu-text" style="color:var(--ios-red);">Logout</span>
+                </div>
                 <i class="fas fa-chevron-right menu-chevron"></i>
             </div>
         </div>
     </div>
 
-    <!-- Details Page -->
+    <!-- DETAILS PAGE -->
     <div class="details-page" id="detailsPage">
-        <div class="detail-backdrop"><img id="dBackdrop" src=""><div class="backdrop-grad"></div></div>
-        <div class="poster-3d-section"><div class="poster-3d-card"><img id="dPoster" src=""></div></div>
-        <div class="title-typewriter-area"><span class="title-typewriter" id="dTitleTypewriter"></span></div>
-        <div class="info-detail-grid" id="infoDetailGrid"></div>
+        <div class="detail-backdrop">
+            <img id="dBackdrop" src="" alt="Backdrop" onerror="this.src='https://via.placeholder.com/800x400/1a1a1a/666?text=No+Image'">
+            <div class="backdrop-grad"></div>
+        </div>
+        <div class="poster-3d-section">
+            <div class="poster-3d-card">
+                <img id="dPoster" src="" alt="Poster" onerror="this.src='https://via.placeholder.com/180x270/1a1a1a/666?text=No+Poster'">
+            </div>
+        </div>
+        <div class="title-typewriter-area">
+            <span class="title-typewriter" id="dTitleTypewriter">Loading...</span>
+        </div>
+        <div class="info-detail-grid" id="infoDetailGrid">
+            <!-- Dynamic content -->
+        </div>
         <div class="detail-actions">
             <button class="btn-action btn-trailer" id="openTrailerBtn"><i class="fas fa-play"></i> Trailer</button>
             <button class="btn-action btn-play-movie" id="playMovieBtn"><i class="fas fa-play-circle"></i> Play</button>
             <button class="btn-action btn-download" id="downloadBtn"><i class="fas fa-download"></i> Download</button>
         </div>
-        <div class="detail-section"><div class="detail-section-title"><i class="fas fa-users"></i> Cast</div><div class="cast-scroll" id="castScroll"></div></div>
-        <div class="detail-section"><div class="detail-section-title"><i class="fas fa-align-left"></i> Storyline</div><p class="storyline-text" id="dStoryline"></p><button class="read-more-btn" id="readMoreBtn">Read More</button></div>
-        <div class="detail-section" id="similarSection"><div class="detail-section-title"><i class="fas fa-film"></i> More Like This</div><div class="similar-scroll" id="similarScroll"></div></div>
-        <div class="detail-section"><div class="detail-section-title"><i class="fas fa-comment"></i> Comments (<span id="commentCount">0</span>)</div><div id="commentInputArea"></div><div class="comments-list" id="commentsList"></div></div>
+        <div class="detail-section">
+            <div class="detail-section-title"><i class="fas fa-users"></i> Cast</div>
+            <div class="cast-scroll" id="castScroll">
+                <div class="empty-state">Loading cast...</div>
+            </div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-section-title"><i class="fas fa-align-left"></i> Storyline</div>
+            <p class="storyline-text" id="dStoryline">Loading storyline...</p>
+            <button class="read-more-btn" id="readMoreBtn" onclick="toggleStoryline()">Read More</button>
+        </div>
+        <div class="detail-section" id="similarSection">
+            <div class="detail-section-title"><i class="fas fa-film"></i> More Like This</div>
+            <div class="similar-scroll" id="similarScroll">
+                <div class="empty-state">Loading recommendations...</div>
+            </div>
+        </div>
+        <div class="detail-section">
+            <div class="detail-section-title"><i class="fas fa-comment"></i> Comments (<span id="commentCount">0</span>)</div>
+            <div id="commentInputArea">
+                <div class="comment-login-prompt">
+                    <i class="fas fa-comment-alt" style="font-size: 2rem; margin-bottom: 12px;"></i>
+                    <p>Sign in to leave a comment</p>
+                </div>
+            </div>
+            <div class="comments-list" id="commentsList"></div>
+        </div>
         <div class="page-spacer"></div>
     </div>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="nav('home', this)"><i class="fas fa-home nav-icon"></i><span class="nav-label">Home</span></div>
-        <div class="nav-item" onclick="nav('channels', this)"><i class="fas fa-tv nav-icon"></i><span class="nav-label">Channels</span></div>
-        <div class="nav-item" onclick="nav('movies', this)"><i class="fas fa-film nav-icon"></i><span class="nav-label">Movies</span></div>
-        <div class="nav-item" onclick="nav('favorites', this)"><i class="fas fa-heart nav-icon"></i><span class="nav-label">Favs</span></div>
-        <div class="nav-item" onclick="nav('downloads', this)"><i class="fas fa-download nav-icon"></i><span class="nav-label">Down</span></div>
-        <div class="nav-item" onclick="nav('tips', this)"><i class="fas fa-lightbulb nav-icon"></i><span class="nav-label">Tips</span></div>
-        <div class="nav-item" onclick="nav('bettingTips', this)"><i class="fas fa-chart-line nav-icon"></i><span class="nav-label">Betting</span></div>
-        <div class="nav-item" onclick="nav('chat', this)"><i class="fas fa-comments nav-icon"></i><span class="nav-label">Support</span></div>
-        <div class="more-btn" onclick="toggleSidebar()"><i class="fas fa-ellipsis-h"></i></div>
+        <div class="nav-item active" onclick="nav('home', this)" title="Home">
+            <i class="fas fa-home nav-icon"></i>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item" onclick="nav('channels', this)" title="Channels">
+            <i class="fas fa-tv nav-icon"></i>
+            <span class="nav-label">Channels</span>
+        </div>
+        <div class="nav-item" onclick="nav('movies', this)" title="Movies">
+            <i class="fas fa-film nav-icon"></i>
+            <span class="nav-label">Movies</span>
+        </div>
+        <div class="nav-item" onclick="nav('favorites', this)" title="Favorites">
+            <i class="fas fa-heart nav-icon"></i>
+            <span class="nav-label">Favs</span>
+        </div>
+        <div class="nav-item" onclick="nav('downloads', this)" title="Downloads">
+            <i class="fas fa-download nav-icon"></i>
+            <span class="nav-label">Down</span>
+        </div>
+        <div class="nav-item" onclick="nav('tips', this)" title="Tips">
+            <i class="fas fa-lightbulb nav-icon"></i>
+            <span class="nav-label">Tips</span>
+        </div>
+        <div class="nav-item" onclick="nav('bettingTips', this)" title="Betting">
+            <i class="fas fa-chart-line nav-icon"></i>
+            <span class="nav-label">Betting</span>
+        </div>
+        <div class="nav-item" onclick="nav('chat', this)" title="Support">
+            <i class="fas fa-comments nav-icon"></i>
+            <span class="nav-label">Support</span>
+        </div>
+        <div class="more-btn" onclick="toggleSidebar()" title="More">
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
     </div>
 </div>
 
-<!-- Modals -->
+<!-- LOGOUT MODAL -->
 <div id="logoutModal" class="modal">
     <div class="modal-content">
         <div class="modal-close" onclick="cancelLogout()"><i class="fas fa-times"></i></div>
-        <div style="text-align:center; margin-bottom:24px;"><i class="fas fa-sign-out-alt" style="font-size:48px; color:var(--ios-red);"></i></div>
+        <div style="text-align:center; margin-bottom:24px;">
+            <i class="fas fa-sign-out-alt" style="font-size:48px; color:var(--ios-red);"></i>
+        </div>
         <h3 class="modal-title">Logout</h3>
-        <p class="modal-text">Are you sure you want to logout?</p>
-        <button class="ios-button" onclick="confirmLogout()" style="margin-bottom:12px; background:var(--ios-red);">Yes, Logout</button>
-        <button class="ios-button ios-button-secondary" onclick="cancelLogout()">Cancel</button>
+        <p class="modal-text">Are you sure you want to logout from STANY MIN TV?</p>
+        <button class="ios-button" onclick="confirmLogout()" style="margin-bottom:12px; background:var(--ios-red);">
+            <i class="fas fa-check"></i> Yes, Logout
+        </button>
+        <button class="ios-button ios-button-secondary" onclick="cancelLogout()">
+            <i class="fas fa-times"></i> Cancel
+        </button>
     </div>
 </div>
 
-<div id="detailModal" class="modal" style="display:none;">
+<!-- DETAIL MODAL (Fallback) -->
+<div id="detailModal" class="modal">
     <div class="modal-content">
         <div class="modal-close" onclick="closeDetailModal()"><i class="fas fa-times"></i></div>
-        <img id="dImg" style="width:100%; height:220px; object-fit:cover; border-radius:16px; margin-bottom:20px;">
-        <h3 class="modal-title" id="dTitle"></h3>
+        <img id="dImg" style="width:100%; height:220px; object-fit:cover; border-radius:16px; margin-bottom:20px;" onerror="this.src='https://via.placeholder.com/400x220/1a1a1a/666?text=No+Image'">
+        <h3 class="modal-title" id="dTitle">Loading...</h3>
         <p class="modal-text" id="dDesc" style="text-align:left;"></p>
         <div class="share-section" style="margin:20px 0;">
             <div class="share-title"><i class="fas fa-share-alt"></i><span>Share This</span></div>
@@ -1324,465 +1083,1355 @@
             </div>
         </div>
         <div class="flex-between gap-2">
-            <button class="ios-button" id="dBtnDownload" style="margin-bottom:12px; background:var(--ios-green);">Download</button>
-            <button class="ios-button" id="dBtnWatch">Watch Now</button>
+            <button class="ios-button" id="dBtnDownload" style="margin-bottom:12px; background:var(--ios-green);" onclick="downloadContent()">
+                <i class="fas fa-download"></i> Download
+            </button>
+            <button class="ios-button" id="dBtnWatch" onclick="watchContent()">
+                <i class="fas fa-play"></i> Watch Now
+            </button>
         </div>
     </div>
 </div>
 
+<!-- VIDEO PLAYER MODAL -->
 <div id="playerModal" class="modal" style="padding:0; background:#000;">
     <div style="width:100%; height:100%; position:relative;">
-        <div class="modal-close" onclick="closePlayer()" style="top:20px; right:20px; background:rgba(0,0,0,0.6); z-index:1001;"><i class="fas fa-times"></i></div>
+        <div class="modal-close" onclick="closePlayer()" style="top:20px; right:20px; background:rgba(0,0,0,0.6); z-index:1001;">
+            <i class="fas fa-times"></i>
+        </div>
         <video id="videoJS" class="video-js vjs-fluid vjs-big-play-centered vjs-16-9" controls preload="auto" data-setup='{}' style="width:100%;height:100%;"></video>
-        <div id="shakaContainer" style="width:100%;height:100%;display:none;"></div>
+        <div id="shakaContainer" style="width:100%;height:100%;display:none;position:absolute;top:0;left:0;"></div>
     </div>
 </div>
 
 <script>
-    // ==================== FIREBASE CONFIG (STANY MIN TV) ====================
-    const firebaseConfig = {
-        apiKey: "AIzaSyAGQqAiYCnWR7X8XkxEXCGu19PU45qXDnc",
-        authDomain: "stanyappstore.firebaseapp.com",
-        projectId: "stanyappstore",
-        storageBucket: "stanyappstore.firebasestorage.app",
-        messagingSenderId: "735017831251",
-        appId: "1:735017831251:web:9fa4184ef141349fb9afa6"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+// ==================== FIREBASE CONFIG ====================
+const firebaseConfig = {
+    apiKey: "AIzaSyAGQqAiYCnWR7X8XkxEXCGu19PU45qXDnc",
+    authDomain: "stanyappstore.firebaseapp.com",
+    projectId: "stanyappstore",
+    storageBucket: "stanyappstore.firebasestorage.app",
+    messagingSenderId: "735017831251",
+    appId: "1:735017831251:web:9fa4184ef141349fb9afa6"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
 
-    // ==================== GLOBALS ====================
-    let currentUser = null, userIsExpired = false;
-    let allData = { channels: [], movies: [], genres: [], carousel: [], tips: [], bettingTips: [], downloads: [] };
-    let currentMovieId = null, currentMovieData = null;
-    let currentSlide = 0, slideInterval = null;
-    let player = null, shakaPlayer = null;
-    let deviceId = localStorage.getItem('did') || 'dev_' + Date.now();
-    let currentLang = localStorage.getItem('language') || 'en';
-    let favoritesSet = new Set();
-    let appSettings = { cardSize: 'medium', fontSize: 'medium', carouselInterval: 5000, lockedChannels: [], freeChannels: [], channelScripts: {} };
-    let deviceCheckInterval = null;
-    let enteredPin = "", pinLength = 4;
-    localStorage.setItem('did', deviceId);
+// ==================== GLOBALS ====================
+let currentUser = null, userIsExpired = false;
+let allData = { channels: [], movies: [], genres: [], carousel: [], tips: [], bettingTips: [], downloads: [] };
+let currentMovieId = null, currentMovieData = null;
+let currentSlide = 0, slideInterval = null;
+let player = null, shakaPlayer = null;
+let deviceId = localStorage.getItem('did') || 'dev_' + Date.now();
+let currentLang = localStorage.getItem('language') || 'en';
+let favoritesSet = new Set();
+let appSettings = { cardSize: 'medium', fontSize: 'medium', carouselInterval: 5000, lockedChannels: [], freeChannels: [], channelScripts: {} };
+let deviceCheckInterval = null;
+let enteredPin = "", pinLength = 4;
+let firebaseListeners = []; // Track listeners for cleanup
+localStorage.setItem('did', deviceId);
 
-    // ==================== AUTH & INIT ====================
-    function showToast(msg, type='info') {
-        const wrap = document.getElementById('toastWrap');
-        const toast = document.createElement('div');
-        toast.className = `toast-msg ${type}`;
-        toast.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':'fa-info-circle'}"></i> ${msg}`;
-        wrap.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
+// ==================== UTILITY FUNCTIONS ====================
+function sanitize(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
 
-    function login() {
-        const email = document.getElementById('lemail').value, pass = document.getElementById('lpass').value;
-        if(!email || !pass) { showToast('Please enter email and password'); return; }
-        auth.signInWithEmailAndPassword(email, pass).catch(e => showToast(e.message));
-    }
-    function register() {
-        const name = document.getElementById('rname').value, email = document.getElementById('remail').value, pass = document.getElementById('rpass').value;
-        if(!name || !email || !pass) { showToast('Please fill all fields'); return; }
-        auth.createUserWithEmailAndPassword(email, pass)
-            .then(user => db.ref('users/'+user.user.uid).set({ name, email, language: currentLang, activeDeviceId: deviceId, registeredAt: Date.now(), accessExpiry: Date.now() + (7*24*60*60*1000), subscriptionType: 'trial' }))
-            .then(() => showToast('Registration successful'))
-            .catch(e => showToast(e.message));
-    }
-    function showRegister() { document.getElementById('loginPage').style.display='none'; document.getElementById('regPage').style.display='block'; }
-    function showLogin() { document.getElementById('regPage').style.display='none'; document.getElementById('loginPage').style.display='block'; }
-    function changeLanguage(lang) { currentLang = lang; localStorage.setItem('language', lang); showToast('Language updated'); }
-    function checkDevice(uid) {
-        db.ref('users/'+uid).once('value').then(snap => {
+function showToast(msg, type='info') {
+    const wrap = document.getElementById('toastWrap');
+    const toast = document.createElement('div');
+    toast.className = `toast-msg ${type}`;
+    toast.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':'fa-info-circle'}"></i> ${sanitize(msg)}`;
+    wrap.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// ==================== AUTH FUNCTIONS ====================
+function login() {
+    const email = document.getElementById('lemail').value.trim();
+    const pass = document.getElementById('lpass').value;
+    if(!email || !pass) { showToast('Please enter email and password', 'error'); return; }
+    
+    auth.signInWithEmailAndPassword(email, pass)
+        .catch(e => {
+            console.error('Login error:', e);
+            showToast(e.message || 'Login failed', 'error');
+        });
+}
+
+function register() {
+    const name = document.getElementById('rname').value.trim();
+    const email = document.getElementById('remail').value.trim();
+    const pass = document.getElementById('rpass').value;
+    
+    if(!name || !email || !pass) { showToast('Please fill all fields', 'error'); return; }
+    if(pass.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+    
+    auth.createUserWithEmailAndPassword(email, pass)
+        .then(userCredential => {
+            const uid = userCredential.user.uid;
+            return db.ref('users/'+uid).set({
+                name: sanitize(name),
+                email: sanitize(email),
+                language: currentLang,
+                activeDeviceId: deviceId,
+                registeredAt: Date.now(),
+                accessExpiry: Date.now() + (7*24*60*60*1000),
+                subscriptionType: 'trial'
+            });
+        })
+        .then(() => showToast('Registration successful! Welcome!', 'success'))
+        .catch(e => {
+            console.error('Register error:', e);
+            showToast(e.message || 'Registration failed', 'error');
+        });
+}
+
+function showRegister() {
+    document.getElementById('loginPage').style.display='none';
+    document.getElementById('regPage').style.display='block';
+}
+
+function showLogin() {
+    document.getElementById('regPage').style.display='none';
+    document.getElementById('loginPage').style.display='block';
+}
+
+function changeLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('language', lang);
+    document.querySelectorAll('.language-option').forEach(opt => {
+        opt.classList.toggle('active', opt.dataset.lang === lang);
+    });
+    showToast(`Language changed to ${lang.toUpperCase()}`, 'success');
+}
+
+// ==================== DEVICE MANAGEMENT ====================
+function checkDevice(uid) {
+    db.ref('users/'+uid).once('value')
+        .then(snap => {
             const u = snap.val();
-            if(!u || u.isBlocked) { auth.signOut(); showToast('Account blocked or not found'); return; }
-            if(!u.activeDeviceId || u.activeDeviceId === deviceId) initializeApp(uid, u);
-            else {
+            if(!u) { auth.signOut(); showToast('Account not found', 'error'); return; }
+            if(u.isBlocked) { auth.signOut(); showToast('Account is blocked', 'error'); return; }
+            
+            if(!u.activeDeviceId || u.activeDeviceId === deviceId) {
+                initializeApp(uid, u);
+            } else {
                 showDeviceWait(uid);
                 createDeviceRequest(uid);
                 startDeviceApprovalCheck(uid);
             }
+        })
+        .catch(e => {
+            console.error('Device check error:', e);
+            showToast('Connection error', 'error');
         });
-    }
-    function createDeviceRequest(uid) {
-        const user = auth.currentUser;
-        if(!user) return;
-        db.ref('deviceRequests/'+uid).set({
-            email: user.email,
-            deviceId: deviceId,
-            status: 'pending',
-            timestamp: Date.now(),
-            userName: user.displayName || user.email,
-            userUid: uid,
-            userEmail: user.email
-        }).catch(e => console.log(e));
-    }
-    function startDeviceApprovalCheck(uid) {
-        if(deviceCheckInterval) clearInterval(deviceCheckInterval);
-        deviceCheckInterval = setInterval(() => {
-            db.ref('deviceRequests/'+uid).once('value').then(s => {
+}
+
+function createDeviceRequest(uid) {
+    const user = auth.currentUser;
+    if(!user) return;
+    db.ref('deviceRequests/'+uid).set({
+        email: user.email,
+        deviceId: deviceId,
+        status: 'pending',
+        timestamp: Date.now(),
+        userName: user.displayName || user.email,
+        userUid: uid,
+        userEmail: user.email
+    }).catch(e => console.log('Device request error:', e));
+}
+
+function startDeviceApprovalCheck(uid) {
+    if(deviceCheckInterval) clearInterval(deviceCheckInterval);
+    deviceCheckInterval = setInterval(() => {
+        db.ref('deviceRequests/'+uid).once('value')
+            .then(s => {
                 const r = s.val();
                 if(r && r.status === 'approved' && r.deviceId === deviceId) {
                     db.ref('users/'+uid).update({ activeDeviceId: deviceId });
                     clearInterval(deviceCheckInterval);
-                    document.getElementById('deviceOverlay').classList.add('hidden');
+                    const overlay = document.getElementById('deviceOverlay');
+                    if(overlay) overlay.remove();
                     location.reload();
                 } else if(r && r.status === 'rejected') {
                     clearInterval(deviceCheckInterval);
-                    document.getElementById('deviceMsg').innerText = "❌ Device request rejected. Contact admin.";
-                    document.getElementById('refreshDevBtn').style.display = 'block';
+                    const msg = document.getElementById('deviceMsg');
+                    if(msg) msg.innerHTML = "❌ Device request rejected. Contact admin.";
+                    const btn = document.getElementById('refreshDevBtn');
+                    if(btn) btn.style.display = 'block';
                 }
-            });
-        }, 3000);
+            })
+            .catch(e => console.log('Approval check error:', e));
+    }, 5000);
+}
+
+function showDeviceWait(uid) {
+    let overlay = document.getElementById('deviceOverlay');
+    if(!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'deviceOverlay';
+        overlay.className = 'pin-lock-overlay';
+        overlay.innerHTML = `
+            <i class="fas fa-mobile-alt" style="font-size:3rem; color:var(--ios-orange);"></i>
+            <h2>Device Verification Required</h2>
+            <p id="deviceMsg">⏳ Waiting for Admin Approval...</p>
+            <button id="refreshDevBtn" class="ios-button" style="width:auto; padding:12px 24px; margin: 10px 0;" onclick="refreshDeviceStatus()">Check Status</button>
+            <button class="ios-button ios-button-secondary" onclick="auth.signOut(); location.reload();">Back to Login</button>
+        `;
+        document.body.appendChild(overlay);
     }
-    function showDeviceWait(uid) {
-        let overlay = document.getElementById('deviceOverlay');
-        if(!overlay) {
-            overlay = document.createElement('div');
-            overlay.id = 'deviceOverlay';
-            overlay.className = 'pin-lock-overlay';
-            overlay.innerHTML = `
-                <i class="fas fa-mobile-alt" style="font-size:3rem; color:var(--ios-orange);"></i>
-                <h2>Device Verification Required</h2>
-                <p id="deviceMsg">⏳ Waiting for Admin Approval...</p>
-                <button id="refreshDevBtn" class="ios-button" style="width:auto; padding:12px 24px;" onclick="refreshDeviceStatus()">Check Status</button>
-                <button class="ios-button ios-button-secondary" onclick="auth.signOut(); location.reload();">Back to Login</button>
-            `;
-            document.body.appendChild(overlay);
-        }
-        overlay.classList.remove('hidden');
-        document.getElementById('mainApp').style.display = 'none';
-        document.getElementById('authPages').style.display = 'none';
+    overlay.classList.remove('hidden');
+    document.getElementById('mainApp').style.display = 'none';
+    document.getElementById('authPages').style.display = 'none';
+}
+
+function refreshDeviceStatus() {
+    if(deviceCheckInterval) {
+        clearInterval(deviceCheckInterval);
+        startDeviceApprovalCheck(auth.currentUser?.uid);
+        showToast("Checking status...", 'info');
     }
-    function refreshDeviceStatus() {
-        if(deviceCheckInterval) {
-            clearInterval(deviceCheckInterval);
-            startDeviceApprovalCheck(auth.currentUser.uid);
-            showToast("Checking status...");
-        }
+}
+
+// ==================== APP INITIALIZATION ====================
+function initializeApp(uid, userData) {
+    currentUser = { uid: uid, ...userData };
+    userIsExpired = userData.accessExpiry && userData.accessExpiry < Date.now();
+    if(userData.language) currentLang = userData.language;
+    
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    document.getElementById('pName').textContent = sanitize(userData.name || 'User');
+    document.getElementById('pEmail').textContent = sanitize(userData.email || '');
+    
+    const days = userData.accessExpiry ? Math.ceil((userData.accessExpiry - Date.now())/(1000*60*60*24)) : 0;
+    const daysEl = document.getElementById('pDays');
+    daysEl.textContent = userIsExpired ? '❌ Expired' : `⏰ ${days} days left`;
+    daysEl.style.color = userIsExpired ? 'var(--ios-red)' : 'var(--ios-blue)';
+    
+    loadEssentialData();
+    loadFavorites();
+    updateFavoritesSet();
+    showToast('Welcome to STANY MIN TV! 🎬', 'success');
+}
+
+auth.onAuthStateChanged(u => {
+    if(u) {
+        document.getElementById('authPages').style.display='none';
+        document.getElementById('loader').style.display='flex';
+        setTimeout(() => checkDevice(u.uid), 1000);
+    } else {
+        document.getElementById('authPages').style.display='flex';
+        document.getElementById('mainApp').style.display='none';
+        document.getElementById('loader').style.display='none';
     }
-    function initializeApp(uid, userData) {
-        currentUser = { uid: uid, ...userData };
-        userIsExpired = userData.accessExpiry && userData.accessExpiry < Date.now();
-        if(userData.language) currentLang = userData.language;
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        document.getElementById('pName').textContent = userData.name || 'User';
-        document.getElementById('pEmail').textContent = userData.email;
-        const days = userData.accessExpiry ? Math.ceil((userData.accessExpiry - Date.now())/(1000*60*60*24)) : 0;
-        document.getElementById('pDays').textContent = userIsExpired ? 'Expired' : days + ' days left';
-        loadEssentialData();
-        loadFavorites();
-        updateFavoritesSet();
-        showToast('Welcome to STANY MIN TV');
-    }
-    auth.onAuthStateChanged(u => {
-        if(u) { document.getElementById('authPages').style.display='none'; document.getElementById('loader').style.display='flex'; setTimeout(() => checkDevice(u.uid), 1000); }
-        else { document.getElementById('authPages').style.display='flex'; document.getElementById('mainApp').style.display='none'; document.getElementById('loader').style.display='none'; }
+});
+
+// ==================== DATA LOADING ====================
+function loadEssentialData() {
+    // Clear existing listeners to prevent duplicates
+    firebaseListeners.forEach(ref => ref.off());
+    firebaseListeners = [];
+    
+    const channelsRef = db.ref('channels');
+    channelsRef.on('value', s => {
+        allData.channels = [];
+        s.forEach(c => {
+            const val = c.val();
+            if(val) allData.channels.push({ id: c.key, type: 'channel', ...val });
+        });
+        updateAll();
     });
-
-    // ==================== LOAD DATA ====================
-    function loadEssentialData() {
-        db.ref('channels').on('value', s => { allData.channels = []; s.forEach(c => allData.channels.push({ id: c.key, type: 'channel', ...c.val() })); updateAll(); });
-        db.ref('movies').on('value', s => { allData.movies = []; s.forEach(m => allData.movies.push({ id: m.key, type: 'movie', ...m.val() })); updateAll(); });
-        db.ref('genres').on('value', s => { allData.genres = []; s.forEach(g => allData.genres.push({ id: g.key, name: g.val().name })); updateAll(); });
-        db.ref('carousel').on('value', s => { allData.carousel = []; s.forEach(slide => allData.carousel.push(slide.val())); renderSlider(); });
-        db.ref('tips').on('value', s => { allData.tips = []; s.forEach(t => allData.tips.push(t.val())); renderTips(); });
-        db.ref('bettingTips').on('value', s => { allData.bettingTips = []; s.forEach(t => allData.bettingTips.push(t.val())); renderBettingTips(); });
-        db.ref('downloadableMovies').on('value', s => { allData.downloads = []; s.forEach(d => allData.downloads.push(d.val())); renderDownloads(); });
-        db.ref('appSettings').on('value', s => { if(s.exists()) appSettings = { ...appSettings, ...s.val() }; applyAppSettings(); });
-    }
-    function updateAll() { renderHomePage(); renderAllChannels(); renderAllMovies(); }
-    function applyAppSettings() {
-        document.body.classList.remove('small-cards', 'large-cards', 'small-font', 'large-font');
-        if(appSettings.cardSize === 'small') document.body.classList.add('small-cards');
-        else if(appSettings.cardSize === 'large') document.body.classList.add('large-cards');
-        if(appSettings.fontSize === 'small') document.body.classList.add('small-font');
-        else if(appSettings.fontSize === 'large') document.body.classList.add('large-font');
-        if(appSettings.carouselInterval) { if(slideInterval) clearInterval(slideInterval); if(document.querySelectorAll('.slide').length > 1) startAutoSlide(document.querySelectorAll('.slide').length, appSettings.carouselInterval); }
-    }
-
-    // ==================== RENDER HOME (CATEGORIES with NH BOX layout) ====================
-    function renderHomePage() {
-        const container = document.getElementById('homeContent');
-        if (!container) return;
-        container.innerHTML = '';
-        const categoryMap = new Map();
-        allData.genres.forEach(g => categoryMap.set(g.name, { channels: [], movies: [] }));
-        categoryMap.set('Uncategorized', { channels: [], movies: [] });
-        allData.channels.forEach(ch => {
-            const cats = ch.categories && Array.isArray(ch.categories) ? ch.categories : (ch.genre ? [ch.genre] : []);
-            if(cats.length===0) categoryMap.get('Uncategorized').channels.push(ch);
-            else cats.forEach(cat => { if(!categoryMap.has(cat)) categoryMap.set(cat,{channels:[],movies:[]}); categoryMap.get(cat).channels.push(ch); });
+    firebaseListeners.push(channelsRef);
+    
+    const moviesRef = db.ref('movies');
+    moviesRef.on('value', s => {
+        allData.movies = [];
+        s.forEach(m => {
+            const val = m.val();
+            if(val) allData.movies.push({ id: m.key, type: 'movie', ...val });
         });
-        allData.movies.forEach(m => {
-            const cats = m.genre && Array.isArray(m.genre) ? m.genre : (m.genre ? [m.genre] : []);
-            if(cats.length===0) categoryMap.get('Uncategorized').movies.push(m);
-            else cats.forEach(cat => { if(!categoryMap.has(cat)) categoryMap.set(cat,{channels:[],movies:[]}); categoryMap.get(cat).movies.push(m); });
+        updateAll();
+    });
+    firebaseListeners.push(moviesRef);
+    
+    const genresRef = db.ref('genres');
+    genresRef.on('value', s => {
+        allData.genres = [];
+        s.forEach(g => {
+            const val = g.val();
+            if(val) allData.genres.push({ id: g.key, name: val.name });
         });
-        for (let [catName, items] of categoryMap) {
-            if(items.channels.length===0 && items.movies.length===0) continue;
-            const section = document.createElement('div');
-            section.className = 'category-section';
-            section.innerHTML = `<div class="category-header"><h3>${catName}</h3><span class="see-all" onclick="viewAllCategory('${catName}')">See All</span></div>`;
-            if(items.channels.length>0) {
-                const channelsDiv = document.createElement('div');
-                channelsDiv.className = 'horizontal-scroll-container';
-                const cols = [];
-                for(let i=0;i<items.channels.length;i+=2) cols.push(items.channels.slice(i,i+2));
-                channelsDiv.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(ch => createCard(ch,true)).join('')}</div>`).join('');
-                section.appendChild(channelsDiv);
-            }
-            if(items.movies.length>0) {
-                const moviesDiv = document.createElement('div');
-                moviesDiv.className = 'horizontal-scroll-container';
-                const cols = [];
-                for(let i=0;i<items.movies.length;i+=2) cols.push(items.movies.slice(i,i+2));
-                moviesDiv.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(m => createCard(m,false)).join('')}</div>`).join('');
-                section.appendChild(moviesDiv);
-            }
-            container.appendChild(section);
+    });
+    firebaseListeners.push(genresRef);
+    
+    const carouselRef = db.ref('carousel');
+    carouselRef.on('value', s => {
+        allData.carousel = [];
+        s.forEach(slide => {
+            const val = slide.val();
+            if(val) allData.carousel.push(val);
+        });
+        renderSlider();
+    });
+    firebaseListeners.push(carouselRef);
+    
+    const tipsRef = db.ref('tips');
+    tipsRef.on('value', s => {
+        allData.tips = [];
+        s.forEach(t => {
+            const val = t.val();
+            if(val) allData.tips.push(val);
+        });
+        renderTips();
+    });
+    firebaseListeners.push(tipsRef);
+    
+    const bettingRef = db.ref('bettingTips');
+    bettingRef.on('value', s => {
+        allData.bettingTips = [];
+        s.forEach(t => {
+            const val = t.val();
+            if(val) allData.bettingTips.push(val);
+        });
+        renderBettingTips();
+    });
+    firebaseListeners.push(bettingRef);
+    
+    const downloadsRef = db.ref('downloadableMovies');
+    downloadsRef.on('value', s => {
+        allData.downloads = [];
+        s.forEach(d => {
+            const val = d.val();
+            if(val) allData.downloads.push(val);
+        });
+        renderDownloads();
+    });
+    firebaseListeners.push(downloadsRef);
+    
+    const settingsRef = db.ref('appSettings');
+    settingsRef.on('value', s => {
+        if(s.exists()) {
+            const val = s.val();
+            if(val) appSettings = { ...appSettings, ...val };
+            applyAppSettings();
         }
-    }
-    function renderAllChannels() {
-        const grid = document.getElementById('allChannelsGrid');
-        if(grid) {
-            const cols = [];
-            for(let i=0;i<allData.channels.length;i+=2) cols.push(allData.channels.slice(i,i+2));
-            grid.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(ch => createCard(ch,true)).join('')}</div>`).join('');
-        }
-    }
-    function renderAllMovies() {
-        const grid = document.getElementById('allMoviesGrid');
-        if(grid) {
-            const cols = [];
-            for(let i=0;i<allData.movies.length;i+=2) cols.push(allData.movies.slice(i,i+2));
-            grid.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(m => createCard(m,false)).join('')}</div>`).join('');
-        }
-    }
-    function createCard(item, isChannel) {
-        let isLocked = false;
-        if(isChannel) isLocked = userIsExpired || (appSettings.lockedChannels && appSettings.lockedChannels.includes(item.id));
-        else isLocked = userIsExpired && item.access === 'VIP';
-        const poster = item.posterURL || item.logo || 'https://via.placeholder.com/300x450';
-        const title = item.name || item.title || 'Untitled';
-        let badge = (isChannel && !isLocked) ? '<div class="live-badge">LIVE</div>' : '';
-        let playButton = (!isChannel && !isLocked) ? `<div class="play-button" onclick="event.stopPropagation(); handleClick('${item.type}','${item.id}',false)"><i class="fas fa-play"></i></div>` : '';
-        const favStar = currentUser ? `<div class="favorite-star" onclick="event.stopPropagation(); toggleFavorite('${item.type}','${item.id}')"><i class="fas ${favoritesSet.has(item.id) ? 'fa-star' : 'fa-star-o'}"></i></div>` : '';
-        return `<div class="content-card" onclick="handleClick('${item.type}','${item.id}',${isLocked})">${badge}${playButton}${favStar}${isLocked ? '<div class="locked-overlay"><i class="fas fa-lock lock-icon"></i></div>' : ''}<img src="${poster}" onerror="this.src='https://via.placeholder.com/300x450'"><div class="content-overlay"><div class="content-title">${title}</div></div></div>`;
-    }
-    function handleClick(type, id, locked) {
-        if(locked) { showToast('Content locked or subscription expired'); return; }
-        const item = type === 'channel' ? allData.channels.find(x => x.id === id) : allData.movies.find(x => x.id === id);
-        if(!item) return;
-        currentMovieId = id; currentMovieData = item;
-        openDetailsPage(item);
-    }
-    function openDetailsPage(item) {
-        document.getElementById('detailsPage').classList.add('show');
-        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-        populateMovieDetails(item);
-    }
-    function populateMovieDetails(movie) {
-        document.getElementById('dBackdrop').src = movie.backdrop_url || '';
-        const posterSrc = movie.poster_url || movie.posterURL || 'https://via.placeholder.com/180x270';
-        document.getElementById('dPoster').src = posterSrc;
-        document.getElementById('dTitleTypewriter').textContent = movie.title || movie.name || 'Untitled';
-        const infoGrid = document.getElementById('infoDetailGrid');
-        infoGrid.innerHTML = `
-            <div class="info-d-card"><div class="info-d-icon"><i class="fas fa-star"></i></div><div class="info-d-label">Rating</div><div class="info-d-value">⭐ ${movie.rating?.toFixed(1)||'0'}</div></div>
-            <div class="info-d-card"><div class="info-d-icon"><i class="fas fa-calendar"></i></div><div class="info-d-label">Year</div><div class="info-d-value">${movie.release_year||''}</div></div>
-            <div class="info-d-card"><div class="info-d-icon"><i class="fas fa-clock"></i></div><div class="info-d-label">Runtime</div><div class="info-d-value">${movie.runtime||''} min</div></div>`;
-        document.getElementById('dStoryline').textContent = movie.storyline || 'No storyline available.';
-        const castContainer = document.getElementById('castScroll');
-        if(movie.cast && movie.cast.length) {
-            castContainer.innerHTML = movie.cast.map(c => `<div class="cast-card"><img src="${c.profile_image||'https://via.placeholder.com/80'}" onerror="this.src='https://via.placeholder.com/80'"><div class="cast-actor">${c.name}</div><div class="cast-character">${c.character||''}</div></div>`).join('');
-        } else castContainer.innerHTML = '<div class="empty-state">No cast info</div>';
-        const similar = allData.movies.filter(m => m.id !== movie.id && m.genres?.some(g => movie.genres?.includes(g))).slice(0,12);
-        const similarDiv = document.getElementById('similarScroll');
-        if(similar.length) similarDiv.innerHTML = similar.map(m => `<div class="similar-card" onclick="openDetailsPageFromSimilar('${m.id}')"><img src="${m.poster_url||'https://via.placeholder.com/110x165'}" onerror="this.src='https://via.placeholder.com/110x165'"><p>${m.title}</p></div>`).join('');
-        else document.getElementById('similarSection').style.display = 'none';
-        loadComments(movie.id);
-        document.getElementById('playMovieBtn').onclick = () => playContent(movie);
-        document.getElementById('downloadBtn').onclick = () => { if(movie.movie_links) { const q = prompt('Select quality (1080p,720p,480p):'); if(q && movie.movie_links[q]) window.open(movie.movie_links[q], '_blank'); else showToast('Link not available','error'); } else showToast('No download links','error'); };
-        document.getElementById('openTrailerBtn').onclick = () => { if(movie.trailer_url) window.open(movie.trailer_url, '_blank'); else showToast('No trailer','error'); };
-    }
-    function openDetailsPageFromSimilar(id) {
-        const movie = allData.movies.find(m => m.id === id);
-        if(movie) openDetailsPage(movie);
-    }
-    function playContent(item) {
-        const url = item.m3u8Link || item.movieURL || item.mpdUrl;
-        if(!url) { showToast('No stream URL'); return; }
-        document.getElementById('playerModal').style.display = 'flex';
-        if(!player) player = videojs('videoJS', { fluid: true, autoplay: true, controls: true, responsive: true });
-        const isM3U8 = url.includes('.m3u8');
-        player.src({ src: url, type: isM3U8 ? 'application/x-mpegURL' : 'video/mp4' });
-        player.play();
-        if(currentUser) db.ref(`userWatchHistory/${currentUser.uid}/${item.id}`).set({ id: item.id, type: item.type, name: item.name || item.title, poster: item.posterURL, timestamp: Date.now() });
-    }
-    function closePlayer() { document.getElementById('playerModal').style.display = 'none'; if(player) player.pause(); }
-    function loadComments(mid) { /* simplified */ }
+    });
+    firebaseListeners.push(settingsRef);
+}
 
-    // ==================== SLIDER (NH BOX) ====================
-    function renderSlider() {
-        const movies = allData.carousel.length ? allData.carousel : allData.movies.filter(m => m.backdrop_url).slice(0,6);
-        const wrapper = document.getElementById('sliderWrapper');
-        const dots = document.getElementById('sliderDots');
-        if(movies.length===0) { wrapper.innerHTML='<div class="slide" style="display:flex;align-items:center;justify-content:center;background:#111;"><p>No slides</p></div>'; dots.innerHTML=''; return; }
-        wrapper.innerHTML = movies.map((m,i) => `<div class="slide" onclick="openDetailsPageFromSimilar('${m.id||''}')"><img src="${m.imageURL || m.backdrop_url || 'https://via.placeholder.com/800x400'}" onerror="this.src='https://via.placeholder.com/800x400'"><div class="slide-overlay"><div class="slide-info"><h3>${m.title||m.name||'Slide'}</h3><p>${m.description||''}</p></div></div></div>`).join('');
-        dots.innerHTML = movies.map((_,i) => `<div class="s-dot ${i===0?'active':''}" data-slide-index="${i}"></div>`).join('');
-        currentSlide=0; startAutoSlide(movies.length, appSettings.carouselInterval);
-        attachSliderEvents(movies.length);
-    }
-    function startAutoSlide(total, interval=5000) {
-        if(slideInterval) clearInterval(slideInterval);
-        slideInterval = setInterval(()=>{ currentSlide=(currentSlide+1)%total; updateSlider(); }, interval);
-    }
-    function updateSlider() { document.getElementById('sliderWrapper').style.transform=`translateX(-${currentSlide*100}%)`; document.querySelectorAll('.s-dot').forEach((d,i)=>d.classList.toggle('active',i===currentSlide)); }
-    function attachSliderEvents(total) {
-        const wrapper=document.getElementById('sliderWrapper'); let startX=0;
-        wrapper.addEventListener('touchstart',e=>startX=e.touches[0].clientX,{passive:true});
-        wrapper.addEventListener('touchend',e=>{
-            const diff=startX-e.changedTouches[0].clientX;
-            if(Math.abs(diff)>50){
-                if(diff>0) currentSlide=(currentSlide+1)%total;
-                else currentSlide=(currentSlide-1+total)%total;
-                updateSlider(); clearInterval(slideInterval); startAutoSlide(total, appSettings.carouselInterval);
-            }
-        });
-        document.querySelectorAll('.s-dot').forEach(dot=>{
-            dot.onclick=()=>{ currentSlide=parseInt(dot.dataset.slideIndex); updateSlider(); clearInterval(slideInterval); startAutoSlide(total, appSettings.carouselInterval); };
-        });
-    }
+function updateAll() {
+    renderHomePage();
+    renderAllChannels();
+    renderAllMovies();
+}
 
-    // ==================== FAVORITES ====================
-    function updateFavoritesSet() { if(!currentUser) return; db.ref(`userFavorites/${currentUser.uid}`).once('value', snap => { favoritesSet.clear(); snap.forEach(f => favoritesSet.add(f.key)); }); }
-    function toggleFavorite(type, id) {
-        if(!currentUser) { showToast('Please login to add favorites'); return; }
-        const favRef = db.ref(`userFavorites/${currentUser.uid}/${id}`);
-        favRef.once('value', snap => {
-            if(snap.exists()) { favRef.remove(); favoritesSet.delete(id); showToast('Removed from favorites'); }
-            else { favRef.set({ type, addedAt: Date.now() }); favoritesSet.add(id); showToast('Added to favorites'); }
-            if(document.getElementById('favorites').classList.contains('active')) loadFavorites();
-            renderHomePage();
-        });
+function applyAppSettings() {
+    document.body.classList.remove('small-cards', 'large-cards', 'small-font', 'large-font');
+    if(appSettings.cardSize === 'small') document.body.classList.add('small-cards');
+    else if(appSettings.cardSize === 'large') document.body.classList.add('large-cards');
+    if(appSettings.fontSize === 'small') document.body.classList.add('small-font');
+    else if(appSettings.fontSize === 'large') document.body.classList.add('large-font');
+    
+    if(slideInterval) clearInterval(slideInterval);
+    if(appSettings.carouselInterval && document.querySelectorAll('.slide').length > 1) {
+        startAutoSlide(document.querySelectorAll('.slide').length, appSettings.carouselInterval);
     }
-    function loadFavorites() {
-        if(!currentUser) return;
-        db.ref(`userFavorites/${currentUser.uid}`).on('value', snap => {
-            const container=document.getElementById('favoritesContent'); container.innerHTML='';
-            if(!snap.exists()) { container.innerHTML='<div class="empty-state">No favorites</div>'; return; }
-            snap.forEach(fav=>{
-                const item=allData.channels.find(c=>c.id===fav.key) || allData.movies.find(m=>m.id===fav.key);
-                if(item) container.innerHTML+=`<div class="download-item" style="display:flex; gap:12px; background:var(--ios-card); padding:12px; border-radius:12px; margin-bottom:8px;"><div><div style="font-weight:600;">${item.name||item.title}</div><div style="color:var(--ios-gray);">${item.type}</div></div><button class="ios-button" style="padding:8px 16px; width:auto;" onclick="handleClick('${item.type}','${item.id}',false)">Watch</button></div>`;
-            });
-        });
-    }
+}
 
-    // ==================== TIPS & BETTING TIPS ====================
-    function renderTips() {
-        const container = document.getElementById('tipsContent');
-        container.innerHTML = allData.tips.map(t => `<div class="tip-card" style="background:var(--ios-card); padding:16px; border-radius:16px; margin-bottom:12px;"><div class="tip-title" style="font-weight:600; margin-bottom:8px;">${t.title}</div><div class="tip-content" style="color:var(--ios-gray);">${t.content}</div></div>`).join('');
-    }
-    function renderBettingTips() {
-        const container = document.getElementById('bettingTipsContent');
-        container.innerHTML = allData.bettingTips.map(t => `<div class="betting-tip-card" style="background:var(--ios-card); padding:16px; border-radius:16px; margin-bottom:12px;"><div class="betting-tip-teams" style="font-weight:600; margin-bottom:4px;">${t.team1} vs ${t.team2}</div><div class="betting-tip-title" style="font-weight:500;">${t.title}</div><div class="betting-tip-prediction" style="background:rgba(255,0,0,0.1); padding:4px 8px; border-radius:20px; display:inline-block; margin:8px 0;">${t.prediction}</div><div class="betting-tip-odds" style="color:var(--ios-orange);">Odds: ${t.odds}</div></div>`).join('');
-    }
-    function renderDownloads() {
-        const container = document.getElementById('dlContent');
-        container.innerHTML = allData.downloads.map(d => `<div class="download-item" style="background:var(--ios-card); padding:12px; border-radius:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;"><div><div style="font-weight:600;">${d.title}</div><div style="color:var(--ios-gray);">${d.description||''}</div></div><a href="${d.downloadURL}" target="_blank" class="ios-button" style="padding:8px 16px; width:auto;">Download</a></div>`).join('');
-    }
-
-    // ==================== CHAT ====================
-    function sendChat() {
-        if(!currentUser) return;
-        const text = document.getElementById('chatInput').value.trim();
-        if(!text) return;
-        db.ref(`stanyBotMessages/${currentUser.uid}`).push({ text, sender: 'user', timestamp: Date.now() });
-        document.getElementById('chatInput').value = '';
-        setTimeout(() => {
-            db.ref(`stanyBotMessages/${currentUser.uid}`).push({ text: "Admin will reply soon.", sender: 'admin', timestamp: Date.now() });
-        }, 1000);
-    }
-    function listenChat() {
-        if(!currentUser) return;
-        db.ref(`stanyBotMessages/${currentUser.uid}`).on('value', snap => {
-            const container = document.getElementById('chatBox');
-            container.innerHTML = '';
-            const msgs = [];
-            snap.forEach(msg => msgs.push(msg.val()));
-            msgs.sort((a,b)=>a.timestamp-b.timestamp);
-            msgs.forEach(msg => {
-                const div = document.createElement('div');
-                div.className = `chat-msg ${msg.sender==='user'?'sent':'received'}`;
-                div.textContent = msg.text;
-                container.appendChild(div);
-            });
-            container.scrollTop = container.scrollHeight;
-        });
-    }
-
-    // ==================== PIN LOCK ====================
-    function checkPinLock() {
-        const pin = localStorage.getItem('appPin'), enabled = localStorage.getItem('appLockEnabled')==='true';
-        if(enabled && pin) {
-            pinLength = pin.length;
-            renderPinDots();
-            initPinKeypad();
-            document.getElementById('pinLockOverlay').classList.remove('hidden');
-            document.getElementById('mainApp').style.display = 'none';
+// ==================== HOME PAGE RENDERING ====================
+function renderHomePage() {
+    const container = document.getElementById('homeContent');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    const categoryMap = new Map();
+    allData.genres.forEach(g => categoryMap.set(g.name, { channels: [], movies: [] }));
+    categoryMap.set('Uncategorized', { channels: [], movies: [] });
+    
+    // Group channels by category
+    allData.channels.forEach(ch => {
+        const cats = (ch.categories && Array.isArray(ch.categories)) ? ch.categories : (ch.genre ? [ch.genre] : []);
+        if(cats.length===0) {
+            categoryMap.get('Uncategorized').channels.push(ch);
         } else {
+            cats.forEach(cat => {
+                if(!categoryMap.has(cat)) categoryMap.set(cat,{channels:[],movies:[]});
+                categoryMap.get(cat).channels.push(ch);
+            });
+        }
+    });
+    
+    // Group movies by category
+    allData.movies.forEach(m => {
+        const cats = (m.genre && Array.isArray(m.genre)) ? m.genre : (m.genre ? [m.genre] : []);
+        if(cats.length===0) {
+            categoryMap.get('Uncategorized').movies.push(m);
+        } else {
+            cats.forEach(cat => {
+                if(!categoryMap.has(cat)) categoryMap.set(cat,{channels:[],movies:[]});
+                categoryMap.get(cat).movies.push(m);
+            });
+        }
+    });
+    
+    // Render each category
+    for (let [catName, items] of categoryMap) {
+        if(items.channels.length===0 && items.movies.length===0) continue;
+        
+        const section = document.createElement('div');
+        section.className = 'category-section';
+        section.innerHTML = `<div class="category-header"><h3>${sanitize(catName)}</h3><span class="see-all" onclick="viewAllCategory('${sanitize(catName)}')">See All</span></div>`;
+        
+        if(items.channels.length>0) {
+            const channelsDiv = document.createElement('div');
+            channelsDiv.className = 'horizontal-scroll-container';
+            const cols = [];
+            for(let i=0;i<items.channels.length;i+=2) cols.push(items.channels.slice(i,i+2));
+            channelsDiv.innerHTML = cols.map(col => 
+                `<div class="scroll-column">${col.map(ch => createCard(ch,true)).join('')}</div>`
+            ).join('');
+            section.appendChild(channelsDiv);
+        }
+        if(items.movies.length>0) {
+            const moviesDiv = document.createElement('div');
+            moviesDiv.className = 'horizontal-scroll-container';
+            const cols = [];
+            for(let i=0;i<items.movies.length;i+=2) cols.push(items.movies.slice(i,i+2));
+            moviesDiv.innerHTML = cols.map(col => 
+                `<div class="scroll-column">${col.map(m => createCard(m,false)).join('')}</div>`
+            ).join('');
+            section.appendChild(moviesDiv);
+        }
+        container.appendChild(section);
+    }
+}
+
+function renderAllChannels() {
+    const grid = document.getElementById('allChannelsGrid');
+    if(grid) {
+        if(allData.channels.length === 0) {
+            grid.innerHTML = '<div class="empty-state">No channels available</div>';
+            return;
+        }
+        const cols = [];
+        for(let i=0;i<allData.channels.length;i+=2) cols.push(allData.channels.slice(i,i+2));
+        grid.innerHTML = cols.map(col => 
+            `<div class="scroll-column">${col.map(ch => createCard(ch,true)).join('')}</div>`
+        ).join('');
+    }
+}
+
+function renderAllMovies() {
+    const grid = document.getElementById('allMoviesGrid');
+    if(grid) {
+        if(allData.movies.length === 0) {
+            grid.innerHTML = '<div class="empty-state">No movies available</div>';
+            return;
+        }
+        const cols = [];
+        for(let i=0;i<allData.movies.length;i+=2) cols.push(allData.movies.slice(i,i+2));
+        grid.innerHTML = cols.map(col => 
+            `<div class="scroll-column">${col.map(m => createCard(m,false)).join('')}</div>`
+        ).join('');
+    }
+}
+
+function createCard(item, isChannel) {
+    let isLocked = false;
+    if(isChannel) {
+        isLocked = userIsExpired || (appSettings.lockedChannels && appSettings.lockedChannels.includes(item.id));
+    } else {
+        isLocked = userIsExpired && item.access === 'VIP';
+    }
+    
+    const poster = item.posterURL || item.logo || item.poster_url || 'https://via.placeholder.com/300x450/1a1a1a/666?text=No+Image';
+    const title = sanitize(item.name || item.title || 'Untitled');
+    
+    let badge = (isChannel && !isLocked) ? '<div class="live-badge">LIVE</div>' : '';
+    let playButton = (!isChannel && !isLocked) ? 
+        `<div class="play-button" onclick="event.stopPropagation(); handleClick('${item.type}','${item.id}',false)"><i class="fas fa-play"></i></div>` : '';
+    
+    const favStar = currentUser ? 
+        `<div class="favorite-star" onclick="event.stopPropagation(); toggleFavorite('${item.type}','${item.id}')">
+            <i class="fas ${favoritesSet.has(item.id) ? 'fa-star' : 'fa-star-o'}"></i>
+        </div>` : '';
+    
+    return `
+        <div class="content-card" onclick="handleClick('${item.type}','${item.id}',${isLocked})">
+            ${badge}
+            ${playButton}
+            ${favStar}
+            ${isLocked ? '<div class="locked-overlay"><i class="fas fa-lock lock-icon"></i></div>' : ''}
+            <img src="${sanitize(poster)}" onerror="this.src='https://via.placeholder.com/300x450/1a1a1a/666?text=No+Image'" loading="lazy">
+            <div class="content-overlay">
+                <div class="content-title">${title}</div>
+            </div>
+        </div>
+    `;
+}
+
+// ==================== CONTENT HANDLING ====================
+function handleClick(type, id, locked) {
+    if(locked) { showToast('Content locked or subscription expired', 'error'); return; }
+    
+    const item = type === 'channel' ? 
+        allData.channels.find(x => x.id === id) : 
+        allData.movies.find(x => x.id === id);
+    
+    if(!item) { showToast('Content not found', 'error'); return; }
+    
+    currentMovieId = id;
+    currentMovieData = item;
+    openDetailsPage(item);
+}
+
+function openDetailsPage(item) {
+    // Hide all pages and show details
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('detailsPage').classList.add('show');
+    document.getElementById('detailsPage').classList.add('active');
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+    
+    populateMovieDetails(item);
+}
+
+function populateMovieDetails(movie) {
+    // Set backdrop and poster
+    const backdropSrc = movie.backdrop_url || movie.backdropURL || 'https://via.placeholder.com/800x400/1a1a1a/666?text=No+Backdrop';
+    document.getElementById('dBackdrop').src = sanitize(backdropSrc);
+    
+    const posterSrc = movie.poster_url || movie.posterURL || movie.poster || 'https://via.placeholder.com/180x270/1a1a1a/666?text=No+Poster';
+    document.getElementById('dPoster').src = sanitize(posterSrc);
+    
+    // Set title with typing effect
+    const title = movie.title || movie.name || 'Untitled';
+    document.getElementById('dTitleTypewriter').textContent = sanitize(title);
+    
+    // Info grid
+    const rating = typeof movie.rating === 'number' ? movie.rating.toFixed(1) : 'N/A';
+    const year = movie.release_year || movie.year || 'N/A';
+    const runtime = movie.runtime || movie.duration || 'N/A';
+    
+    document.getElementById('infoDetailGrid').innerHTML = `
+        <div class="info-d-card">
+            <div class="info-d-icon"><i class="fas fa-star"></i></div>
+            <div class="info-d-label">Rating</div>
+            <div class="info-d-value">⭐ ${rating}</div>
+        </div>
+        <div class="info-d-card">
+            <div class="info-d-icon"><i class="fas fa-calendar"></i></div>
+            <div class="info-d-label">Year</div>
+            <div class="info-d-value">${sanitize(year)}</div>
+        </div>
+        <div class="info-d-card">
+            <div class="info-d-icon"><i class="fas fa-clock"></i></div>
+            <div class="info-d-label">Runtime</div>
+            <div class="info-d-value">${sanitize(runtime)} min</div>
+        </div>
+    `;
+    
+    // Storyline
+    const storyline = movie.storyline || movie.description || 'No storyline available.';
+    const storyEl = document.getElementById('dStoryline');
+    storyEl.textContent = sanitize(storyline);
+    storyEl.classList.remove('expanded');
+    document.getElementById('readMoreBtn').textContent = 'Read More';
+    
+    // Cast
+    const castContainer = document.getElementById('castScroll');
+    if(movie.cast && Array.isArray(movie.cast) && movie.cast.length) {
+        castContainer.innerHTML = movie.cast.map(c => `
+            <div class="cast-card">
+                <img src="${sanitize(c.profile_image || c.image || 'https://via.placeholder.com/80/1a1a1a/666?text=No+Photo')}" 
+                     onerror="this.src='https://via.placeholder.com/80/1a1a1a/666?text=No+Photo'" loading="lazy">
+                <div class="cast-actor">${sanitize(c.name || 'Unknown')}</div>
+                <div class="cast-character">${sanitize(c.character || '')}</div>
+            </div>
+        `).join('');
+    } else {
+        castContainer.innerHTML = '<div class="empty-state">No cast info available</div>';
+    }
+    
+    // Similar movies
+    const similar = allData.movies
+        .filter(m => m.id !== movie.id && 
+                    m.genres?.some(g => movie.genres?.includes(g)))
+        .slice(0, 12);
+    
+    const similarDiv = document.getElementById('similarScroll');
+    if(similar.length) {
+        similarDiv.innerHTML = similar.map(m => `
+            <div class="similar-card" onclick="openDetailsPageFromSimilar('${sanitize(m.id)}')">
+                <img src="${sanitize(m.poster_url || m.posterURL || 'https://via.placeholder.com/110x165/1a1a1a/666?text=No+Poster')}" 
+                     onerror="this.src='https://via.placeholder.com/110x165/1a1a1a/666?text=No+Poster'" loading="lazy">
+                <p>${sanitize(m.title || m.name || 'Untitled')}</p>
+            </div>
+        `).join('');
+    } else {
+        similarDiv.innerHTML = '<div class="empty-state">No recommendations</div>';
+    }
+    
+    // Buttons
+    document.getElementById('playMovieBtn').onclick = () => playContent(movie);
+    document.getElementById('downloadBtn').onclick = () => {
+        if(movie.movie_links) {
+            const qualities = Object.keys(movie.movie_links);
+            if(qualities.length === 1) {
+                window.open(movie.movie_links[qualities[0]], '_blank');
+            } else {
+                const q = prompt('Select quality: ' + qualities.join(', '));
+                if(q && movie.movie_links[q]) {
+                    window.open(movie.movie_links[q], '_blank');
+                } else {
+                    showToast('Invalid quality or link not available', 'error');
+                }
+            }
+        } else if(movie.downloadURL) {
+            window.open(movie.downloadURL, '_blank');
+        } else {
+            showToast('No download links available', 'error');
+        }
+    };
+    document.getElementById('openTrailerBtn').onclick = () => {
+        if(movie.trailer_url || movie.trailer) {
+            window.open(movie.trailer_url || movie.trailer, '_blank');
+        } else {
+            showToast('No trailer available', 'error');
+        }
+    };
+    
+    // Comments section (simplified)
+    loadComments(movie.id);
+}
+
+function openDetailsPageFromSimilar(id) {
+    const movie = allData.movies.find(m => m.id === id);
+    if(movie) openDetailsPage(movie);
+    else showToast('Movie not found', 'error');
+}
+
+function toggleStoryline() {
+    const el = document.getElementById('dStoryline');
+    const btn = document.getElementById('readMoreBtn');
+    if(el.classList.contains('expanded')) {
+        el.classList.remove('expanded');
+        btn.textContent = 'Read More';
+    } else {
+        el.classList.add('expanded');
+        btn.textContent = 'Read Less';
+    }
+}
+
+// ==================== VIDEO PLAYER ====================
+function playContent(item) {
+    const url = item.m3u8Link || item.stream_url || item.movieURL || item.mpdUrl || item.url;
+    if(!url) { showToast('No stream URL available', 'error'); return; }
+    
+    document.getElementById('playerModal').classList.add('show');
+    
+    // Initialize Video.js if not already
+    if(!player) {
+        player = videojs('videoJS', {
+            fluid: true,
+            autoplay: true,
+            controls: true,
+            responsive: true,
+            preload: 'auto',
+            html5: {
+                hls: { overrideNative: true }
+            }
+        });
+    }
+    
+    // Determine content type
+    const isM3U8 = url.includes('.m3u8');
+    const isMPD = url.includes('.mpd');
+    const contentType = isM3U8 ? 'application/x-mpegURL' : (isMPD ? 'application/dash+xml' : 'video/mp4');
+    
+    // Set source and play
+    player.src({ src: url, type: contentType });
+    player.play().catch(e => {
+        console.log('Autoplay prevented:', e);
+        showToast('Click play to start', 'info');
+    });
+    
+    // Track watch history
+    if(currentUser) {
+        db.ref(`userWatchHistory/${currentUser.uid}/${item.id}`).set({
+            id: item.id,
+            type: item.type,
+            name: item.name || item.title,
+            poster: item.posterURL,
+            timestamp: Date.now()
+        }).catch(e => console.log('History error:', e));
+    }
+}
+
+function closePlayer() {
+    document.getElementById('playerModal').classList.remove('show');
+    if(player) {
+        player.pause();
+        player.reset();
+    }
+}
+
+// ==================== SLIDER ====================
+function renderSlider() {
+    const movies = allData.carousel.length ? allData.carousel : 
+                   allData.movies.filter(m => m.backdrop_url || m.backdropURL).slice(0, 6);
+    
+    const wrapper = document.getElementById('sliderWrapper');
+    const dots = document.getElementById('sliderDots');
+    
+    if(movies.length === 0) {
+        wrapper.innerHTML = '<div class="slide" style="display:flex;align-items:center;justify-content:center;background:#111;"><p>No featured content</p></div>';
+        dots.innerHTML = '';
+        return;
+    }
+    
+    wrapper.innerHTML = movies.map((m, i) => `
+        <div class="slide" onclick="openDetailsPageFromSimilar('${sanitize(m.id || '')}')">
+            <img src="${sanitize(m.imageURL || m.backdrop_url || m.backdropURL || 'https://via.placeholder.com/800x400/1a1a1a/666?text=No+Image')}" 
+                 onerror="this.src='https://via.placeholder.com/800x400/1a1a1a/666?text=No+Image'" loading="lazy">
+            <div class="slide-overlay">
+                <div class="slide-info">
+                    <h3>${sanitize(m.title || m.name || 'Featured')}</h3>
+                    <p>${sanitize(m.description || '').substring(0, 100)}${(m.description?.length > 100) ? '...' : ''}</p>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    dots.innerHTML = movies.map((_, i) => 
+        `<div class="s-dot ${i===0?'active':''}" data-slide-index="${i}" onclick="goToSlide(${i})"></div>`
+    ).join('');
+    
+    currentSlide = 0;
+    startAutoSlide(movies.length, appSettings.carouselInterval || 5000);
+    attachSliderEvents(movies.length);
+}
+
+function startAutoSlide(total, interval = 5000) {
+    if(slideInterval) clearInterval(slideInterval);
+    slideInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % total;
+        updateSlider();
+    }, interval);
+}
+
+function goToSlide(index) {
+    currentSlide = index;
+    updateSlider();
+    if(slideInterval) {
+        clearInterval(slideInterval);
+        const total = document.querySelectorAll('.slide').length;
+        startAutoSlide(total, appSettings.carouselInterval || 5000);
+    }
+}
+
+function updateSlider() {
+    const wrapper = document.getElementById('sliderWrapper');
+    if(wrapper) wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    document.querySelectorAll('.s-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === currentSlide);
+    });
+}
+
+function attachSliderEvents(total) {
+    const wrapper = document.getElementById('sliderWrapper');
+    if(!wrapper) return;
+    
+    let startX = 0;
+    
+    wrapper.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+    }, {passive: true});
+    
+    wrapper.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if(Math.abs(diff) > 50) {
+            if(diff > 0) {
+                currentSlide = (currentSlide + 1) % total;
+            } else {
+                currentSlide = (currentSlide - 1 + total) % total;
+            }
+            updateSlider();
+            if(slideInterval) {
+                clearInterval(slideInterval);
+                startAutoSlide(total, appSettings.carouselInterval || 5000);
+            }
+        }
+    });
+}
+
+// ==================== FAVORITES ====================
+function updateFavoritesSet() {
+    if(!currentUser) return;
+    db.ref(`userFavorites/${currentUser.uid}`).once('value', snap => {
+        favoritesSet.clear();
+        snap.forEach(f => favoritesSet.add(f.key));
+    });
+}
+
+function toggleFavorite(type, id) {
+    if(!currentUser) { showToast('Please login to add favorites', 'error'); return; }
+    
+    const favRef = db.ref(`userFavorites/${currentUser.uid}/${id}`);
+    favRef.once('value', snap => {
+        if(snap.exists()) {
+            favRef.remove().then(() => {
+                favoritesSet.delete(id);
+                showToast('Removed from favorites', 'success');
+            });
+        } else {
+            favRef.set({ type, addedAt: Date.now() }).then(() => {
+                favoritesSet.add(id);
+                showToast('Added to favorites', 'success');
+            });
+        }
+        // Refresh UI
+        if(document.getElementById('favorites').classList.contains('active')) loadFavorites();
+        renderHomePage();
+    });
+}
+
+function loadFavorites() {
+    if(!currentUser) {
+        document.getElementById('favoritesContent').innerHTML = 
+            '<div class="comment-login-prompt"><p>Please sign in to view favorites</p></div>';
+        return;
+    }
+    
+    db.ref(`userFavorites/${currentUser.uid}`).on('value', snap => {
+        const container = document.getElementById('favoritesContent');
+        if(!snap.exists()) {
+            container.innerHTML = '<div class="empty-state">No favorites yet. Start adding! ❤️</div>';
+            return;
+        }
+        
+        container.innerHTML = '';
+        snap.forEach(fav => {
+            const item = allData.channels.find(c => c.id === fav.key) || 
+                        allData.movies.find(m => m.id === fav.key);
+            if(item) {
+                container.innerHTML += `
+                    <div class="download-item" style="display:flex; gap:12px; background:var(--ios-card); padding:12px; border-radius:12px; margin-bottom:8px;">
+                        <div style="flex:1;">
+                            <div style="font-weight:600;">${sanitize(item.name || item.title)}</div>
+                            <div style="color:var(--ios-gray); font-size:0.85rem;">${sanitize(item.type)}</div>
+                        </div>
+                        <button class="ios-button" style="padding:8px 16px; width:auto; font-size:0.9rem;" 
+                                onclick="handleClick('${item.type}','${item.id}',false)">
+                            <i class="fas fa-play"></i> Watch
+                        </button>
+                    </div>
+                `;
+            }
+        });
+    });
+}
+
+// ==================== TIPS & DOWNLOADS ====================
+function renderTips() {
+    const container = document.getElementById('tipsContent');
+    if(!container) return;
+    
+    if(allData.tips.length === 0) {
+        container.innerHTML = '<div class="empty-state">No tips available yet</div>';
+        return;
+    }
+    
+    container.innerHTML = allData.tips.map(t => `
+        <div class="tip-card" style="background:var(--ios-card); padding:16px; border-radius:16px; margin-bottom:12px;">
+            <div class="tip-title" style="font-weight:600; margin-bottom:8px;">${sanitize(t.title)}</div>
+            <div class="tip-content" style="color:var(--ios-gray); line-height:1.5;">${sanitize(t.content)}</div>
+        </div>
+    `).join('');
+}
+
+function renderBettingTips() {
+    const container = document.getElementById('bettingTipsContent');
+    if(!container) return;
+    
+    if(allData.bettingTips.length === 0) {
+        container.innerHTML = '<div class="empty-state">No betting tips available yet</div>';
+        return;
+    }
+    
+    container.innerHTML = allData.bettingTips.map(t => `
+        <div class="betting-tip-card" style="background:var(--ios-card); padding:16px; border-radius:16px; margin-bottom:12px;">
+            <div class="betting-tip-teams" style="font-weight:600; margin-bottom:4px;">
+                ${sanitize(t.team1)} vs ${sanitize(t.team2)}
+            </div>
+            <div class="betting-tip-title" style="font-weight:500;">${sanitize(t.title)}</div>
+            <div class="betting-tip-prediction" style="background:rgba(255,0,0,0.1); padding:4px 8px; border-radius:20px; display:inline-block; margin:8px 0;">
+                ${sanitize(t.prediction)}
+            </div>
+            <div class="betting-tip-odds" style="color:var(--ios-orange); font-weight:500;">Odds: ${sanitize(t.odds)}</div>
+        </div>
+    `).join('');
+}
+
+function renderDownloads() {
+    const container = document.getElementById('dlContent');
+    if(!container) return;
+    
+    if(allData.downloads.length === 0) {
+        container.innerHTML = '<div class="empty-state">No downloadable content available</div>';
+        return;
+    }
+    
+    container.innerHTML = allData.downloads.map(d => `
+        <div class="download-item" style="background:var(--ios-card); padding:12px; border-radius:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+            <div style="flex:1;">
+                <div style="font-weight:600;">${sanitize(d.title)}</div>
+                <div style="color:var(--ios-gray); font-size:0.85rem;">${sanitize(d.description || '')}</div>
+            </div>
+            <a href="${sanitize(d.downloadURL)}" target="_blank" class="ios-button" style="padding:8px 16px; width:auto; font-size:0.9rem;">
+                <i class="fas fa-download"></i> Download
+            </a>
+        </div>
+    `).join('');
+}
+
+// ==================== CHAT ====================
+function sendChat() {
+    if(!currentUser) { showToast('Please login to chat', 'error'); return; }
+    
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if(!text) return;
+    
+    // Send message
+    db.ref(`stanyBotMessages/${currentUser.uid}`).push({
+        text: sanitize(text),
+        sender: 'user',
+        timestamp: Date.now()
+    });
+    
+    input.value = '';
+    
+    // Auto-reply simulation
+    setTimeout(() => {
+        db.ref(`stanyBotMessages/${currentUser.uid}`).push({
+            text: "Thanks for your message! Our support team will reply soon. 🙏",
+            sender: 'admin',
+            timestamp: Date.now()
+        });
+    }, 1500);
+}
+
+function listenChat() {
+    if(!currentUser) return;
+    
+    db.ref(`stanyBotMessages/${currentUser.uid}`).on('value', snap => {
+        const container = document.getElementById('chatBox');
+        container.innerHTML = '';
+        
+        const msgs = [];
+        snap.forEach(msg => {
+            const val = msg.val();
+            if(val) msgs.push(val);
+        });
+        
+        msgs.sort((a,b) => a.timestamp - b.timestamp);
+        
+        msgs.forEach(msg => {
+            const div = document.createElement('div');
+            div.className = `chat-msg ${msg.sender === 'user' ? 'sent' : 'received'}`;
+            div.textContent = msg.text;
+            container.appendChild(div);
+        });
+        
+        container.scrollTop = container.scrollHeight;
+    });
+}
+
+function loadComments(movieId) {
+    // Simplified - can be expanded with real comments feature
+    const container = document.getElementById('commentsList');
+    const countEl = document.getElementById('commentCount');
+    
+    if(!currentUser) {
+        document.getElementById('commentInputArea').innerHTML = `
+            <div class="comment-login-prompt">
+                <i class="fas fa-comment-alt" style="font-size: 2rem; margin-bottom: 12px;"></i>
+                <p>Sign in to leave a comment</p>
+            </div>
+        `;
+        countEl.textContent = '0';
+        return;
+    }
+    
+    // Show comment input
+    document.getElementById('commentInputArea').innerHTML = `
+        <textarea id="commentText" rows="3" placeholder="Write a comment..."></textarea>
+        <button class="comment-post-btn" onclick="postComment('${sanitize(movieId)}')">Post</button>
+    `;
+    
+    // Load comments (simplified)
+    countEl.textContent = '0';
+    container.innerHTML = '<div class="empty-state">Be the first to comment! 💬</div>';
+}
+
+function postComment(movieId) {
+    const text = document.getElementById('commentText')?.value.trim();
+    if(!text || !currentUser) return;
+    
+    db.ref(`movieComments/${movieId}`).push({
+        userId: currentUser.uid,
+        userName: currentUser.name || 'Anonymous',
+        text: sanitize(text),
+        timestamp: Date.now()
+    }).then(() => {
+        document.getElementById('commentText').value = '';
+        showToast('Comment posted!', 'success');
+    });
+}
+
+// ==================== PIN LOCK ====================
+function checkPinLock() {
+    const pin = localStorage.getItem('appPin');
+    const enabled = localStorage.getItem('appLockEnabled') === 'true';
+    
+    if(enabled && pin) {
+        pinLength = pin.length;
+        renderPinDots();
+        initPinKeypad();
+        document.getElementById('pinLockOverlay').classList.remove('hidden');
+        document.getElementById('mainApp').style.display = 'none';
+    } else {
+        document.getElementById('pinLockOverlay').classList.add('hidden');
+        document.getElementById('mainApp').style.display = 'block';
+    }
+}
+
+function renderPinDots() {
+    const dots = document.getElementById('pinDots');
+    if(!dots) return;
+    dots.innerHTML = '';
+    for(let i = 0; i < pinLength; i++) {
+        const d = document.createElement('div');
+        d.className = 'pin-dot' + (i < enteredPin.length ? ' filled' : '');
+        dots.appendChild(d);
+    }
+}
+
+function pinInput(digit) {
+    if(enteredPin.length >= pinLength) return;
+    enteredPin += digit;
+    renderPinDots();
+    
+    if(enteredPin.length === pinLength) {
+        const storedPin = localStorage.getItem('appPin');
+        if(enteredPin === storedPin) {
             document.getElementById('pinLockOverlay').classList.add('hidden');
             document.getElementById('mainApp').style.display = 'block';
+            enteredPin = '';
+            showToast('Unlocked!', 'success');
+        } else {
+            document.querySelectorAll('#pinDots .pin-dot').forEach(d => d.classList.add('error'));
+            setTimeout(() => {
+                enteredPin = '';
+                renderPinDots();
+                document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('error'));
+            }, 500);
+            showToast('Incorrect PIN', 'error');
         }
     }
-    function renderPinDots() { const dots = document.getElementById('pinDots'); dots.innerHTML = ''; for(let i=0;i<pinLength;i++){ const d=document.createElement('div'); d.className='pin-dot'; if(i<enteredPin.length) d.classList.add('filled'); dots.appendChild(d); } }
-    function pinInput(digit) { if(enteredPin.length>=pinLength) return; enteredPin+=digit; renderPinDots(); if(enteredPin.length===pinLength){ if(enteredPin===localStorage.getItem('appPin')){ document.getElementById('pinLockOverlay').classList.add('hidden'); document.getElementById('mainApp').style.display='block'; enteredPin=''; } else { document.querySelectorAll('#pinDots .pin-dot').forEach(d=>d.classList.add('error')); setTimeout(()=>{ enteredPin=''; renderPinDots(); },500); showToast('Incorrect PIN','error'); } } }
-    function pinBackspace() { if(enteredPin.length>0){ enteredPin=enteredPin.slice(0,-1); renderPinDots(); } }
-    function initPinKeypad() { const pad=document.getElementById('pinKeypad'); pad.innerHTML=''; for(let d of ['1','2','3','4','5','6','7','8','9','0']){ const btn=document.createElement('button'); btn.className='pin-key'; btn.textContent=d; btn.onclick=()=>pinInput(d); pad.appendChild(btn); } const empty=document.createElement('button'); empty.className='pin-key empty'; pad.appendChild(empty); const back=document.createElement('button'); back.className='pin-key backspace'; back.innerHTML='<i class="fas fa-backspace"></i>'; back.onclick=pinBackspace; pad.appendChild(back); }
-    function setupPin() { const p=prompt('Enter 4-6 digit PIN:'); if(p && /^\d{4,6}$/.test(p)){ localStorage.setItem('appPin',p); localStorage.setItem('appLockEnabled','true'); document.getElementById('appLockToggle').checked=true; document.getElementById('setPinRow').classList.remove('hidden'); showToast('PIN set!','success'); } else if(p!==null) showToast('Invalid PIN','error'); }
-    function toggleAppLock() { if(document.getElementById('appLockToggle').checked) setupPin(); else { localStorage.removeItem('appPin'); localStorage.setItem('appLockEnabled','false'); document.getElementById('setPinRow').classList.add('hidden'); showToast('App lock disabled','success'); document.getElementById('pinLockOverlay').classList.add('hidden'); document.getElementById('mainApp').style.display='block'; } }
+}
 
-    // ==================== UI NAVIGATION ====================
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
-    function nav(page, el) {
-        document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-        document.getElementById(page).classList.add('active');
-        if(page==='home') renderHomePage();
-        if(page==='channels') renderAllChannels();
-        if(page==='movies') renderAllMovies();
-        if(page==='favorites') loadFavorites();
-        if(page==='downloads') renderDownloads();
-        if(page==='tips') renderTips();
-        if(page==='bettingTips') renderBettingTips();
-        if(page==='chat') listenChat();
-        if(page==='profile') { /* nothing */ }
-        if(window.innerWidth<768) toggleSidebar();
+function pinBackspace() {
+    if(enteredPin.length > 0) {
+        enteredPin = enteredPin.slice(0, -1);
+        renderPinDots();
     }
-    function toggleSearch() { const bar=document.getElementById('searchBar'); bar.style.display=bar.style.display==='none'?'block':'none'; }
-    function globalSearch() { const q=document.getElementById('searchInput').value.toLowerCase(); if(!q){ renderAllChannels(); renderAllMovies(); return; } const filteredChannels=allData.channels.filter(c=>c.name?.toLowerCase().includes(q)); const filteredMovies=allData.movies.filter(m=>m.title?.toLowerCase().includes(q)); document.getElementById('allChannelsGrid').innerHTML=filteredChannels.map(ch=>createCard(ch,true)).join(''); document.getElementById('allMoviesGrid').innerHTML=filteredMovies.map(m=>createCard(m,false)).join(''); }
-    function showNotifications() { showToast('No new notifications'); }
-    function showLanguageSettings() { document.querySelector('.language-selector').scrollIntoView({behavior:'smooth'}); }
-    function quickRefresh() { loadEssentialData(); showToast('Refreshed'); }
-    function showLogoutConfirm() { document.getElementById('logoutModal').style.display='flex'; }
-    function cancelLogout() { document.getElementById('logoutModal').style.display='none'; }
-    function confirmLogout() { auth.signOut(); document.getElementById('logoutModal').style.display='none'; showToast('Logged out'); window.location.reload(); }
-    function shareApp(platform) { const url=encodeURIComponent(window.location.href); const text=encodeURIComponent('Watch STANY MIN TV - Premium Entertainment'); let shareUrl=''; if(platform==='whatsapp') shareUrl=`https://wa.me/?text=${text}%20${url}`; else if(platform==='facebook') shareUrl=`https://www.facebook.com/sharer/sharer.php?u=${url}`; else if(platform==='twitter') shareUrl=`https://twitter.com/intent/tweet?text=${text}&url=${url}`; else if(platform==='telegram') shareUrl=`https://t.me/share/url?url=${url}&text=${text}`; window.open(shareUrl,'_blank'); }
-    function copyLink() { navigator.clipboard.writeText(window.location.href); showToast('Link copied'); }
-    function shareContent(platform) { shareApp(platform); }
-    function copyContentLink() { copyLink(); }
-    function viewAllCategory(cat) { if(cat.includes('Channel')) nav('channels'); else nav('movies'); }
-    function closeDetailModal() { document.getElementById('detailModal').style.display='none'; }
-    function closePlayer() { document.getElementById('playerModal').style.display='none'; if(player) player.pause(); }
+}
 
-    // ==================== INIT ====================
-    window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => document.getElementById('loader').style.display='none',1500);
-        checkPinLock();
-        auth.onAuthStateChanged(user => { if(user) loadEssentialData(); else loadEssentialData(); });
-        document.getElementById('appLockToggle').onchange = toggleAppLock;
+function initPinKeypad() {
+    const pad = document.getElementById('pinKeypad');
+    if(!pad) return;
+    pad.innerHTML = '';
+    
+    const keys = ['1','2','3','4','5','6','7','8','9','empty','0','back'];
+    keys.forEach(key => {
+        const btn = document.createElement('button');
+        if(key === 'empty') {
+            btn.className = 'pin-key empty';
+        } else if(key === 'back') {
+            btn.className = 'pin-key backspace';
+            btn.innerHTML = '<i class="fas fa-backspace"></i>';
+            btn.onclick = pinBackspace;
+        } else {
+            btn.className = 'pin-key';
+            btn.textContent = key;
+            btn.onclick = () => pinInput(key);
+        }
+        pad.appendChild(btn);
     });
+}
+
+function setupPin() {
+    const p = prompt('Enter a new PIN (4-6 digits):');
+    if(p && /^\d{4,6}$/.test(p)) {
+        localStorage.setItem('appPin', p);
+        localStorage.setItem('appLockEnabled', 'true');
+        document.getElementById('appLockToggle').checked = true;
+        document.getElementById('setPinRow').classList.remove('hidden');
+        showToast('PIN set successfully!', 'success');
+    } else if(p !== null) {
+        showToast('Invalid PIN format (4-6 digits)', 'error');
+    }
+}
+
+function toggleAppLock() {
+    const toggle = document.getElementById('appLockToggle');
+    if(toggle.checked) {
+        setupPin();
+    } else {
+        localStorage.removeItem('appPin');
+        localStorage.setItem('appLockEnabled', 'false');
+        document.getElementById('setPinRow').classList.add('hidden');
+        showToast('App lock disabled', 'success');
+        document.getElementById('pinLockOverlay').classList.add('hidden');
+        document.getElementById('mainApp').style.display = 'block';
+    }
+}
+
+// ==================== NAVIGATION ====================
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+function nav(page, el) {
+    // Update active states
+    document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+        if(p.id !== 'detailsPage') p.style.display = 'none';
+    });
+    document.getElementById(page).classList.add('active');
+    document.getElementById(page).style.display = 'block';
+    
+    // Update bottom nav
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    if(el && el.classList.contains('nav-item')) {
+        el.classList.add('active');
+    } else {
+        // Find corresponding nav item
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            if(item.onclick?.toString().includes(`nav('${page}'`)) {
+                item.classList.add('active');
+            }
+        });
+    }
+    
+    // Page-specific actions
+    if(page === 'home') renderHomePage();
+    if(page === 'channels') renderAllChannels();
+    if(page === 'movies') renderAllMovies();
+    if(page === 'favorites') loadFavorites();
+    if(page === 'downloads') renderDownloads();
+    if(page === 'tips') renderTips();
+    if(page === 'bettingTips') renderBettingTips();
+    if(page === 'chat') listenChat();
+    
+    // Close sidebar on mobile
+    if(window.innerWidth < 768) {
+        document.getElementById('sidebar').classList.remove('active');
+        document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+
+function toggleSearch() {
+    const bar = document.getElementById('searchBar');
+    bar.style.display = bar.style.display === 'none' ? 'block' : 'none';
+    if(bar.style.display === 'block') {
+        document.getElementById('searchInput').focus();
+    }
+}
+
+function globalSearch() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    if(!q) {
+        renderAllChannels();
+        renderAllMovies();
+        return;
+    }
+    
+    const filteredChannels = allData.channels.filter(c => 
+        (c.name?.toLowerCase().includes(q)) || (c.genre?.toLowerCase().includes(q))
+    );
+    const filteredMovies = allData.movies.filter(m => 
+        (m.title?.toLowerCase().includes(q)) || (m.genre?.some?.(g => g.toLowerCase().includes(q)))
+    );
+    
+    document.getElementById('allChannelsGrid').innerHTML = 
+        filteredChannels.length ? 
+        filteredChannels.map(ch => createCard(ch, true)).join('') : 
+        '<div class="empty-state">No channels found</div>';
+    
+    document.getElementById('allMoviesGrid').innerHTML = 
+        filteredMovies.length ? 
+        filteredMovies.map(m => createCard(m, false)).join('') : 
+        '<div class="empty-state">No movies found</div>';
+}
+
+function showNotifications() {
+    showToast('🔔 No new notifications', 'info');
+}
+
+function showLanguageSettings() {
+    document.querySelector('.language-selector')?.scrollIntoView({behavior: 'smooth'});
+}
+
+function quickRefresh() {
+    loadEssentialData();
+    showToast('Data refreshed! 🔄', 'success');
+}
+
+// ==================== MODALS & SHARING ====================
+function showLogoutConfirm() {
+    document.getElementById('logoutModal').classList.add('show');
+}
+
+function cancelLogout() {
+    document.getElementById('logoutModal').classList.remove('show');
+}
+
+function confirmLogout() {
+    auth.signOut().then(() => {
+        document.getElementById('logoutModal').classList.remove('show');
+        showToast('Logged out successfully', 'success');
+        window.location.reload();
+    });
+}
+
+function shareApp(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('Watch STANY MIN TV - Premium Entertainment');
+    let shareUrl = '';
+    
+    switch(platform) {
+        case 'whatsapp':
+            shareUrl = `https://wa.me/?text=${text}%20${url}`;
+            break;
+        case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            break;
+        case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            break;
+        case 'telegram':
+            shareUrl = `https://t.me/share/url?url=${url}&text=${text}`;
+            break;
+    }
+    
+    if(shareUrl) window.open(shareUrl, '_blank');
+}
+
+function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('Link copied to clipboard! 📋', 'success');
+    });
+}
+
+function shareContent(platform) {
+    shareApp(platform);
+}
+
+function copyContentLink() {
+    copyLink();
+}
+
+function viewAllCategory(cat) {
+    if(cat.toLowerCase().includes('channel')) {
+        nav('channels');
+    } else {
+        nav('movies');
+    }
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('show');
+}
+
+function downloadContent() {
+    if(currentMovieData?.downloadURL || currentMovieData?.movie_links) {
+        const url = currentMovieData.downloadURL || 
+                   Object.values(currentMovieData.movie_links)[0];
+        if(url) window.open(url, '_blank');
+        else showToast('No download link', 'error');
+    } else {
+        showToast('Download not available', 'error');
+    }
+}
+
+function watchContent() {
+    if(currentMovieData) playContent(currentMovieData);
+}
+
+// ==================== INITIALIZATION ====================
+window.addEventListener('DOMContentLoaded', () => {
+    // Hide loader after delay
+    setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+    }, 1500);
+    
+    // Check PIN lock
+    checkPinLock();
+    
+    // Initialize auth state
+    auth.onAuthStateChanged(user => {
+        if(user) loadEssentialData();
+        else loadEssentialData(); // Load public data too
+    });
+    
+    // Setup app lock toggle
+    const lockToggle = document.getElementById('appLockToggle');
+    if(lockToggle) {
+        lockToggle.checked = localStorage.getItem('appLockEnabled') === 'true';
+        document.getElementById('setPinRow').classList.toggle('hidden', !lockToggle.checked);
+    }
+    
+    // Handle offline/online
+    window.addEventListener('online', () => showToast('🌐 Back online', 'success'));
+    window.addEventListener('offline', () => showToast('⚠️ You are offline', 'error'));
+});
+
+// Prevent zoom on input focus (iOS)
+document.addEventListener('touchstart', function(event) {
+    if (event.touches.length > 1) {
+        event.preventDefault();
+    }
+}, { passive: false });
+
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function(event) {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+    }
+    lastTouchEnd = now;
+}, false);
 </script>
 </body>
 </html>
+
