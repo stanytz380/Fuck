@@ -5,100 +5,1050 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#0a0a0a">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    
-    <title>STANY MIN TV - Premium Movies & Live TV</title>
-    <meta name="title" content="STANY MIN TV - Premium Movies & Live TV">
-    <meta name="description" content="Watch the latest movies, live channels, and exclusive content on STANY MIN TV.">
+    <title>STANY MIN TV - Premium Entertainment</title>
+    <meta name="description" content="Watch the latest movies, live channels, and exclusive content on STANY MIN TV. Stream in HD.">
     <meta name="author" content="Stany Min">
-    
-    <meta property="og:title" content="STANY MIN TV - Premium Movies & Live TV">
-    <meta property="og:description" content="Watch the latest movies, live channels, and exclusive content on STANY MIN TV.">
+    <meta property="og:title" content="STANY MIN TV">
     <meta property="og:image" content="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
-    <meta property="og:url" content="https://stanyappstore.web.app">
-    
     <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
-    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/src/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        /* ===== PIN LOCK - FIXED OVERLAY ===== */
+        .pin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            z-index: 20000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 1.5rem;
+            transition: opacity 0.3s ease;
+        }
+        .pin-overlay.hidden {
+            display: none;
+        }
+        .pin-lock-icon {
+            font-size: 3rem;
+            color: #ff0000;
+        }
+        .pin-overlay h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .pin-overlay p {
+            color: #888;
+            font-size: 0.85rem;
+        }
+        .pin-dots {
+            display: flex;
+            gap: 0.8rem;
+            margin: 0.5rem 0;
+        }
+        .pin-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #555;
+            transition: all 0.2s;
+        }
+        .pin-dot.filled {
+            background: #ff0000;
+            border-color: #ff0000;
+            box-shadow: 0 0 8px rgba(255,0,0,0.5);
+        }
+        .pin-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 70px);
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        .pin-key {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .pin-key:active {
+            transform: scale(0.92);
+            background: rgba(255,0,0,0.25);
+        }
+        .pin-key.backspace {
+            font-size: 1.2rem;
+        }
+        .pin-key.empty {
+            visibility: hidden;
+        }
+        /* ===== REST OF STYLES (same as before, but ensure main content starts below) ===== */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            background: rgba(10,10,10,0.92);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(90deg,#FF0000,#FF4444,#FFD700);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s ease infinite;
+        }
+        @keyframes shimmer { 0% { background-position: 0% center; } 50% { background-position: 100% center; } 100% { background-position: 0% center; } }
+        .slider-section {
+            padding: 0.8rem 1rem;
+        }
+        .slider-container {
+            position: relative;
+            width: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+            height: 200px;
+        }
+        .slide {
+            min-width: 100%;
+            position: relative;
+            cursor: pointer;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(to top, rgba(10,10,10,0.95), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+        }
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.4rem;
+            margin-top: 0.8rem;
+        }
+        .s-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .s-dot.active {
+            background: #FF0000;
+            width: 24px;
+            border-radius: 4px;
+        }
+        .category-section {
+            padding: 0 1rem;
+            margin-bottom: 1.8rem;
+        }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        .category-header h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+        .see-all {
+            font-size: 0.8rem;
+            color: #FF0000;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+        }
+        .movie-row {
+            display: flex;
+            gap: 0.7rem;
+            overflow-x: auto;
+            padding: 0.3rem 0 0.8rem;
+            scrollbar-width: none;
+        }
+        .movie-row::-webkit-scrollbar { display: none; }
+        .movie-poster-card {
+            min-width: 120px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .movie-poster-card img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        }
+        .poster-rating {
+            position: absolute;
+            top: 0.4rem;
+            right: 0.4rem;
+            background: rgba(0,0,0,0.8);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .poster-title {
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin-top: 0.4rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .movie-grid-full {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 0.8rem;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            background: rgba(10,10,10,0.96);
+            backdrop-filter: blur(20px);
+            padding: 0.6rem 0 calc(0.6rem + env(safe-area-inset-bottom));
+            z-index: 100;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+            color: #666;
+            font-size: 0.7rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .nav-item i { font-size: 1.3rem; }
+        .nav-item.active { color: #FF0000; }
+        .search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0a0a;
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+        }
+        .search-overlay.show { display: flex; }
+        .search-bar {
+            display: flex;
+            gap: 0.6rem;
+            padding: 1rem;
+            align-items: center;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: #fff;
+        }
+        .search-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+        .search-results {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .details-page {
+            display: none;
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+        .details-page.show { display: block; }
+        .detail-backdrop {
+            position: relative;
+            width: 100%;
+            height: 260px;
+        }
+        .detail-backdrop img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .backdrop-grad {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to top, #0a0a0a, transparent);
+        }
+        .poster-3d-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -110px;
+            position: relative;
+            z-index: 10;
+        }
+        .poster-3d-card img {
+            width: 180px;
+            height: 270px;
+            object-fit: cover;
+            border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+        }
+        .title-typewriter-area {
+            text-align: center;
+            padding: 0.8rem 1rem 0;
+        }
+        .title-typewriter {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        .info-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+        .info-d-card {
+            background: rgba(255,255,255,0.04);
+            padding: 0.6rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .detail-actions {
+            display: flex;
+            gap: 0.6rem;
+            padding: 0.5rem 1rem;
+        }
+        .btn-action {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-trailer {
+            background: linear-gradient(135deg,#FF0000,#CC0000);
+            color: #fff;
+        }
+        .btn-play-movie {
+            background: linear-gradient(135deg,#1a8a1a,#0d6b0d);
+            color: #fff;
+        }
+        .btn-download {
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+        }
+        .cast-scroll, .similar-scroll {
+            display: flex;
+            gap: 0.8rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+        .cast-card, .similar-card {
+            min-width: 95px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .cast-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+        .storyline-text {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #bbb;
+            max-height: 120px;
+            overflow: hidden;
+        }
+        .storyline-text.expanded { max-height: 1000px; }
+        .read-more-btn {
+            color: #FF0000;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-top: 0.4rem;
+        }
+        .comment-input-area textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: #fff;
+            resize: none;
+        }
+        .comment-post-btn {
+            background: linear-gradient(135deg,#FF0000,#CC0000);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            float: right;
+            margin-top: 0.5rem;
+        }
+        .comments-list { clear: both; margin-top: 1rem; }
+        .comment-card {
+            display: flex;
+            gap: 0.8rem;
+            padding: 0.9rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .comment-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .chat-page {
+            display: none;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .chat-page.show { display: flex; }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .chat-msg {
+            max-width: 80%;
+            padding: 0.7rem 1rem;
+            border-radius: 16px;
+        }
+        .chat-msg.sent {
+            align-self: flex-end;
+            background: linear-gradient(135deg,#FF0000,#CC0000);
+        }
+        .chat-msg.received {
+            align-self: flex-start;
+            background: rgba(255,255,255,0.08);
+        }
+        .chat-input-bar {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.8rem 1rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .chat-input-bar input {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            color: #fff;
+        }
+        .chat-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#FF0000,#CC0000);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+        .settings-page {
+            display: none;
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+        .settings-page.show { display: block; }
+        .settings-section {
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            padding: 1.2rem;
+            margin: 1rem;
+        }
+        .profile-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .profile-photo {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #333;
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .toggle input:checked + .toggle-slider { background: #FF0000; }
+        .toggle input:checked + .toggle-slider::before { transform: translateX(22px); }
+        .toast-wrap {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+        .toast-msg {
+            background: #222;
+            padding: 0.7rem 1.4rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border-left: 3px solid #FF0000;
+        }
+        .app-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0a0a;
+            z-index: 100000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .app-loader.hidden { display: none; }
+        .loader-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(90deg,#FF0000,#FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .loader-bar {
+            width: 160px;
+            height: 3px;
+            background: #222;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .loader-fill {
+            height: 100%;
+            background: linear-gradient(90deg,#FF0000,#FFD700);
+            animation: loaderAnim 1.5s forwards;
+        }
+        @keyframes loaderAnim { from { width: 0%; } to { width: 100%; } }
+        .page-spacer { height: 70px; }
+        .hidden { display: none !important; }
+        @media (max-width: 600px) {
+            .movie-grid-full { grid-template-columns: repeat(2,1fr); }
+            .poster-3d-card img { width: 140px; height: 210px; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="app-loader" id="appLoader"><div class="loader-logo">STANY MIN TV</div><div class="loader-bar"><div class="loader-fill"></div></div></div>
+<div class="app-loader" id="appLoader">
+    <div class="loader-logo">STANY MIN TV</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
 
-<div class="pin-lock-overlay hidden" id="pinLock"><div class="lock-icon"><i class="fas fa-lock"></i></div><h2>Enter PIN</h2><p>Enter your PIN to unlock</p><div class="pin-dots" id="pinDots"></div><div class="pin-keypad" id="pinKeypad"></div></div>
+<!-- PIN LOCK OVERLAY (FIXED) -->
+<div class="pin-overlay" id="pinOverlay">
+    <div class="pin-lock-icon"><i class="fas fa-lock"></i></div>
+    <h2>Enter PIN</h2>
+    <p>Enter your PIN to unlock</p>
+    <div class="pin-dots" id="pinDots"></div>
+    <div class="pin-keypad" id="pinKeypad"></div>
+</div>
 
 <div class="toast-wrap" id="toastWrap"></div>
 
-<div class="trailer-float" id="trailerFloat"><div class="trailer-float-header" id="trailerDragHandle"><span><i class="fas fa-play-circle" style="color:#FF0000;margin-right:0.3rem;"></i> Trailer</span><div class="trailer-float-controls"><button id="trailerFullscreenBtn"><i class="fas fa-expand"></i></button><button id="trailerMinimizeBtn"><i class="fas fa-minus"></i></button><button class="close-btn" id="trailerCloseBtn"><i class="fas fa-times"></i></button></div></div><iframe id="trailerIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+<!-- MAIN APP (initially hidden until PIN cleared) -->
+<div id="mainApp" style="display: none;">
+    <header>
+        <button class="header-icon" id="settingsBtn"><i class="fas fa-user"></i></button>
+        <div class="logo">STANY MIN TV</div>
+        <div style="display: flex; gap: 0.5rem;">
+            <button class="header-icon" id="shareBtn"><i class="fas fa-share-alt"></i></button>
+            <button class="header-icon" id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
 
-<div class="video-player-float" id="videoPlayerFloat"><div class="vp-header" id="vpDragHandle"><span><i class="fas fa-film" style="color:#00cc00;margin-right:0.3rem;"></i> <span id="vpTitle">STANY MIN Player</span></span><div class="vp-controls"><button id="vpFullscreenBtn"><i class="fas fa-expand"></i></button><button id="vpMinimizeBtn"><i class="fas fa-minus"></i></button><button class="close-btn" id="vpCloseBtn"><i class="fas fa-times"></i></button></div></div><div class="vp-body"><div class="vp-quality-select" id="vpQualitySelect"><h4><i class="fas fa-play-circle"></i> Select Quality</h4><button class="vp-quality-btn vp-q-1080" data-quality="1080p"><i class="fas fa-play"></i> 1080p Full HD</button><button class="vp-quality-btn vp-q-720" data-quality="720p"><i class="fas fa-play"></i> 720p HD</button><button class="vp-quality-btn vp-q-480" data-quality="480p"><i class="fas fa-play"></i> 480p SD</button></div><video id="vpVideo" controls style="display:none;" controlslist="nodownload">Your browser does not support video.</video></div></div>
+    <!-- Home Page -->
+    <div id="homePage">
+        <div class="slider-section">
+            <div class="slider-container">
+                <div class="slider-wrapper" id="sliderWrapper"></div>
+            </div>
+            <div class="slider-dots" id="sliderDots"></div>
+        </div>
+        <div class="category-section">
+            <div class="category-header"><h2>🔥 Recent Uploads</h2><button class="see-all" data-seeall="recent">See All</button></div>
+            <div class="movie-row" id="recentMovies"></div>
+        </div>
+        <div class="category-section">
+            <div class="category-header"><h2>⭐ Top Rated</h2><button class="see-all" data-seeall="toprated">See All</button></div>
+            <div class="movie-row" id="topRatedMovies"></div>
+        </div>
+        <div id="dynamicCategories"></div>
+        <div class="page-spacer"></div>
+    </div>
 
-<div id="homePage">
-    <header><button class="header-icon" id="settingsBtn"><i class="fas fa-user"></i></button><div class="logo">STANY MIN TV</div><div style="display:flex; gap:0.5rem;"><button class="header-icon" id="shareBtn"><i class="fas fa-share-alt"></i></button><button class="header-icon" id="searchBtn"><i class="fas fa-search"></i></button></div></header>
-    <div class="slider-section"><div class="slider-container"><div class="slider-wrapper" id="sliderWrapper"></div></div><div class="slider-dots" id="sliderDots"></div></div>
-    <div class="category-section"><div class="category-header"><h2>🔥 Recent Uploads</h2><button class="see-all" data-seeall="recent">See All</button></div><div class="movie-row" id="recentMovies"></div></div>
-    <div class="category-section"><div class="category-header"><h2>⭐ Top Rated</h2><button class="see-all" data-seeall="toprated">See All</button></div><div class="movie-row" id="topRatedMovies"></div></div>
-    <div id="dynamicCategories"></div>
-    <div class="page-spacer"></div>
-    <nav class="bottom-nav"><button class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></button><button class="nav-item" data-page="settings"><i class="fas fa-cog"></i><span>Settings</span></button><button class="nav-item" data-page="chat"><i class="fas fa-comments"></i><span>Chat</span></button></nav>
-</div>
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search movies...">
+            <button class="search-close" id="closeSearchBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+    </div>
 
-<div class="search-overlay" id="searchOverlay"><div class="search-bar"><input type="text" id="searchInput" placeholder="Search movies..."><button class="search-close" id="closeSearchBtn"><i class="fas fa-times"></i></button></div><div class="search-results" id="searchResults"><div class="search-empty"><i class="fas fa-search"></i><p>Search for your favorite movies</p></div></div></div>
+    <!-- Details Page -->
+    <div class="details-page" id="detailsPage">
+        <div class="detail-backdrop"><img id="dBackdrop" src=""><div class="backdrop-grad"></div></div>
+        <div class="poster-3d-section"><div class="poster-3d-card"><img id="dPoster" src=""></div></div>
+        <div class="title-typewriter-area"><span class="title-typewriter" id="dTitleTypewriter"></span></div>
+        <div class="info-detail-grid" id="infoDetailGrid"></div>
+        <div class="detail-actions">
+            <button class="btn-action btn-trailer" id="openTrailerBtn"><i class="fas fa-play"></i> Trailer</button>
+            <button class="btn-action btn-play-movie" id="playMovieBtn"><i class="fas fa-play-circle"></i> Play</button>
+            <button class="btn-action btn-download" id="downloadBtn"><i class="fas fa-download"></i> Download</button>
+        </div>
+        <div class="detail-section" id="castSection"><div class="detail-section-title"><i class="fas fa-users"></i> Cast</div><div class="cast-scroll" id="castScroll"></div></div>
+        <div class="detail-section"><div class="detail-section-title"><i class="fas fa-align-left"></i> Storyline</div><p class="storyline-text" id="dStoryline"></p><button class="read-more-btn" id="readMoreBtn">Read More</button></div>
+        <div class="detail-section" id="similarSection"><div class="detail-section-title"><i class="fas fa-film"></i> More Like This</div><div class="similar-scroll" id="similarScroll"></div></div>
+        <div class="detail-section"><div class="detail-section-title"><i class="fas fa-comment"></i> Comments (<span id="commentCount">0</span>)</div><div id="commentInputArea"></div><div class="comments-list" id="commentsList"></div></div>
+        <div class="page-spacer"></div>
+    </div>
 
-<div class="details-page" id="detailsPage">
-    <div class="detail-backdrop"><img id="dBackdrop" src="" alt=""><div class="backdrop-grad"></div></div>
-    <div class="poster-3d-section"><div class="poster-3d-wrapper"><div class="poster-3d-card"><img id="dPoster" src="" alt=""><div class="poster-3d-shine"></div></div><div class="poster-3d-glow"></div></div><div class="poster-3d-reflection"><img id="dPosterReflection" src="" alt=""></div></div>
-    <div class="detail-logo-center" id="dLogoWrap" style="display:none;"><img id="dLogo" src="" alt=""></div>
-    <div class="title-typewriter-area"><span class="title-typewriter" id="dTitleTypewriter"></span><span class="typewriter-cursor" id="twCursor"></span><p class="tagline" id="dTagline"></p></div>
-    <div class="info-detail-grid" id="infoDetailGrid"></div>
-    <div class="detail-actions"><button class="btn-action btn-trailer" id="openTrailerBtn"><i class="fas fa-play"></i> Trailer</button><button class="btn-action btn-play-movie" id="playMovieBtn"><i class="fas fa-play-circle"></i> Play</button><button class="btn-action btn-download" id="downloadBtn"><i class="fas fa-download"></i> Download</button></div>
-    <div class="detail-section" id="castSection"><div class="detail-section-title"><i class="fas fa-users"></i> Top Billed Cast</div><div class="cast-scroll" id="castScroll"></div></div>
-    <div class="detail-section"><div class="detail-section-title"><i class="fas fa-align-left"></i> Storyline</div><p class="storyline-text" id="dStoryline"></p><button class="read-more-btn" id="readMoreBtn">Read More</button></div>
-    <div class="detail-section" id="similarSection"><div class="detail-section-title"><i class="fas fa-film"></i> More Like This</div><div class="similar-scroll" id="similarScroll"></div></div>
-    <div class="detail-section" style="margin-bottom:0;"><div class="detail-section-title"><i class="fas fa-comment"></i> Comments (<span id="commentCount">0</span>)</div><div id="commentInputArea"></div><div class="comments-list" id="commentsList"></div></div>
-    <div class="page-spacer"></div>
-</div>
+    <!-- Chat Page -->
+    <div class="chat-page" id="chatPage">
+        <div class="chat-header"><h2><i class="fas fa-comments"></i> Community Chat</h2></div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-bar"><input type="text" id="chatInput" placeholder="Type a message..."><button class="chat-send-btn" id="chatSendBtn"><i class="fas fa-paper-plane"></i></button></div>
+    </div>
 
-<div class="quality-modal" id="qualityModal"><div class="quality-sheet"><div class="quality-handle"></div><h3><i class="fas fa-download"></i> Select Quality</h3><div class="quality-option" data-quality="1080p"><span class="q-label"><i class="fas fa-circle" style="color:#00cc00;font-size:0.5rem;margin-right:0.4rem;"></i> 1080p</span><span class="q-badge">Full HD</span></div><div class="quality-option" data-quality="720p"><span class="q-label"><i class="fas fa-circle" style="color:#FFD700;font-size:0.5rem;margin-right:0.4rem;"></i> 720p</span><span class="q-badge">HD</span></div><div class="quality-option" data-quality="480p"><span class="q-label"><i class="fas fa-circle" style="color:#FF6600;font-size:0.5rem;margin-right:0.4rem;"></i> 480p</span><span class="q-badge">SD</span></div><button class="quality-cancel" id="cancelQualityBtn">Cancel</button></div></div>
-
-<div class="ad-overlay" id="adOverlay"><div class="ad-top-bar"><div class="ad-countdown"><div class="ad-countdown-circle" id="adTimerCircle">30</div><span>seconds remaining</span></div><button class="ad-skip-btn" id="adSkipBtn"><i class="fas fa-forward"></i> Skip Ad</button></div><iframe class="ad-frame" id="adFrame" src="" allowfullscreen></iframe></div>
-
-<div class="settings-page" id="settingsPage">
-    <div class="settings-header"><h2><i class="fas fa-cog" style="color:#FF0000;margin-right:0.4rem;"></i> Settings</h2></div>
-    <div class="settings-content">
+    <!-- Settings Page -->
+    <div class="settings-page" id="settingsPage">
         <div class="settings-section">
             <h3><i class="fas fa-user-circle"></i> Account</h3>
-            <div class="profile-row"><img class="profile-photo" id="sUserPhoto" src="https://via.placeholder.com/55/1a1a1a/666?text=?" alt=""><div class="profile-details"><div class="p-name" id="sUserName">Guest User</div><div class="p-email" id="sUserEmail">Not logged in</div></div></div>
-            <button class="settings-btn google" id="googleSignInBtn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20" alt=""> Sign in with Google</button>
-            <button class="settings-btn logout hidden" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <div class="profile-row"><img class="profile-photo" id="sUserPhoto" src=""><div><div class="p-name" id="sUserName">Guest User</div><div class="p-email" id="sUserEmail">Not logged in</div></div></div>
+            <button class="btn google" id="googleSignInBtn"><i class="fab fa-google"></i> Sign in with Google</button>
+            <button class="btn logout hidden" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
         <div class="settings-section">
             <h3><i class="fas fa-lock"></i> App Lock</h3>
-            <div class="setting-row"><div><label>Enable PIN Lock</label><div class="setting-desc">Lock app with a PIN code</div></div><label class="toggle"><input type="checkbox" id="appLockToggle"><span class="toggle-slider"></span></label></div>
-            <div class="setting-row hidden" id="setPinRow"><label>Change PIN</label><button class="settings-btn" style="width:auto;padding:0.5rem 1rem;background:rgba(255,0,0,0.1);color:#FF0000;border:1px solid rgba(255,0,0,0.2);margin:0;" id="setupPinBtn">Set PIN</button></div>
-        </div>
-        <div class="settings-section">
-            <h3><i class="fas fa-bell"></i> Notifications</h3>
-            <div class="setting-row"><div><label>Push Notifications</label><div class="setting-desc">Get notified about new movies</div></div><label class="toggle"><input type="checkbox" id="notifToggle" checked><span class="toggle-slider"></span></label></div>
+            <div class="setting-row"><label>Enable PIN Lock</label><label class="toggle"><input type="checkbox" id="appLockToggle"><span class="toggle-slider"></span></label></div>
+            <div class="setting-row hidden" id="setPinRow"><label>Change PIN</label><button class="btn btn-sm" id="setupPinBtn">Set PIN</button></div>
         </div>
         <div class="settings-section">
             <h3><i class="fas fa-info-circle"></i> About</h3>
-            <div class="setting-row"><label>Version</label><span style="color:#888;font-size:0.85rem;">2.0.0</span></div>
-            <div class="setting-row dev-link-row" id="shareSettingsBtn">
-                <label style="cursor:pointer;">Share STANY MIN TV</label>
-                <span style="color:#FF0000;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;gap:0.3rem;"><i class="fas fa-share-alt"></i></span>
-            </div>
+            <div class="setting-row"><label>Version</label><span>2.0.0</span></div>
+            <div class="setting-row dev-link-row" id="shareSettingsBtn"><label>Share App</label><i class="fas fa-share-alt"></i></div>
         </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-item" data-page="chat"><i class="fas fa-comments"></i><span>Chat</span></button>
+        <button class="nav-item" data-page="settings"><i class="fas fa-cog"></i><span>Settings</span></button>
     </div>
 </div>
 
-<div class="see-all-page" id="seeAllPage"><div class="see-all-header"><h2 id="seeAllTitle">Movies</h2></div><div class="see-all-content"><div class="movie-grid-full" id="seeAllGrid"></div></div><div class="page-spacer"></div></div>
+<script>
+    // ===== FIREBASE CONFIG (STANY MIN TV) =====
+    const firebaseConfig = {
+        apiKey: "AIzaSyAGQqAiYCnWR7X8XkxEXCGu19PU45qXDnc",
+        authDomain: "stanyappstore.firebaseapp.com",
+        projectId: "stanyappstore",
+        storageBucket: "stanyappstore.firebasestorage.app",
+        messagingSenderId: "735017831251",
+        appId: "1:735017831251:web:9fa4184ef141349fb9afa6"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
 
-<div class="chat-page" id="chatPage"><div class="chat-header"><h2><i class="fas fa-comments" style="color:#FF0000;margin-right:0.4rem;font-size:1rem;"></i> Community Chat</h2></div><div class="chat-messages" id="chatMessages"></div><div class="chat-input-bar"><input type="text" id="chatInput" placeholder="Type a message..."><button class="chat-send-btn" id="chatSendBtn"><i class="fas fa-paper-plane"></i></button></div></div>
+    // ===== GLOBALS =====
+    let isLoggedIn = false, currentUser = null;
+    let allMovies = [];
+    let currentMovieId = null, currentMovieData = null;
+    let currentSlide = 0, slideInterval = null;
+    let enteredPin = "", pinLength = 4;
+    let typewriterInterval = null;
+    let currentPage = 'home';
 
-<button class="skip-btn" id="skipButton"><i class="fas fa-forward"></i> Continue as Guest</button>
+    // ===== HELPER FUNCTIONS =====
+    function showToast(msg, type = 'info') {
+        const wrap = document.getElementById('toastWrap');
+        const toast = document.createElement('div');
+        toast.className = `toast-msg ${type}`;
+        toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${msg}`;
+        wrap.appendChild(toast);
+        setTimeout(() => { toast.remove(); }, 3000);
+    }
 
-<script type="module" src="/src/main.ts"></script>
+    function openShare() {
+        if (navigator.share) {
+            navigator.share({ title: 'STANY MIN TV', text: 'Watch movies & live TV!', url: location.href });
+        } else {
+            navigator.clipboard.writeText(location.href);
+            showToast('Link copied!', 'success');
+        }
+    }
+
+    // ===== PIN LOCK (FIXED) =====
+    function renderPinDots() {
+        const dots = document.getElementById('pinDots');
+        dots.innerHTML = '';
+        for (let i = 0; i < pinLength; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'pin-dot';
+            if (i < enteredPin.length) dot.classList.add('filled');
+            dots.appendChild(dot);
+        }
+    }
+    function pinInput(digit) {
+        if (enteredPin.length >= pinLength) return;
+        enteredPin += digit;
+        renderPinDots();
+        if (enteredPin.length === pinLength) {
+            const saved = localStorage.getItem('appPin');
+            if (enteredPin === saved) {
+                document.getElementById('pinOverlay').classList.add('hidden');
+                document.getElementById('mainApp').style.display = 'block';
+                enteredPin = '';
+            } else {
+                showToast('Incorrect PIN', 'error');
+                enteredPin = '';
+                renderPinDots();
+            }
+        }
+    }
+    function pinBackspace() {
+        if (enteredPin.length > 0) {
+            enteredPin = enteredPin.slice(0, -1);
+            renderPinDots();
+        }
+    }
+    function initPinKeypad() {
+        const pad = document.getElementById('pinKeypad');
+        pad.innerHTML = '';
+        const digits = ['1','2','3','4','5','6','7','8','9','0'];
+        digits.forEach(d => {
+            const btn = document.createElement('button');
+            btn.className = 'pin-key';
+            btn.textContent = d;
+            btn.onclick = () => pinInput(d);
+            pad.appendChild(btn);
+        });
+        const empty = document.createElement('button');
+        empty.className = 'pin-key empty';
+        pad.appendChild(empty);
+        const back = document.createElement('button');
+        back.className = 'pin-key backspace';
+        back.innerHTML = '<i class="fas fa-backspace"></i>';
+        back.onclick = pinBackspace;
+        pad.appendChild(back);
+    }
+    function checkPinLock() {
+        const enabled = localStorage.getItem('appLockEnabled') === 'true';
+        const pin = localStorage.getItem('appPin');
+        if (enabled && pin) {
+            pinLength = pin.length;
+            renderPinDots();
+            initPinKeypad();
+            document.getElementById('pinOverlay').classList.remove('hidden');
+            document.getElementById('mainApp').style.display = 'none';
+        } else {
+            document.getElementById('pinOverlay').classList.add('hidden');
+            document.getElementById('mainApp').style.display = 'block';
+        }
+    }
+
+    // ===== AUTH =====
+    function updateProfileUI(user) {
+        const sUserPhoto = document.getElementById('sUserPhoto');
+        const sUserName = document.getElementById('sUserName');
+        const sUserEmail = document.getElementById('sUserEmail');
+        const googleBtn = document.getElementById('googleSignInBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (user) {
+            sUserPhoto.src = user.photoURL || 'https://via.placeholder.com/55/1a1a1a/666?text=?';
+            sUserName.textContent = user.displayName || 'User';
+            sUserEmail.textContent = user.email || '';
+            googleBtn.classList.add('hidden');
+            logoutBtn.classList.remove('hidden');
+            isLoggedIn = true;
+            currentUser = user;
+        } else {
+            sUserPhoto.src = 'https://via.placeholder.com/55/1a1a1a/666?text=?';
+            sUserName.textContent = 'Guest User';
+            sUserEmail.textContent = 'Not logged in';
+            googleBtn.classList.remove('hidden');
+            logoutBtn.classList.add('hidden');
+            isLoggedIn = false;
+            currentUser = null;
+        }
+    }
+    function googleSignIn() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).then(() => showToast('Signed in', 'success')).catch(e => showToast('Error: ' + e.message, 'error'));
+    }
+    function logoutUser() {
+        auth.signOut().then(() => showToast('Logged out', 'success'));
+    }
+
+    // ===== MOVIE LOADING (SIMPLIFIED DEMO) =====
+    async function loadMovies() {
+        const snap = await db.ref('movies').once('value');
+        const data = snap.val();
+        if (!data) return;
+        allMovies = Object.keys(data).map(k => ({ id: k, ...data[k] }));
+        renderHomeRows();
+    }
+    function renderHomeRows() {
+        const recent = [...allMovies].sort((a,b)=> (b.created_at||0)-(a.created_at||0)).slice(0,12);
+        const top = [...allMovies].sort((a,b)=> (b.rating||0)-(a.rating||0)).slice(0,12);
+        document.getElementById('recentMovies').innerHTML = recent.map(m => `<div class="movie-poster-card" data-movie-id="${m.id}"><img src="${m.poster_url||'https://via.placeholder.com/120x180'}" onerror="this.src='https://via.placeholder.com/120x180'"><div class="poster-rating">⭐ ${m.rating?.toFixed(1)||'0'}</div><div class="poster-title">${m.title||'Untitled'}</div></div>`).join('');
+        document.getElementById('topRatedMovies').innerHTML = top.map(m => `<div class="movie-poster-card" data-movie-id="${m.id}"><img src="${m.poster_url||'https://via.placeholder.com/120x180'}" onerror="this.src='https://via.placeholder.com/120x180'"><div class="poster-rating">⭐ ${m.rating?.toFixed(1)||'0'}</div><div class="poster-title">${m.title||'Untitled'}</div></div>`).join('');
+        attachMovieClickEvents();
+    }
+    function attachMovieClickEvents() {
+        document.querySelectorAll('.movie-poster-card').forEach(card => {
+            card.onclick = () => openMovieDetails(card.dataset.movieId);
+        });
+    }
+    async function openMovieDetails(id) {
+        currentMovieId = id;
+        const snap = await db.ref(`movies/${id}`).once('value');
+        currentMovieData = snap.val();
+        if (!currentMovieData) return;
+        document.getElementById('detailsPage').classList.add('show');
+        document.getElementById('homePage').style.display = 'none';
+        document.getElementById('chatPage').classList.remove('show');
+        document.getElementById('settingsPage').classList.remove('show');
+        // populate details (simplified)
+        document.getElementById('dBackdrop').src = currentMovieData.backdrop_url || '';
+        document.getElementById('dPoster').src = currentMovieData.poster_url || '';
+        document.getElementById('dTitleTypewriter').textContent = currentMovieData.title || '';
+        const infoGrid = document.getElementById('infoDetailGrid');
+        infoGrid.innerHTML = `<div class="info-d-card"><div class="info-d-icon"><i class="fas fa-star"></i></div><div class="info-d-label">Rating</div><div class="info-d-value">⭐ ${currentMovieData.rating||0}</div></div>
+                              <div class="info-d-card"><div class="info-d-icon"><i class="fas fa-calendar"></i></div><div class="info-d-label">Year</div><div class="info-d-value">${currentMovieData.release_year||''}</div></div>
+                              <div class="info-d-card"><div class="info-d-icon"><i class="fas fa-clock"></i></div><div class="info-d-label">Runtime</div><div class="info-d-value">${currentMovieData.runtime||''} min</div></div>`;
+        document.getElementById('dStoryline').textContent = currentMovieData.storyline || '';
+        // Cast
+        const castScroll = document.getElementById('castScroll');
+        if (currentMovieData.cast && currentMovieData.cast.length) {
+            castScroll.innerHTML = currentMovieData.cast.map(c => `<div class="cast-card"><img src="${c.profile_image||'https://via.placeholder.com/80'}" onerror="this.src='https://via.placeholder.com/80'"><div class="cast-actor">${c.name}</div><div class="cast-character">${c.character||''}</div></div>`).join('');
+        } else castScroll.innerHTML = '<div class="empty-state">No cast info</div>';
+    }
+    function goHome() {
+        document.getElementById('detailsPage').classList.remove('show');
+        document.getElementById('homePage').style.display = 'block';
+        document.getElementById('chatPage').classList.remove('show');
+        document.getElementById('settingsPage').classList.remove('show');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelector('[data-page="home"]').classList.add('active');
+        currentPage = 'home';
+    }
+    function showChat() {
+        document.getElementById('detailsPage').classList.remove('show');
+        document.getElementById('homePage').style.display = 'none';
+        document.getElementById('chatPage').classList.add('show');
+        document.getElementById('settingsPage').classList.remove('show');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelector('[data-page="chat"]').classList.add('active');
+        currentPage = 'chat';
+        loadChatMessages();
+    }
+    function showSettings() {
+        document.getElementById('detailsPage').classList.remove('show');
+        document.getElementById('homePage').style.display = 'none';
+        document.getElementById('chatPage').classList.remove('show');
+        document.getElementById('settingsPage').classList.add('show');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelector('[data-page="settings"]').classList.add('active');
+        currentPage = 'settings';
+    }
+    function loadChatMessages() {
+        const ref = db.ref('global_chat').limitToLast(50);
+        ref.on('value', snap => {
+            const msgs = snap.val();
+            const container = document.getElementById('chatMessages');
+            if (!msgs) { container.innerHTML = '<div class="empty-state">No messages</div>'; return; }
+            const arr = Object.values(msgs).sort((a,b)=>a.timestamp-b.timestamp);
+            container.innerHTML = arr.map(m => `<div class="chat-msg ${m.user_id === currentUser?.uid ? 'sent' : 'received'}"><div>${m.text}</div><div class="msg-meta"><span>${m.username||'User'}</span><span>${new Date(m.timestamp).toLocaleTimeString()}</span></div></div>`).join('');
+            container.scrollTop = container.scrollHeight;
+        });
+    }
+    function sendChat() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        if (!currentUser) { showToast('Sign in to chat', 'error'); return; }
+        db.ref('global_chat').push({ user_id: currentUser.uid, username: currentUser.displayName || 'User', text, timestamp: Date.now() });
+        input.value = '';
+    }
+    function setupPin() {
+        const newPin = prompt('Set a 4-6 digit PIN:');
+        if (newPin && /^\d{4,6}$/.test(newPin)) {
+            localStorage.setItem('appPin', newPin);
+            localStorage.setItem('appLockEnabled', 'true');
+            document.getElementById('appLockToggle').checked = true;
+            document.getElementById('setPinRow').classList.remove('hidden');
+            showToast('PIN set!', 'success');
+        } else if (newPin) showToast('Invalid PIN (4-6 digits)', 'error');
+    }
+    function toggleAppLock() {
+        if (document.getElementById('appLockToggle').checked) {
+            setupPin();
+        } else {
+            localStorage.removeItem('appPin');
+            localStorage.setItem('appLockEnabled', 'false');
+            document.getElementById('setPinRow').classList.add('hidden');
+            showToast('App lock disabled', 'success');
+            // remove overlay if visible
+            document.getElementById('pinOverlay').classList.add('hidden');
+            document.getElementById('mainApp').style.display = 'block';
+        }
+    }
+
+    // ===== INIT =====
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => document.getElementById('appLoader').classList.add('hidden'), 1500);
+        checkPinLock();
+        auth.onAuthStateChanged(user => {
+            updateProfileUI(user);
+            if (user) loadMovies();
+            else loadMovies(); // still load for guest
+        });
+        document.getElementById('shareBtn').onclick = openShare;
+        document.getElementById('shareSettingsBtn').onclick = openShare;
+        document.getElementById('googleSignInBtn').onclick = googleSignIn;
+        document.getElementById('logoutBtn').onclick = logoutUser;
+        document.getElementById('settingsBtn').onclick = showSettings;
+        document.getElementById('searchBtn').onclick = () => document.getElementById('searchOverlay').classList.add('show');
+        document.getElementById('closeSearchBtn').onclick = () => document.getElementById('searchOverlay').classList.remove('show');
+        document.getElementById('appLockToggle').onchange = toggleAppLock;
+        document.getElementById('setupPinBtn').onclick = setupPin;
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.onclick = () => {
+                const page = btn.dataset.page;
+                if (page === 'home') goHome();
+                else if (page === 'chat') showChat();
+                else if (page === 'settings') showSettings();
+            };
+        });
+        document.getElementById('chatSendBtn').onclick = sendChat;
+        document.getElementById('chatInput').addEventListener('keypress', e => { if (e.key === 'Enter') sendChat(); });
+        loadMovies();
+    });
+</script>
 </body>
 </html>
