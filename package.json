@@ -1,0 +1,17 @@
+{
+  "name": "stany-min-tv",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "terser": "^5.30.3",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0",
+    "vite-plugin-javascript-obfuscator": "^1.0.0"
+  }
+}
