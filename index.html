@@ -8,16 +8,8 @@
     <meta name="theme-color" content="#000000">
     <meta name="description" content="STANY MIN TV - Premium Entertainment with DRM Support & Offline Downloads">
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="application/manifest+json,{
-        &quot;name&quot;:&quot;STANY MIN TV&quot;,
-        &quot;short_name&quot;:&quot;STANY TV&quot;,
-        &quot;start_url&quot;:&quot;.&quot;,
-        &quot;display&quot;:&quot;standalone&quot;,
-        &quot;background_color&quot;:&quot;#000000&quot;,
-        &quot;theme_color&quot;:&quot;#000000&quot;,
-        &quot;icons&quot;:[{&quot;src&quot;:&quot;https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/jpeg&quot;}]
-    }">
+    <!-- PWA Manifest - FIXED: Now points to valid manifest.json file -->
+    <link rel="manifest" href="/manifest.json">
     
     <!-- Primary Meta Tags -->
     <title>STANY MIN TV - Premium Entertainment</title>
@@ -2058,8 +2050,8 @@ function initVideoJS(url, item) {
         return;
     }
     
-    if(!player) {
-        player = videojs('videoJS', {
+    if(!window.player) {
+        window.player = videojs('videoJS', {
             fluid: true, autoplay: true, controls: true, responsive: true,
             html5: { hls: { overrideNative: true } }
         });
@@ -2069,8 +2061,8 @@ function initVideoJS(url, item) {
     const isMPD = url.includes('.mpd');
     const contentType = isM3U8 ? 'application/x-mpegURL' : (isMPD ? 'application/dash+xml' : 'video/mp4');
     
-    player.src({ src: url, type: contentType });
-    player.play().catch(e => showToast('Click play to start', 'info'));
+    window.player.src({ src: url, type: contentType });
+    window.player.play().catch(e => showToast('Click play to start', 'info'));
 }
 
 function initShakaPlayer(url, item) {
@@ -2084,13 +2076,13 @@ function initShakaPlayer(url, item) {
         return;
     }
     
-    if(!shakaPlayer) {
-        shakaPlayer = new shaka.Player(video);
+    if(!window.shakaPlayer) {
+        window.shakaPlayer = new shaka.Player(video);
     }
     
     // Configure DRM if needed
     if(item?.hasDRM || url.includes('peacocktv') || url.includes('.mpd')) {
-        shakaPlayer.configure({
+        window.shakaPlayer.configure({
             drm: {
                 servers: {
                     'com.widevine.alpha': DRM_CONFIG.widevine.licenseUrl
@@ -2104,7 +2096,7 @@ function initShakaPlayer(url, item) {
         });
     }
     
-    shakaPlayer.load(url)
+    window.shakaPlayer.load(url)
         .then(() => { video.play(); showToast('DRM content playing', 'success'); })
         .catch(e => {
             console.error('Shaka error:', e);
@@ -2157,8 +2149,8 @@ function initNativePlayer(url, item) {
 
 function closePlayer() {
     document.getElementById('playerModal').classList.remove('show');
-    if(player && player.pause) player.pause();
-    if(shakaPlayer && shakaPlayer.destroy) shakaPlayer.destroy();
+    if(window.player && window.player.pause) window.player.pause();
+    if(window.shakaPlayer && window.shakaPlayer.destroy) window.shakaPlayer.destroy();
 }
 
 // ==================== OFFLINE DOWNLOADS ====================
@@ -2703,3 +2695,4 @@ if('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
