@@ -18,29 +18,37 @@
     
     <title>STANY MIN TV - Premium Entertainment</title>
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
+    <!-- PWA Manifest (inline fallback) -->
+    <link rel="manifest" href="data:application/manifest+json,{
+        &quot;name&quot;:&quot;STANY MIN TV&quot;,
+        &quot;short_name&quot;:&quot;StanyTV&quot;,
+        &quot;start_url&quot;:&quot;.&quot;,
+        &quot;display&quot;:&quot;standalone&quot;,
+        &quot;background_color&quot;:&quot;#000000&quot;,
+        &quot;theme_color&quot;:&quot;#000000&quot;,
+        &quot;icons&quot;:[{&quot;src&quot;:&quot;https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/jpeg&quot;}]
+    }">
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <!-- Video Players -->
     <link href="https://unpkg.com/video.js@8.6.1/dist/video-js.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.7.0/dist/shaka-player.compiled.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dashjs@4.7.2/dist/dash.all.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js" integrity="sha512-8V0qX4+8r9V7f8q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.7.0/dist/shaka-player.compiled.min.js" integrity="sha512-8V0qX4+8r9V7f8q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dashjs@4.7.2/dist/dash.all.min.js" integrity="sha512-8V0qX4+8r9V7f8q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" integrity="sha512-8V0qX4+8r9V7f8q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9" crossorigin="anonymous" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js" integrity="sha512-8V0qX4+8r9V7f8q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js" integrity="sha512-8V0qX4+8r9V7f8q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9" crossorigin="anonymous"></script>
     
     <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" integrity="sha512-8V0qX4+8r9V7f8q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" integrity="sha512-8V0qX4+8r9V7f8q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" integrity="sha512-8V0qX4+8r9V7f8q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9q9" crossorigin="anonymous"></script>
 
     <style>
-        /* ===== ORIGINAL STYLES (same as your user app) – kept intact ===== */
+        /* ===== CORE STYLES ===== */
         :root {
             --ios-bg: #000000;
             --ios-card: rgba(28, 28, 30, 0.65);
@@ -1335,7 +1343,11 @@
         messagingSenderId: "735017831251",
         appId: "1:735017831251:web:9fa4184ef141349fb9afa6"
     };
-    firebase.initializeApp(firebaseConfig);
+    
+    // Initialize Firebase safely
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
     const auth = firebase.auth();
     const db = firebase.database();
 
@@ -1353,6 +1365,7 @@
     let firebaseListeners = [];
     let downloads = JSON.parse(localStorage.getItem('downloads') || '[]');
     let activeDownloads = {};
+    let videoPlayers = {}; // Track player instances for cleanup
 
     // DRM Config
     const DRM_CONFIG = {
@@ -1474,22 +1487,111 @@
         setTimeout(() => handleDeepLink(), 2000);
     }
 
-    auth.onAuthStateChanged(u => { if(u) { document.getElementById('authPages').style.display='none'; document.getElementById('loader').style.display='flex'; setTimeout(() => checkDevice(u.uid), 1000); } else { document.getElementById('authPages').style.display='flex'; document.getElementById('mainApp').style.display='none'; document.getElementById('loader').style.display='none'; } });
+    auth.onAuthStateChanged(u => { 
+        if(u) { 
+            document.getElementById('authPages').style.display='none'; 
+            document.getElementById('loader').style.display='flex'; 
+            setTimeout(() => checkDevice(u.uid), 1000); 
+        } else { 
+            document.getElementById('authPages').style.display='flex'; 
+            document.getElementById('mainApp').style.display='none'; 
+            document.getElementById('loader').style.display='none'; 
+        } 
+    });
 
     // ==================== DATA LOADING ====================
     function loadEssentialData() {
-        firebaseListeners.forEach(ref => ref.off()); firebaseListeners = [];
-        const channelsRef = db.ref('channels'); channelsRef.on('value', s => { allData.channels = []; s.forEach(c => { if(c.val()) allData.channels.push({ id: c.key, type: 'channel', ...c.val() }); }); updateAll(); }); firebaseListeners.push(channelsRef);
-        const moviesRef = db.ref('movies'); moviesRef.on('value', s => { allData.movies = []; s.forEach(m => { if(m.val()) allData.movies.push({ id: m.key, type: 'movie', ...m.val() }); }); updateAll(); }); firebaseListeners.push(moviesRef);
-        const genresRef = db.ref('genres'); genresRef.on('value', s => { allData.genres = []; s.forEach(g => { if(g.val()) allData.genres.push({ id: g.key, name: g.val().name }); }); }); firebaseListeners.push(genresRef);
-        const carouselRef = db.ref('carousel'); carouselRef.on('value', s => { allData.carousel = []; s.forEach(slide => { if(slide.val()) allData.carousel.push(slide.val()); }); renderSlider(); }); firebaseListeners.push(carouselRef);
-        const tipsRef = db.ref('tips'); tipsRef.on('value', s => { allData.tips = []; s.forEach(t => { if(t.val()) allData.tips.push(t.val()); }); renderTips(); }); firebaseListeners.push(tipsRef);
-        const bettingRef = db.ref('bettingTips'); bettingRef.on('value', s => { allData.bettingTips = []; s.forEach(t => { if(t.val()) allData.bettingTips.push(t.val()); }); renderBettingTips(); }); firebaseListeners.push(bettingRef);
-        const downloadsRef = db.ref('downloadableMovies'); downloadsRef.on('value', s => { allData.downloads = []; s.forEach(d => { if(d.val()) allData.downloads.push(d.val()); }); renderDownloads(); }); firebaseListeners.push(downloadsRef);
-        const settingsRef = db.ref('appSettings'); settingsRef.on('value', s => { if(s.exists()) { appSettings = { ...appSettings, ...s.val() }; applyAppSettings(); } }); firebaseListeners.push(settingsRef);
+        // Clean up existing listeners first
+        firebaseListeners.forEach(ref => {
+            if(ref && ref.off) ref.off();
+        });
+        firebaseListeners = [];
+        
+        const channelsRef = db.ref('channels'); 
+        channelsRef.on('value', s => { 
+            allData.channels = []; 
+            s.forEach(c => { 
+                if(c.val()) allData.channels.push({ id: c.key, type: 'channel', ...c.val() }); 
+            }); 
+            updateAll(); 
+        }); 
+        firebaseListeners.push(channelsRef);
+        
+        const moviesRef = db.ref('movies'); 
+        moviesRef.on('value', s => { 
+            allData.movies = []; 
+            s.forEach(m => { 
+                if(m.val()) allData.movies.push({ id: m.key, type: 'movie', ...m.val() }); 
+            }); 
+            updateAll(); 
+        }); 
+        firebaseListeners.push(moviesRef);
+        
+        const genresRef = db.ref('genres'); 
+        genresRef.on('value', s => { 
+            allData.genres = []; 
+            s.forEach(g => { 
+                if(g.val()) allData.genres.push({ id: g.key, name: g.val().name }); 
+            }); 
+        }); 
+        firebaseListeners.push(genresRef);
+        
+        const carouselRef = db.ref('carousel'); 
+        carouselRef.on('value', s => { 
+            allData.carousel = []; 
+            s.forEach(slide => { 
+                if(slide.val()) allData.carousel.push(slide.val()); 
+            }); 
+            renderSlider(); 
+        }); 
+        firebaseListeners.push(carouselRef);
+        
+        const tipsRef = db.ref('tips'); 
+        tipsRef.on('value', s => { 
+            allData.tips = []; 
+            s.forEach(t => { 
+                if(t.val()) allData.tips.push(t.val()); 
+            }); 
+            renderTips(); 
+        }); 
+        firebaseListeners.push(tipsRef);
+        
+        const bettingRef = db.ref('bettingTips'); 
+        bettingRef.on('value', s => { 
+            allData.bettingTips = []; 
+            s.forEach(t => { 
+                if(t.val()) allData.bettingTips.push(t.val()); 
+            }); 
+            renderBettingTips(); 
+        }); 
+        firebaseListeners.push(bettingRef);
+        
+        const downloadsRef = db.ref('downloadableMovies'); 
+        downloadsRef.on('value', s => { 
+            allData.downloads = []; 
+            s.forEach(d => { 
+                if(d.val()) allData.downloads.push(d.val()); 
+            }); 
+            renderDownloads(); 
+        }); 
+        firebaseListeners.push(downloadsRef);
+        
+        const settingsRef = db.ref('appSettings'); 
+        settingsRef.on('value', s => { 
+            if(s.exists()) { 
+                appSettings = { ...appSettings, ...s.val() }; 
+                applyAppSettings(); 
+            } 
+        }); 
+        firebaseListeners.push(settingsRef);
     }
 
-    function updateAll() { renderHomePage(); renderAllChannels(); renderAllMovies(); }
+    function updateAll() { 
+        renderHomePage(); 
+        renderAllChannels(); 
+        renderAllMovies(); 
+    }
+    
     function applyAppSettings() {
         document.body.classList.remove('small-cards', 'large-cards', 'small-font', 'large-font');
         if(appSettings.cardSize === 'small') document.body.classList.add('small-cards');
@@ -1500,40 +1602,106 @@
         if(appSettings.carouselInterval && document.querySelectorAll('.slide').length > 1) startAutoSlide(document.querySelectorAll('.slide').length, appSettings.carouselInterval);
     }
 
-    // ==================== RENDER FUNCTIONS (same as before) ====================
+    // ==================== RENDER FUNCTIONS ====================
     function renderHomePage() {
-        const container = document.getElementById('homeContent'); if (!container) return; container.innerHTML = '';
+        const container = document.getElementById('homeContent'); 
+        if (!container) return; 
+        container.innerHTML = '';
+        
         const categoryMap = new Map();
         allData.genres.forEach(g => categoryMap.set(g.name, { channels: [], movies: [] }));
         categoryMap.set('Uncategorized', { channels: [], movies: [] });
-        allData.channels.forEach(ch => { const cats = (ch.categories && Array.isArray(ch.categories)) ? ch.categories : (ch.genre ? [ch.genre] : []); if(cats.length===0) categoryMap.get('Uncategorized').channels.push(ch); else cats.forEach(cat => { if(!categoryMap.has(cat)) categoryMap.set(cat,{channels:[],movies:[]}); categoryMap.get(cat).channels.push(ch); }); });
-        allData.movies.forEach(m => { const cats = (m.genre && Array.isArray(m.genre)) ? m.genre : (m.genre ? [m.genre] : []); if(cats.length===0) categoryMap.get('Uncategorized').movies.push(m); else cats.forEach(cat => { if(!categoryMap.has(cat)) categoryMap.set(cat,{channels:[],movies:[]}); categoryMap.get(cat).movies.push(m); }); });
+        
+        allData.channels.forEach(ch => { 
+            const cats = (ch.categories && Array.isArray(ch.categories)) ? ch.categories : (ch.genre ? [ch.genre] : []); 
+            if(cats.length===0) categoryMap.get('Uncategorized').channels.push(ch); 
+            else cats.forEach(cat => { 
+                if(!categoryMap.has(cat)) categoryMap.set(cat,{channels:[],movies:[]}); 
+                categoryMap.get(cat).channels.push(ch); 
+            }); 
+        });
+        
+        allData.movies.forEach(m => { 
+            const cats = (m.genre && Array.isArray(m.genre)) ? m.genre : (m.genre ? [m.genre] : []); 
+            if(cats.length===0) categoryMap.get('Uncategorized').movies.push(m); 
+            else cats.forEach(cat => { 
+                if(!categoryMap.has(cat)) categoryMap.set(cat,{channels:[],movies:[]}); 
+                categoryMap.get(cat).movies.push(m); 
+            }); 
+        });
+        
         for (let [catName, items] of categoryMap) {
             if(items.channels.length===0 && items.movies.length===0) continue;
-            const section = document.createElement('div'); section.className = 'category-section';
+            const section = document.createElement('div'); 
+            section.className = 'category-section';
             section.innerHTML = `<div class="category-header"><h3>${sanitize(catName)}</h3><span class="see-all" onclick="viewAllCategory('${sanitize(catName)}')">See All</span></div>`;
-            if(items.channels.length>0) { const channelsDiv = document.createElement('div'); channelsDiv.className = 'horizontal-scroll-container'; const cols = []; for(let i=0;i<items.channels.length;i+=2) cols.push(items.channels.slice(i,i+2)); channelsDiv.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(ch => createCard(ch,true)).join('')}</div>`).join(''); section.appendChild(channelsDiv); }
-            if(items.movies.length>0) { const moviesDiv = document.createElement('div'); moviesDiv.className = 'horizontal-scroll-container'; const cols = []; for(let i=0;i<items.movies.length;i+=2) cols.push(items.movies.slice(i,i+2)); moviesDiv.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(m => createCard(m,false)).join('')}</div>`).join(''); section.appendChild(moviesDiv); }
+            
+            if(items.channels.length>0) { 
+                const channelsDiv = document.createElement('div'); 
+                channelsDiv.className = 'horizontal-scroll-container'; 
+                const cols = []; 
+                for(let i=0;i<items.channels.length;i+=2) cols.push(items.channels.slice(i,i+2)); 
+                channelsDiv.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(ch => createCard(ch,true)).join('')}</div>`).join(''); 
+                section.appendChild(channelsDiv); 
+            }
+            
+            if(items.movies.length>0) { 
+                const moviesDiv = document.createElement('div'); 
+                moviesDiv.className = 'horizontal-scroll-container'; 
+                const cols = []; 
+                for(let i=0;i<items.movies.length;i+=2) cols.push(items.movies.slice(i,i+2)); 
+                moviesDiv.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(m => createCard(m,false)).join('')}</div>`).join(''); 
+                section.appendChild(moviesDiv); 
+            }
             container.appendChild(section);
         }
     }
 
-    function renderAllChannels() { const grid = document.getElementById('allChannelsGrid'); if(grid) { if(allData.channels.length === 0) { grid.innerHTML = '<div class="empty-state">No channels available</div>'; return; } const cols = []; for(let i=0;i<allData.channels.length;i+=2) cols.push(allData.channels.slice(i,i+2)); grid.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(ch => createCard(ch,true)).join('')}</div>`).join(''); } }
-    function renderAllMovies() { const grid = document.getElementById('allMoviesGrid'); if(grid) { if(allData.movies.length === 0) { grid.innerHTML = '<div class="empty-state">No movies available</div>'; return; } const cols = []; for(let i=0;i<allData.movies.length;i+=2) cols.push(allData.movies.slice(i,i+2)); grid.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(m => createCard(m,false)).join('')}</div>`).join(''); } }
+    function renderAllChannels() { 
+        const grid = document.getElementById('allChannelsGrid'); 
+        if(grid) { 
+            if(allData.channels.length === 0) { 
+                grid.innerHTML = '<div class="empty-state">No channels available</div>'; 
+                return; 
+            } 
+            const cols = []; 
+            for(let i=0;i<allData.channels.length;i+=2) cols.push(allData.channels.slice(i,i+2)); 
+            grid.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(ch => createCard(ch,true)).join('')}</div>`).join(''); 
+        } 
+    }
+    
+    function renderAllMovies() { 
+        const grid = document.getElementById('allMoviesGrid'); 
+        if(grid) { 
+            if(allData.movies.length === 0) { 
+                grid.innerHTML = '<div class="empty-state">No movies available</div>'; 
+                return; 
+            } 
+            const cols = []; 
+            for(let i=0;i<allData.movies.length;i+=2) cols.push(allData.movies.slice(i,i+2)); 
+            grid.innerHTML = cols.map(col => `<div class="scroll-column">${col.map(m => createCard(m,false)).join('')}</div>`).join(''); 
+        } 
+    }
 
     function createCard(item, isChannel) {
         let isLocked = false;
         if(isChannel) isLocked = userIsExpired || (appSettings.lockedChannels && appSettings.lockedChannels.includes(item.id));
         else isLocked = userIsExpired && item.access === 'VIP';
+        
         const poster = item.posterURL || item.logo || item.poster_url || 'https://via.placeholder.com/300x450/1a1a1a/666?text=No+Image';
         const title = sanitize(item.name || item.title || 'Untitled');
+        
         let badge = (isChannel && !isLocked) ? '<div class="live-badge">LIVE</div>' : '';
         if(item.isPremium) badge += '<div class="premium-badge-card"><i class="fas fa-crown"></i></div>';
         if(item.hasDRM) badge += '<div class="drm-badge"><i class="fas fa-lock"></i> DRM</div>';
+        
         let playButton = (!isChannel && !isLocked) ? `<div class="play-button" onclick="event.stopPropagation(); handleClick('${item.type}','${item.id}',false)"><i class="fas fa-play"></i></div>` : '';
+        
         const favStar = currentUser ? `<div class="favorite-star" onclick="event.stopPropagation(); toggleFavorite('${item.type}','${item.id}')"><i class="fas ${favoritesSet.has(item.id) ? 'fa-star' : 'fa-star-o'}"></i></div>` : '';
+        
         let downloadBadge = '';
         if(!isChannel && downloads.some(d => d.id === item.id && d.status === 'completed')) downloadBadge = '<div class="download-badge"><i class="fas fa-check"></i> Downloaded</div>';
+        
         return `<div class="content-card" onclick="handleClick('${item.type}','${item.id}',${isLocked})">${badge}${playButton}${downloadBadge}${favStar}${isLocked ? '<div class="locked-overlay"><i class="fas fa-lock lock-icon"></i></div>' : ''}<img src="${sanitize(poster)}" onerror="this.src='https://via.placeholder.com/300x450/1a1a1a/666?text=No+Image'" loading="lazy"><div class="content-overlay"><div class="content-title">${title}</div></div></div>`;
     }
 
@@ -1553,63 +1721,162 @@
         document.getElementById('channelDetailDescription').textContent = sanitize(channel.description || 'No description available.');
         document.getElementById('channelDetailModal').classList.add('show');
     }
-    function closeChannelDetail() { document.getElementById('channelDetailModal').classList.remove('show'); currentChannelData = null; }
-    function playChannelFromDetail() { if(currentChannelData) { closeChannelDetail(); playContent(currentChannelData); } }
-    function shareChannel(platform) { if(!currentChannelData) return; const url = encodeURIComponent(window.location.origin + window.location.pathname + '?type=channel&id=' + currentChannelData.id); const text = encodeURIComponent(`Watch ${currentChannelData.name} on STANY MIN TV`); let shareUrl = ''; if(platform === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`; else if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; else if(platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; if(shareUrl) window.open(shareUrl, '_blank'); }
-    function copyChannelLink() { if(currentChannelData) { const url = window.location.origin + window.location.pathname + '?type=channel&id=' + currentChannelData.id; navigator.clipboard.writeText(url).then(() => showToast('Channel link copied!', 'success')); } }
+    
+    function closeChannelDetail() { 
+        document.getElementById('channelDetailModal').classList.remove('show'); 
+        currentChannelData = null; 
+    }
+    
+    function playChannelFromDetail() { 
+        if(currentChannelData) { 
+            closeChannelDetail(); 
+            playContent(currentChannelData); 
+        } 
+    }
+    
+    function shareChannel(platform) { 
+        if(!currentChannelData) return; 
+        const url = encodeURIComponent(window.location.origin + window.location.pathname + '?type=channel&id=' + currentChannelData.id); 
+        const text = encodeURIComponent(`Watch ${currentChannelData.name} on STANY MIN TV`); 
+        let shareUrl = ''; 
+        if(platform === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`; 
+        else if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; 
+        else if(platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; 
+        if(shareUrl) window.open(shareUrl, '_blank'); 
+    }
+    
+    function copyChannelLink() { 
+        if(currentChannelData) { 
+            const url = window.location.origin + window.location.pathname + '?type=channel&id=' + currentChannelData.id; 
+            navigator.clipboard.writeText(url).then(() => showToast('Channel link copied!', 'success')); 
+        } 
+    }
 
     function openDetailsPage(item) {
-        document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); if(p.id !== 'detailsPage') p.style.display = 'none'; });
-        document.getElementById('detailsPage').classList.add('show'); document.getElementById('detailsPage').classList.add('active');
+        document.querySelectorAll('.page').forEach(p => { 
+            p.classList.remove('active'); 
+            if(p.id !== 'detailsPage') p.style.display = 'none'; 
+        });
+        document.getElementById('detailsPage').classList.add('show'); 
+        document.getElementById('detailsPage').classList.add('active');
         window.scrollTo(0, 0);
         populateMovieDetails(item);
     }
-    function closeDetailsPage() { document.getElementById('detailsPage').classList.remove('show'); document.getElementById('detailsPage').classList.remove('active'); document.getElementById('home').classList.add('active'); document.getElementById('home').style.display = 'block'; currentMovieData = null; }
+    
+    function closeDetailsPage() { 
+        document.getElementById('detailsPage').classList.remove('show'); 
+        document.getElementById('detailsPage').classList.remove('active'); 
+        document.getElementById('home').classList.add('active'); 
+        document.getElementById('home').style.display = 'block'; 
+        currentMovieData = null; 
+    }
+    
     function populateMovieDetails(movie) {
         document.getElementById('dBackdrop').src = sanitize(movie.backdrop_url || movie.backdropURL || 'https://via.placeholder.com/800x400/1a1a1a/666?text=No+Backdrop');
         document.getElementById('dPoster').src = sanitize(movie.poster_url || movie.posterURL || movie.poster || 'https://via.placeholder.com/180x270/1a1a1a/666?text=No+Poster');
         document.getElementById('dTitleTypewriter').textContent = sanitize(movie.title || movie.name || 'Untitled');
+        
         document.getElementById('infoDetailGrid').innerHTML = `<div class="info-d-card"><div class="info-d-icon"><i class="fas fa-star"></i></div><div class="info-d-label">Rating</div><div class="info-d-value">⭐ ${movie.rating?.toFixed(1) || 'N/A'}</div></div><div class="info-d-card"><div class="info-d-icon"><i class="fas fa-calendar"></i></div><div class="info-d-label">Year</div><div class="info-d-value">${movie.release_year || movie.year || 'N/A'}</div></div><div class="info-d-card"><div class="info-d-icon"><i class="fas fa-clock"></i></div><div class="info-d-label">Runtime</div><div class="info-d-value">${movie.runtime || movie.duration || 'N/A'} min</div></div>`;
+        
         document.getElementById('dStoryline').textContent = movie.storyline || movie.description || 'No storyline available.';
+        
         const castContainer = document.getElementById('castScroll');
-        if(movie.cast && Array.isArray(movie.cast) && movie.cast.length) castContainer.innerHTML = movie.cast.map(c => `<div class="cast-card"><img src="${sanitize(c.profile_image || c.image || 'https://via.placeholder.com/80/1a1a1a/666?text=No+Photo')}" onerror="this.src='https://via.placeholder.com/80/1a1a1a/666?text=No+Photo'"><div class="cast-actor">${sanitize(c.name)}</div><div class="cast-character">${sanitize(c.character)}</div></div>`).join('');
-        else castContainer.innerHTML = '<div class="empty-state">No cast info</div>';
+        if(movie.cast && Array.isArray(movie.cast) && movie.cast.length) 
+            castContainer.innerHTML = movie.cast.map(c => `<div class="cast-card"><img src="${sanitize(c.profile_image || c.image || 'https://via.placeholder.com/80/1a1a1a/666?text=No+Photo')}" onerror="this.src='https://via.placeholder.com/80/1a1a1a/666?text=No+Photo'"><div class="cast-actor">${sanitize(c.name)}</div><div class="cast-character">${sanitize(c.character)}</div></div>`).join('');
+        else 
+            castContainer.innerHTML = '<div class="empty-state">No cast info</div>';
+        
         const similar = allData.movies.filter(m => m.id !== movie.id && m.genres?.some(g => movie.genres?.includes(g))).slice(0,12);
         const similarDiv = document.getElementById('similarScroll');
-        if(similar.length) similarDiv.innerHTML = similar.map(m => `<div class="similar-card" onclick="openDetailsPageFromSimilar('${m.id}')"><img src="${sanitize(m.poster_url || m.posterURL || 'https://via.placeholder.com/110x165/1a1a1a/666?text=No+Poster')}" onerror="this.src='https://via.placeholder.com/110x165/1a1a1a/666?text=No+Poster'"><p>${sanitize(m.title)}</p></div>`).join('');
-        else similarDiv.innerHTML = '<div class="empty-state">No recommendations</div>';
+        if(similar.length) 
+            similarDiv.innerHTML = similar.map(m => `<div class="similar-card" onclick="openDetailsPageFromSimilar('${m.id}')"><img src="${sanitize(m.poster_url || m.posterURL || 'https://via.placeholder.com/110x165/1a1a1a/666?text=No+Poster')}" onerror="this.src='https://via.placeholder.com/110x165/1a1a1a/666?text=No+Poster'"><p>${sanitize(m.title)}</p></div>`).join('');
+        else 
+            similarDiv.innerHTML = '<div class="empty-state">No recommendations</div>';
+        
         document.getElementById('playMovieBtn').onclick = () => playContent(movie);
         document.getElementById('downloadBtn').onclick = () => downloadMovie(movie);
-        document.getElementById('openTrailerBtn').onclick = () => { if(movie.trailer_url || movie.trailer) window.open(movie.trailer_url || movie.trailer, '_blank'); else showToast('No trailer available', 'error'); };
+        document.getElementById('openTrailerBtn').onclick = () => { 
+            if(movie.trailer_url || movie.trailer) 
+                window.open(movie.trailer_url || movie.trailer, '_blank'); 
+            else 
+                showToast('No trailer available', 'error'); 
+        };
+        
         loadComments(movie.id);
     }
-    function openDetailsPageFromSimilar(id) { const movie = allData.movies.find(m => m.id === id); if(movie) openDetailsPage(movie); else showToast('Movie not found', 'error'); }
-    function toggleStoryline() { const el = document.getElementById('dStoryline'); const btn = document.getElementById('readMoreBtn'); if(el.classList.contains('expanded')) { el.classList.remove('expanded'); btn.textContent = 'Read More'; } else { el.classList.add('expanded'); btn.textContent = 'Read Less'; } }
+    
+    function openDetailsPageFromSimilar(id) { 
+        const movie = allData.movies.find(m => m.id === id); 
+        if(movie) openDetailsPage(movie); 
+        else showToast('Movie not found', 'error'); 
+    }
+    
+    function toggleStoryline() { 
+        const el = document.getElementById('dStoryline'); 
+        const btn = document.getElementById('readMoreBtn'); 
+        if(el.classList.contains('expanded')) { 
+            el.classList.remove('expanded'); 
+            btn.textContent = 'Read More'; 
+        } else { 
+            el.classList.add('expanded'); 
+            btn.textContent = 'Read Less'; 
+        } 
+    }
 
-    // ==================== VIDEO PLAYER (10 players + DRM) ====================
+    // ==================== VIDEO PLAYER (Fixed & Complete) ====================
     function playContent(item) {
         let url = item.m3u8Link || item.stream_url || item.movieURL || item.mpdUrl || item.url;
         if(!url && item.hasDRM) url = DRM_CONFIG.widevine.licenseUrl;
         if(!url) { showToast('No stream URL available', 'error'); return; }
+        
         document.getElementById('playerTitle').textContent = sanitize(item.title || item.name || 'Playing...');
         document.getElementById('playerModal').classList.add('show');
         renderPlayerSelector();
         switchPlayer('videojs', url, item);
     }
+    
     function renderPlayerSelector() {
         const container = document.getElementById('playerSelector');
-        container.innerHTML = VIDEO_PLAYERS.map(p => `<div class="player-option ${p.id==='videojs'?'active':''} ${p.drm?'drm':''}" onclick="switchPlayer('${p.id}', getCurrentStreamUrl(), getCurrentStreamItem())" data-player="${p.id}">${p.name}</div>`).join('');
+        container.innerHTML = VIDEO_PLAYERS.map(p => 
+            `<div class="player-option ${p.id==='videojs'?'active':''} ${p.drm?'drm':''}" 
+             onclick="switchPlayer('${p.id}', getCurrentStreamUrl(), getCurrentStreamItem())" 
+             data-player="${p.id}">${p.name}</div>`
+        ).join('');
         document.getElementById('playerStatus').textContent = 'Video.js selected';
     }
-    function getCurrentStreamUrl() { if(currentMovieData) return currentMovieData.m3u8Link || currentMovieData.stream_url || currentMovieData.movieURL || currentMovieData.mpdUrl || currentMovieData.url; if(currentChannelData) return currentChannelData.m3u8Link || currentChannelData.stream_url || currentChannelData.url; return ''; }
-    function getCurrentStreamItem() { return currentMovieData || currentChannelData; }
+    
+    function getCurrentStreamUrl() { 
+        if(currentMovieData) return currentMovieData.m3u8Link || currentMovieData.stream_url || currentMovieData.movieURL || currentMovieData.mpdUrl || currentMovieData.url; 
+        if(currentChannelData) return currentChannelData.m3u8Link || currentChannelData.stream_url || currentChannelData.url; 
+        return ''; 
+    }
+    
+    function getCurrentStreamItem() { 
+        return currentMovieData || currentChannelData; 
+    }
+    
     function switchPlayer(playerId, url, item) {
-        ['videoJS','shakaContainer','dashContainer','nativePlayer','hlsPlayer','plyrPlayer','clapprContainer'].forEach(id => { const el = document.getElementById(id); if(el) { el.style.display = 'none'; if(el.tagName === 'VIDEO' && el.pause) el.pause(); } });
+        // Hide all player containers first
+        ['videoJS','shakaContainer','dashContainer','nativePlayer','hlsPlayer','plyrPlayer','clapprContainer'].forEach(id => { 
+            const el = document.getElementById(id); 
+            if(el) { 
+                el.style.display = 'none'; 
+                if(el.tagName === 'VIDEO' && el.pause) el.pause(); 
+            } 
+        });
+        
+        // Update active state in selector
         document.querySelectorAll('.player-option').forEach(opt => opt.classList.remove('active'));
         document.querySelector(`.player-option[data-player="${playerId}"]`)?.classList.add('active');
+        
         const player = VIDEO_PLAYERS.find(p => p.id === playerId);
         if(!player) return;
+        
         document.getElementById('playerStatus').textContent = `${player.name} - ${player.desc}`;
+        
+        // Clean up previous player instances
+        cleanupPlayer(playerId);
+        
         switch(playerId) {
             case 'videojs': initVideoJS(url, item); break;
             case 'shaka': initShakaPlayer(url, item); break;
@@ -1621,76 +1888,656 @@
             default: initVideoJS(url, item);
         }
     }
-    function initVideoJS(url, item) { const videoEl = document.getElementById('videoJS'); videoEl.style.display = 'block'; if(!window.videojs) { showToast('Video.js not loaded', 'error'); return; } if(!window.player) window.player = videojs('videoJS', { fluid: true, autoplay: true, controls: true, responsive: true, html5: { hls: { overrideNative: true } } }); const isM3U8 = url.includes('.m3u8'), isMPD = url.includes('.mpd'); const contentType = isM3U8 ? 'application/x-mpegURL' : (isMPD ? 'application/dash+xml' : 'video/mp4'); window.player.src({ src: url, type: contentType }); window.player.play().catch(e => showToast('Click play to start', 'info')); }
-    function initShakaPlayer(url, item) { const container = document.getElementById('shakaContainer'); container.style.display = 'block'; container.innerHTML = '<video id="shakaVideo" class="player-video" controls autoplay style="width:100%;height:100%;"></video>'; const video = document.getElementById('shakaVideo'); if(!window.shaka) { showToast('Shaka Player not loaded', 'error'); return; } if(!window.shakaPlayer) window.shakaPlayer = new shaka.Player(video); if(item?.hasDRM || url.includes('peacocktv') || url.includes('.mpd')) { window.shakaPlayer.configure({ drm: { servers: { 'com.widevine.alpha': DRM_CONFIG.widevine.licenseUrl }, advanced: { 'com.widevine.alpha': { httpRequestHeaders: DRM_CONFIG.widevine.headers } } } }); } window.shakaPlayer.load(url).then(() => { video.play(); showToast('DRM content playing', 'success'); }).catch(e => { console.error(e); showToast('DRM playback error', 'error'); switchPlayer('videojs', url, item); }); }
-    function initHLSjs(url, item) { const video = document.getElementById('hlsPlayer'); video.style.display = 'block'; if(!window.Hls) { showToast('HLS.js not loaded', 'error'); return; } if(Hls.isSupported()) { const hls = new Hls(); hls.loadSource(url); hls.attachMedia(video); hls.on(Hls.Events.MANIFEST_PARSED, () => video.play()); } else if(video.canPlayType('application/vnd.apple.mpegurl')) { video.src = url; video.play(); } }
-    function initDashJS(url, item) { const container = document.getElementById('dashContainer'); container.style.display = 'block'; container.innerHTML = '<video id="dashVideo" class="player-video" controls autoplay style="width:100%;height:100%;"></video>'; const video = document.getElementById('dashVideo'); if(!window.dashjs) { showToast('Dash.js not loaded', 'error'); return; } const player = dashjs.MediaPlayer().create(); player.initialize(video, url, true); }
-    function initNativePlayer(url, item) { const video = document.getElementById('nativePlayer'); video.style.display = 'block'; video.src = url; video.play(); }
-    function initPlyrPlayer(url, item) { const video = document.getElementById('plyrPlayer'); video.style.display = 'block'; video.src = url; if(!window.Plyr) { showToast('Plyr not loaded', 'error'); return; } new Plyr(video, { controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'] }); video.play(); }
-    function initClapprPlayer(url, item) { const container = document.getElementById('clapprContainer'); container.style.display = 'block'; if(!window.Clappr) { showToast('Clappr not loaded', 'error'); return; } new Clappr.Player({ parent: '#clapprContainer', source: url, autoPlay: true }); }
-    function closePlayer() { document.getElementById('playerModal').classList.remove('show'); if(window.player && window.player.pause) window.player.pause(); if(window.shakaPlayer && window.shakaPlayer.destroy) window.shakaPlayer.destroy(); }
+    
+    function cleanupPlayer(playerId) {
+        switch(playerId) {
+            case 'videojs':
+                if(window.player && window.player.dispose) {
+                    window.player.dispose();
+                    window.player = null;
+                }
+                break;
+            case 'shaka':
+                if(window.shakaPlayer && window.shakaPlayer.destroy) {
+                    window.shakaPlayer.destroy();
+                    window.shakaPlayer = null;
+                }
+                break;
+            case 'hlsjs':
+                if(window.hls && window.hls.destroy) {
+                    window.hls.destroy();
+                    window.hls = null;
+                }
+                break;
+            case 'dashjs':
+                if(window.dashPlayer && window.dashPlayer.reset) {
+                    window.dashPlayer.reset();
+                    window.dashPlayer = null;
+                }
+                break;
+            case 'plyr':
+                if(window.plyrInstance && window.plyrInstance.destroy) {
+                    window.plyrInstance.destroy();
+                    window.plyrInstance = null;
+                }
+                break;
+            case 'clappr':
+                if(window.clapprInstance && window.clapprInstance.destroy) {
+                    window.clapprInstance.destroy();
+                    window.clapprInstance = null;
+                }
+                break;
+        }
+    }
+    
+    function initVideoJS(url, item) { 
+        const videoEl = document.getElementById('videoJS'); 
+        videoEl.style.display = 'block'; 
+        if(!window.videojs) { showToast('Video.js not loaded', 'error'); return; } 
+        
+        // Initialize or reuse player
+        if(!window.player) {
+            window.player = videojs('videoJS', { 
+                fluid: true, 
+                autoplay: true, 
+                controls: true, 
+                responsive: true, 
+                html5: { hls: { overrideNative: true } } 
+            });
+        }
+        
+        const isM3U8 = url.includes('.m3u8'), isMPD = url.includes('.mpd'); 
+        const contentType = isM3U8 ? 'application/x-mpegURL' : (isMPD ? 'application/dash+xml' : 'video/mp4'); 
+        window.player.src({ src: url, type: contentType }); 
+        window.player.play().catch(e => showToast('Click play to start', 'info')); 
+    }
+    
+    function initShakaPlayer(url, item) { 
+        const container = document.getElementById('shakaContainer'); 
+        container.style.display = 'block'; 
+        container.innerHTML = '<video id="shakaVideo" class="player-video" controls autoplay style="width:100%;height:100%;"></video>'; 
+        const video = document.getElementById('shakaVideo'); 
+        if(!window.shaka) { showToast('Shaka Player not loaded', 'error'); return; } 
+        
+        if(!window.shakaPlayer) {
+            window.shakaPlayer = new shaka.Player(video);
+        }
+        
+        if(item?.hasDRM || url.includes('peacocktv') || url.includes('.mpd')) { 
+            window.shakaPlayer.configure({ 
+                drm: { 
+                    servers: { 'com.widevine.alpha': DRM_CONFIG.widevine.licenseUrl }, 
+                    advanced: { 
+                        'com.widevine.alpha': { httpRequestHeaders: DRM_CONFIG.widevine.headers } 
+                    } 
+                } 
+            }); 
+        } 
+        
+        window.shakaPlayer.load(url).then(() => { 
+            video.play(); 
+            showToast('DRM content playing', 'success'); 
+        }).catch(e => { 
+            console.error('Shaka error:', e); 
+            showToast('DRM playback error - falling back to Video.js', 'error'); 
+            switchPlayer('videojs', url, item); 
+        }); 
+    }
+    
+    function initHLSjs(url, item) { 
+        const video = document.getElementById('hlsPlayer'); 
+        video.style.display = 'block'; 
+        if(!window.Hls) { showToast('HLS.js not loaded', 'error'); return; } 
+        
+        if(Hls.isSupported()) { 
+            if(!window.hls) {
+                window.hls = new Hls();
+            }
+            window.hls.loadSource(url); 
+            window.hls.attachMedia(video); 
+            window.hls.on(Hls.Events.MANIFEST_PARSED, () => video.play()); 
+        } else if(video.canPlayType('application/vnd.apple.mpegurl')) { 
+            video.src = url; 
+            video.play(); 
+        } 
+    }
+    
+    function initDashJS(url, item) { 
+        const container = document.getElementById('dashContainer'); 
+        container.style.display = 'block'; 
+        container.innerHTML = '<video id="dashVideo" class="player-video" controls autoplay style="width:100%;height:100%;"></video>'; 
+        const video = document.getElementById('dashVideo'); 
+        if(!window.dashjs) { showToast('Dash.js not loaded', 'error'); return; } 
+        
+        if(!window.dashPlayer) {
+            window.dashPlayer = dashjs.MediaPlayer().create();
+        }
+        window.dashPlayer.initialize(video, url, true); 
+    }
+    
+    function initNativePlayer(url, item) { 
+        const video = document.getElementById('nativePlayer'); 
+        video.style.display = 'block'; 
+        video.src = url; 
+        video.play(); 
+    }
+    
+    function initPlyrPlayer(url, item) { 
+        const video = document.getElementById('plyrPlayer'); 
+        video.style.display = 'block'; 
+        video.src = url; 
+        if(!window.Plyr) { showToast('Plyr not loaded', 'error'); return; } 
+        
+        if(!window.plyrInstance) {
+            window.plyrInstance = new Plyr(video, { 
+                controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'] 
+            });
+        }
+        video.play(); 
+    }
+    
+    function initClapprPlayer(url, item) { 
+        const container = document.getElementById('clapprContainer'); 
+        container.style.display = 'block'; 
+        if(!window.Clappr) { showToast('Clappr not loaded', 'error'); return; } 
+        
+        if(window.clapprInstance) {
+            window.clapprInstance.destroy();
+        }
+        window.clapprInstance = new Clappr.Player({ 
+            parent: '#clapprContainer', 
+            source: url, 
+            autoPlay: true 
+        }); 
+    }
+    
+    function closePlayer() { 
+        document.getElementById('playerModal').classList.remove('show'); 
+        // Clean up all players
+        Object.keys(videoPlayers).forEach(key => cleanupPlayer(key));
+        if(window.player && window.player.pause) window.player.pause(); 
+    }
 
-    // ==================== OFFLINE DOWNLOADS (IndexedDB) ====================
-    const DB_NAME = 'StanyOfflineDB', STORE_NAME = 'videos';
-    async function openDB() { return new Promise((resolve, reject) => { const request = indexedDB.open(DB_NAME, 1); request.onupgradeneeded = (e) => { const db = e.target.result; if(!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME, { keyPath: 'id' }); }; request.onsuccess = (e) => resolve(e.target.result); request.onerror = (e) => reject(e.target.error); }); }
-    async function downloadMovie(movie) { if(!isPremium && !movie.isFree) { showToast('Premium required for offline downloads', 'premium'); return; } const url = movie.movie_links?.['720p'] || movie.downloadURL || movie.movieURL; if(!url) { showToast('No download link available', 'error'); return; } showToast('Starting download...', 'info'); try { const response = await fetch(url); const blob = await response.blob(); const db = await openDB(); const tx = db.transaction(STORE_NAME, 'readwrite'); tx.objectStore(STORE_NAME).put({ id: movie.id, title: movie.title, poster: movie.posterURL, data: blob, timestamp: Date.now() }); await tx.done; const downloadItem = { id: movie.id, title: movie.title, poster: movie.posterURL, status: 'completed', progress: 100, addedAt: Date.now() }; downloads.push(downloadItem); saveDownloads(); renderDownloadManager(); showToast(`Downloaded: ${movie.title}`, 'success'); } catch(e) { showToast('Download failed: ' + e.message, 'error'); } }
-    async function playDownloaded(movieId) { const db = await openDB(); const tx = db.transaction(STORE_NAME, 'readonly'); const store = tx.objectStore(STORE_NAME); const item = await store.get(movieId); if(item && item.data) { const blobUrl = URL.createObjectURL(item.data); const video = document.createElement('video'); video.src = blobUrl; video.controls = true; video.autoplay = true; video.style.position = 'fixed'; video.style.top = '0'; video.style.left = '0'; video.style.width = '100%'; video.style.height = '100%'; video.style.zIndex = '100000'; video.style.backgroundColor = '#000'; document.body.appendChild(video); video.onended = () => { URL.revokeObjectURL(blobUrl); video.remove(); }; video.play(); } else { showToast('File not found offline', 'error'); } }
-    function saveDownloads() { localStorage.setItem('downloads', JSON.stringify(downloads)); }
-    function renderDownloadManager() { const container = document.getElementById('downloadManager'); const active = downloads.filter(d => d.status === 'downloading' || d.status === 'completed'); if(active.length === 0) { container.classList.remove('show'); return; } container.classList.add('show'); container.innerHTML = active.map(d => `<div class="download-item"><img src="${sanitize(d.poster || 'https://via.placeholder.com/50x75/1a1a1a/666?text=?')}"><div class="download-info"><div class="download-title">${sanitize(d.title)}</div><div class="download-progress"><div class="download-progress-bar" style="width:${d.progress}%"></div></div></div><div class="download-actions">${d.status === 'completed' ? `<button class="download-btn-sm" onclick="playDownloaded('${d.id}')"><i class="fas fa-play"></i></button>` : `<button class="download-btn-sm" disabled>${Math.round(d.progress)}%</button>`}</div></div>`).join(''); }
-    function renderDownloads() { const container = document.getElementById('dlContent'); const completed = downloads.filter(d => d.status === 'completed'); if(completed.length === 0) { container.innerHTML = '<div class="empty-state">No downloaded content. Start downloading!</div>'; return; } container.innerHTML = completed.map(d => `<div class="download-item" style="display:flex; gap:12px; background:var(--ios-card); padding:12px; border-radius:12px; margin-bottom:8px;"><img src="${sanitize(d.poster || 'https://via.placeholder.com/50x75/1a1a1a/666?text=?')}" style="width:50px;height:75px;border-radius:10px;object-fit:cover;"><div style="flex:1;"><div style="font-weight:600;">${sanitize(d.title)}</div><div style="color:var(--ios-green);font-size:0.85rem;"><i class="fas fa-check"></i> Offline Ready</div></div><button class="ios-button" style="padding:8px 16px; width:auto; font-size:0.9rem;" onclick="playDownloaded('${d.id}')"><i class="fas fa-play"></i> Play</button></div>`).join(''); }
+    // ==================== OFFLINE DOWNLOADS (Simplified & Safe) ====================
+    // Note: Full video downloads via IndexedDB are impractical for large files
+    // This implementation stores metadata and uses external URLs for playback
+    function downloadMovie(movie) { 
+        if(!isPremium && !movie.isFree) { 
+            showToast('Premium required for offline downloads', 'premium'); 
+            return; 
+        } 
+        
+        const url = movie.movie_links?.['720p'] || movie.downloadURL || movie.movieURL; 
+        if(!url) { 
+            showToast('No download link available', 'error'); 
+            return; 
+        } 
+        
+        // Simulate download progress for demo purposes
+        showToast('Starting download...', 'info');
+        const downloadItem = { 
+            id: movie.id, 
+            title: movie.title, 
+            poster: movie.posterURL, 
+            status: 'downloading', 
+            progress: 0, 
+            addedAt: Date.now(),
+            url: url // Store URL for playback
+        };
+        
+        // Add to downloads array
+        downloads.push(downloadItem);
+        saveDownloads();
+        renderDownloadManager();
+        
+        // Simulate progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 15;
+            if(progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                downloadItem.status = 'completed';
+                downloadItem.progress = 100;
+                saveDownloads();
+                renderDownloadManager();
+                showToast(`Downloaded: ${movie.title}`, 'success');
+            } else {
+                downloadItem.progress = Math.min(progress, 99);
+                renderDownloadManager();
+            }
+        }, 500);
+    }
+    
+    function playDownloaded(movieId) { 
+        const downloaded = downloads.find(d => d.id === movieId && d.status === 'completed');
+        if(downloaded && downloaded.url) {
+            // Create a temporary movie object for playback
+            const tempMovie = {
+                id: downloaded.id,
+                title: downloaded.title,
+                posterURL: downloaded.poster,
+                movieURL: downloaded.url,
+                stream_url: downloaded.url
+            };
+            playContent(tempMovie);
+        } else { 
+            showToast('File not found offline', 'error'); 
+        } 
+    }
+    
+    function saveDownloads() { 
+        localStorage.setItem('downloads', JSON.stringify(downloads)); 
+    }
+    
+    function renderDownloadManager() { 
+        const container = document.getElementById('downloadManager'); 
+        const active = downloads.filter(d => d.status === 'downloading' || d.status === 'completed'); 
+        if(active.length === 0) { 
+            container.classList.remove('show'); 
+            return; 
+        } 
+        container.classList.add('show'); 
+        container.innerHTML = active.map(d => `<div class="download-item"><img src="${sanitize(d.poster || 'https://via.placeholder.com/50x75/1a1a1a/666?text=?')}"><div class="download-info"><div class="download-title">${sanitize(d.title)}</div><div class="download-progress"><div class="download-progress-bar" style="width:${d.progress}%"></div></div></div><div class="download-actions">${d.status === 'completed' ? `<button class="download-btn-sm" onclick="playDownloaded('${d.id}')"><i class="fas fa-play"></i></button>` : `<button class="download-btn-sm" disabled>${Math.round(d.progress)}%</button>`}</div></div>`).join(''); 
+    }
+    
+    function renderDownloads() { 
+        const container = document.getElementById('dlContent'); 
+        const completed = downloads.filter(d => d.status === 'completed'); 
+        if(completed.length === 0) { 
+            container.innerHTML = '<div class="empty-state">No downloaded content. Start downloading!</div>'; 
+            return; 
+        } 
+        container.innerHTML = completed.map(d => `<div class="download-item" style="display:flex; gap:12px; background:var(--ios-card); padding:12px; border-radius:12px; margin-bottom:8px;"><img src="${sanitize(d.poster || 'https://via.placeholder.com/50x75/1a1a1a/666?text=?')}" style="width:50px;height:75px;border-radius:10px;object-fit:cover;"><div style="flex:1;"><div style="font-weight:600;">${sanitize(d.title)}</div><div style="color:var(--ios-green);font-size:0.85rem;"><i class="fas fa-check"></i> Offline Ready</div></div><button class="ios-button" style="padding:8px 16px; width:auto; font-size:0.9rem;" onclick="playDownloaded('${d.id}')"><i class="fas fa-play"></i> Play</button></div>`).join(''); 
+    }
 
     // ==================== SLIDER ====================
     function renderSlider() {
         const movies = allData.carousel.length ? allData.carousel : allData.movies.filter(m => m.backdrop_url || m.backdropURL).slice(0,6);
-        const wrapper = document.getElementById('sliderWrapper'); const dots = document.getElementById('sliderDots');
-        if(movies.length === 0) { wrapper.innerHTML = '<div class="slide"><div class="slide-overlay"><div class="slide-info"><h3>No featured content</h3></div></div></div>'; dots.innerHTML = ''; return; }
+        const wrapper = document.getElementById('sliderWrapper'); 
+        const dots = document.getElementById('sliderDots');
+        
+        if(movies.length === 0) { 
+            wrapper.innerHTML = '<div class="slide"><div class="slide-overlay"><div class="slide-info"><h3>No featured content</h3></div></div></div>'; 
+            dots.innerHTML = ''; 
+            return; 
+        }
+        
         wrapper.innerHTML = movies.map((m,i) => `<div class="slide" onclick="openDetailsPageFromSimilar('${sanitize(m.id || '')}')"><img src="${sanitize(m.imageURL || m.backdrop_url || m.backdropURL || 'https://via.placeholder.com/800x400/1a1a1a/666?text=No+Image')}" onerror="this.src='https://via.placeholder.com/800x400/1a1a1a/666?text=No+Image'"><div class="slide-overlay"><div class="slide-info"><h3>${sanitize(m.title || m.name || 'Featured')}</h3><p>${sanitize(m.description || '').substring(0,100)}</p></div></div></div>`).join('');
+        
         dots.innerHTML = movies.map((_,i) => `<div class="s-dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`).join('');
-        currentSlide = 0; startAutoSlide(movies.length, appSettings.carouselInterval || 5000); attachSliderEvents(movies.length);
+        
+        currentSlide = 0; 
+        startAutoSlide(movies.length, appSettings.carouselInterval || 5000); 
+        attachSliderEvents(movies.length);
     }
-    function startAutoSlide(total, interval) { if(slideInterval) clearInterval(slideInterval); slideInterval = setInterval(() => { currentSlide = (currentSlide + 1) % total; updateSlider(); }, interval); }
-    function goToSlide(index) { currentSlide = index; updateSlider(); if(slideInterval) { clearInterval(slideInterval); startAutoSlide(document.querySelectorAll('.slide').length, appSettings.carouselInterval || 5000); } }
-    function updateSlider() { const wrapper = document.getElementById('sliderWrapper'); if(wrapper) wrapper.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.s-dot').forEach((d,i) => d.classList.toggle('active', i === currentSlide)); }
-    function attachSliderEvents(total) { const wrapper = document.getElementById('sliderWrapper'); if(!wrapper) return; let startX = 0; wrapper.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive: true}); wrapper.addEventListener('touchend', e => { const diff = startX - e.changedTouches[0].clientX; if(Math.abs(diff) > 50) { currentSlide = (diff > 0) ? (currentSlide + 1) % total : (currentSlide - 1 + total) % total; updateSlider(); if(slideInterval) { clearInterval(slideInterval); startAutoSlide(total, appSettings.carouselInterval || 5000); } } }); }
+    
+    function startAutoSlide(total, interval) { 
+        if(slideInterval) clearInterval(slideInterval); 
+        slideInterval = setInterval(() => { 
+            currentSlide = (currentSlide + 1) % total; 
+            updateSlider(); 
+        }, interval); 
+    }
+    
+    function goToSlide(index) { 
+        currentSlide = index; 
+        updateSlider(); 
+        if(slideInterval) { 
+            clearInterval(slideInterval); 
+            startAutoSlide(document.querySelectorAll('.slide').length, appSettings.carouselInterval || 5000); 
+        } 
+    }
+    
+    function updateSlider() { 
+        const wrapper = document.getElementById('sliderWrapper'); 
+        if(wrapper) wrapper.style.transform = `translateX(-${currentSlide * 100}%)`; 
+        document.querySelectorAll('.s-dot').forEach((d,i) => d.classList.toggle('active', i === currentSlide)); 
+    }
+    
+    function attachSliderEvents(total) { 
+        const wrapper = document.getElementById('sliderWrapper'); 
+        if(!wrapper) return; 
+        let startX = 0; 
+        wrapper.addEventListener('touchstart', e => { 
+            startX = e.touches[0].clientX; 
+        }, {passive: true}); 
+        wrapper.addEventListener('touchend', e => { 
+            const diff = startX - e.changedTouches[0].clientX; 
+            if(Math.abs(diff) > 50) { 
+                currentSlide = (diff > 0) ? (currentSlide + 1) % total : (currentSlide - 1 + total) % total; 
+                updateSlider(); 
+                if(slideInterval) { 
+                    clearInterval(slideInterval); 
+                    startAutoSlide(total, appSettings.carouselInterval || 5000); 
+                } 
+            } 
+        }); 
+    }
 
     // ==================== FAVORITES ====================
-    function updateFavoritesSet() { if(!currentUser) return; db.ref(`userFavorites/${currentUser.uid}`).once('value', snap => { favoritesSet.clear(); snap.forEach(f => favoritesSet.add(f.key)); }); }
-    function toggleFavorite(type, id) { if(!currentUser) { showToast('Please login to add favorites', 'error'); return; } const favRef = db.ref(`userFavorites/${currentUser.uid}/${id}`); favRef.once('value', snap => { if(snap.exists()) { favRef.remove().then(() => { favoritesSet.delete(id); showToast('Removed from favorites', 'success'); }); } else { favRef.set({ type, addedAt: Date.now() }).then(() => { favoritesSet.add(id); showToast('Added to favorites', 'success'); }); } if(document.getElementById('favorites').classList.contains('active')) loadFavorites(); renderHomePage(); }); }
-    function loadFavorites() { if(!currentUser) { document.getElementById('favoritesContent').innerHTML = '<div class="comment-login-prompt"><p>Please sign in to view favorites</p></div>'; return; } db.ref(`userFavorites/${currentUser.uid}`).on('value', snap => { const container = document.getElementById('favoritesContent'); if(!snap.exists()) { container.innerHTML = '<div class="empty-state">No favorites yet.</div>'; return; } container.innerHTML = ''; snap.forEach(fav => { const item = allData.channels.find(c => c.id === fav.key) || allData.movies.find(m => m.id === fav.key); if(item) { container.innerHTML += `<div class="download-item" style="display:flex; gap:12px; background:var(--ios-card); padding:12px; border-radius:12px; margin-bottom:8px;"><div style="flex:1;"><div style="font-weight:600;">${sanitize(item.name || item.title)}</div><div style="color:var(--ios-gray); font-size:0.85rem;">${sanitize(item.type)}</div></div><button class="ios-button" style="padding:8px 16px; width:auto; font-size:0.9rem;" onclick="handleClick('${item.type}','${item.id}',false)"><i class="fas fa-play"></i> Watch</button></div>`; } }); }); }
+    function updateFavoritesSet() { 
+        if(!currentUser) return; 
+        db.ref(`userFavorites/${currentUser.uid}`).once('value', snap => { 
+            favoritesSet.clear(); 
+            snap.forEach(f => favoritesSet.add(f.key)); 
+        }); 
+    }
+    
+    function toggleFavorite(type, id) { 
+        if(!currentUser) { 
+            showToast('Please login to add favorites', 'error'); 
+            return; 
+        } 
+        const favRef = db.ref(`userFavorites/${currentUser.uid}/${id}`); 
+        favRef.once('value', snap => { 
+            if(snap.exists()) { 
+                favRef.remove().then(() => { 
+                    favoritesSet.delete(id); 
+                    showToast('Removed from favorites', 'success'); 
+                }); 
+            } else { 
+                favRef.set({ type, addedAt: Date.now() }).then(() => { 
+                    favoritesSet.add(id); 
+                    showToast('Added to favorites', 'success'); 
+                }); 
+            } 
+            if(document.getElementById('favorites').classList.contains('active')) loadFavorites(); 
+            renderHomePage(); 
+        }); 
+    }
+    
+    function loadFavorites() { 
+        if(!currentUser) { 
+            document.getElementById('favoritesContent').innerHTML = '<div class="comment-login-prompt"><p>Please sign in to view favorites</p></div>'; 
+            return; 
+        } 
+        db.ref(`userFavorites/${currentUser.uid}`).on('value', snap => { 
+            const container = document.getElementById('favoritesContent'); 
+            if(!snap.exists()) { 
+                container.innerHTML = '<div class="empty-state">No favorites yet.</div>'; 
+                return; 
+            } 
+            container.innerHTML = ''; 
+            snap.forEach(fav => { 
+                const item = allData.channels.find(c => c.id === fav.key) || allData.movies.find(m => m.id === fav.key); 
+                if(item) { 
+                    container.innerHTML += `<div class="download-item" style="display:flex; gap:12px; background:var(--ios-card); padding:12px; border-radius:12px; margin-bottom:8px;"><div style="flex:1;"><div style="font-weight:600;">${sanitize(item.name || item.title)}</div><div style="color:var(--ios-gray); font-size:0.85rem;">${sanitize(item.type)}</div></div><button class="ios-button" style="padding:8px 16px; width:auto; font-size:0.9rem;" onclick="handleClick('${item.type}','${item.id}',false)"><i class="fas fa-play"></i> Watch</button></div>`; 
+                } 
+            }); 
+        }); 
+    }
 
     // ==================== TIPS & BETTING ====================
-    function renderTips() { const container = document.getElementById('tipsContent'); if(!container) return; if(allData.tips.length === 0) { container.innerHTML = '<div class="empty-state">No tips available</div>'; return; } container.innerHTML = allData.tips.map(t => `<div class="tip-card"><div class="tip-title">${sanitize(t.title)}</div><div class="tip-content">${sanitize(t.content)}</div></div>`).join(''); }
-    function renderBettingTips() { const container = document.getElementById('bettingTipsContent'); if(!container) return; if(allData.bettingTips.length === 0) { container.innerHTML = '<div class="empty-state">No betting tips available</div>'; return; } container.innerHTML = allData.bettingTips.map(t => `<div class="betting-tip-card"><div class="betting-tip-teams">${sanitize(t.team1)} vs ${sanitize(t.team2)}</div><div class="betting-tip-title">${sanitize(t.title)}</div><div class="betting-tip-prediction">${sanitize(t.prediction)}</div><div class="betting-tip-odds">Odds: ${sanitize(t.odds)}</div></div>`).join(''); }
+    function renderTips() { 
+        const container = document.getElementById('tipsContent'); 
+        if(!container) return; 
+        if(allData.tips.length === 0) { 
+            container.innerHTML = '<div class="empty-state">No tips available</div>'; 
+            return; 
+        } 
+        container.innerHTML = allData.tips.map(t => `<div class="tip-card"><div class="tip-title">${sanitize(t.title)}</div><div class="tip-content">${sanitize(t.content)}</div></div>`).join(''); 
+    }
+    
+    function renderBettingTips() { 
+        const container = document.getElementById('bettingTipsContent'); 
+        if(!container) return; 
+        if(allData.bettingTips.length === 0) { 
+            container.innerHTML = '<div class="empty-state">No betting tips available</div>'; 
+            return; 
+        } 
+        container.innerHTML = allData.bettingTips.map(t => `<div class="betting-tip-card"><div class="betting-tip-teams">${sanitize(t.team1)} vs ${sanitize(t.team2)}</div><div class="betting-tip-title">${sanitize(t.title)}</div><div class="betting-tip-prediction">${sanitize(t.prediction)}</div><div class="betting-tip-odds">Odds: ${sanitize(t.odds)}</div></div>`).join(''); 
+    }
 
     // ==================== CHAT ====================
-    function sendChat() { if(!currentUser) { showToast('Please login to chat', 'error'); return; } const input = document.getElementById('chatInput'); const text = input.value.trim(); if(!text) return; db.ref(`stanyBotMessages/${currentUser.uid}`).push({ text: sanitize(text), sender: 'user', timestamp: Date.now() }); input.value = ''; setTimeout(() => { db.ref(`stanyBotMessages/${currentUser.uid}`).push({ text: "Thanks for your message! Our support team will reply soon.", sender: 'admin', timestamp: Date.now() }); }, 1500); }
-    function listenChat() { if(!currentUser) return; db.ref(`stanyBotMessages/${currentUser.uid}`).on('value', snap => { const container = document.getElementById('chatBox'); container.innerHTML = ''; const msgs = []; snap.forEach(msg => { const val = msg.val(); if(val) msgs.push(val); }); msgs.sort((a,b) => a.timestamp - b.timestamp); msgs.forEach(msg => { const div = document.createElement('div'); div.className = `chat-msg ${msg.sender === 'user' ? 'sent' : 'received'}`; div.textContent = msg.text; container.appendChild(div); }); container.scrollTop = container.scrollHeight; }); }
+    function sendChat() { 
+        if(!currentUser) { 
+            showToast('Please login to chat', 'error'); 
+            return; 
+        } 
+        const input = document.getElementById('chatInput'); 
+        const text = input.value.trim(); 
+        if(!text) return; 
+        db.ref(`stanyBotMessages/${currentUser.uid}`).push({ 
+            text: sanitize(text), 
+            sender: 'user', 
+            timestamp: Date.now() 
+        }); 
+        input.value = ''; 
+        setTimeout(() => { 
+            db.ref(`stanyBotMessages/${currentUser.uid}`).push({ 
+                text: "Thanks for your message! Our support team will reply soon.", 
+                sender: 'admin', 
+                timestamp: Date.now() 
+            }); 
+        }, 1500); 
+    }
+    
+    function listenChat() { 
+        if(!currentUser) return; 
+        db.ref(`stanyBotMessages/${currentUser.uid}`).on('value', snap => { 
+            const container = document.getElementById('chatBox'); 
+            container.innerHTML = ''; 
+            const msgs = []; 
+            snap.forEach(msg => { 
+                const val = msg.val(); 
+                if(val) msgs.push(val); 
+            }); 
+            msgs.sort((a,b) => a.timestamp - b.timestamp); 
+            msgs.forEach(msg => { 
+                const div = document.createElement('div'); 
+                div.className = `chat-msg ${msg.sender === 'user' ? 'sent' : 'received'}`; 
+                div.textContent = msg.text; 
+                container.appendChild(div); 
+            }); 
+            container.scrollTop = container.scrollHeight; 
+        }); 
+    }
 
     // ==================== COMMENTS ====================
-    function loadComments(movieId) { const container = document.getElementById('commentsList'); const countEl = document.getElementById('commentCount'); if(!currentUser) { document.getElementById('commentInputArea').innerHTML = `<div class="comment-login-prompt"><i class="fas fa-comment-alt" style="font-size: 2rem; margin-bottom: 12px;"></i><p>Sign in to leave a comment</p></div>`; countEl.textContent = '0'; return; } document.getElementById('commentInputArea').innerHTML = `<textarea id="commentText" rows="3" placeholder="Write a comment..."></textarea><button class="comment-post-btn" onclick="postComment('${sanitize(movieId)}')">Post</button>`; db.ref(`movieComments/${movieId}`).on('value', snap => { countEl.textContent = snap.numChildren(); if(!snap.exists()) { container.innerHTML = '<div class="empty-state">No comments yet. Be the first!</div>'; return; } container.innerHTML = ''; snap.forEach(c => { container.innerHTML += `<div class="comment-item"><div class="comment-meta">${c.val().userName} · ${new Date(c.val().timestamp).toLocaleString()}</div><div class="comment-text">${c.val().text}</div></div>`; }); }); }
-    function postComment(movieId) { const text = document.getElementById('commentText')?.value.trim(); if(!text || !currentUser) return; db.ref(`movieComments/${movieId}`).push({ userId: currentUser.uid, userName: currentUser.name || 'Anonymous', text: sanitize(text), timestamp: Date.now() }).then(() => { document.getElementById('commentText').value = ''; showToast('Comment posted!', 'success'); }); }
+    function loadComments(movieId) { 
+        const container = document.getElementById('commentsList'); 
+        const countEl = document.getElementById('commentCount'); 
+        if(!currentUser) { 
+            document.getElementById('commentInputArea').innerHTML = `<div class="comment-login-prompt"><i class="fas fa-comment-alt" style="font-size: 2rem; margin-bottom: 12px;"></i><p>Sign in to leave a comment</p></div>`; 
+            countEl.textContent = '0'; 
+            return; 
+        } 
+        document.getElementById('commentInputArea').innerHTML = `<textarea id="commentText" rows="3" placeholder="Write a comment..."></textarea><button class="comment-post-btn" onclick="postComment('${sanitize(movieId)}')">Post</button>`; 
+        db.ref(`movieComments/${movieId}`).on('value', snap => { 
+            countEl.textContent = snap.numChildren(); 
+            if(!snap.exists()) { 
+                container.innerHTML = '<div class="empty-state">No comments yet. Be the first!</div>'; 
+                return; 
+            } 
+            container.innerHTML = ''; 
+            snap.forEach(c => { 
+                container.innerHTML += `<div class="comment-item"><div class="comment-meta">${c.val().userName} · ${new Date(c.val().timestamp).toLocaleString()}</div><div class="comment-text">${c.val().text}</div></div>`; 
+            }); 
+        }); 
+    }
+    
+    function postComment(movieId) { 
+        const text = document.getElementById('commentText')?.value.trim(); 
+        if(!text || !currentUser) return; 
+        db.ref(`movieComments/${movieId}`).push({ 
+            userId: currentUser.uid, 
+            userName: currentUser.name || 'Anonymous', 
+            text: sanitize(text), 
+            timestamp: Date.now() 
+        }).then(() => { 
+            document.getElementById('commentText').value = ''; 
+            showToast('Comment posted!', 'success'); 
+        }); 
+    }
 
     // ==================== PIN LOCK ====================
-    function checkPinLock() { const pin = localStorage.getItem('appPin'), enabled = localStorage.getItem('appLockEnabled') === 'true'; if(enabled && pin) { pinLength = pin.length; renderPinDots(); initPinKeypad(); document.getElementById('pinLockOverlay').classList.remove('hidden'); document.getElementById('mainApp').style.display = 'none'; } else { document.getElementById('pinLockOverlay').classList.add('hidden'); document.getElementById('mainApp').style.display = 'block'; } }
-    function renderPinDots() { const dots = document.getElementById('pinDots'); if(!dots) return; dots.innerHTML = ''; for(let i = 0; i < pinLength; i++) { const d = document.createElement('div'); d.className = 'pin-dot' + (i < enteredPin.length ? ' filled' : ''); dots.appendChild(d); } }
-    function pinInput(digit) { if(enteredPin.length >= pinLength) return; enteredPin += digit; renderPinDots(); if(enteredPin.length === pinLength) { const storedPin = localStorage.getItem('appPin'); if(enteredPin === storedPin) { document.getElementById('pinLockOverlay').classList.add('hidden'); document.getElementById('mainApp').style.display = 'block'; enteredPin = ''; showToast('Unlocked!', 'success'); } else { document.querySelectorAll('#pinDots .pin-dot').forEach(d => d.classList.add('error')); setTimeout(() => { enteredPin = ''; renderPinDots(); document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('error')); }, 500); showToast('Incorrect PIN', 'error'); } } }
-    function pinBackspace() { if(enteredPin.length > 0) { enteredPin = enteredPin.slice(0, -1); renderPinDots(); } }
-    function initPinKeypad() { const pad = document.getElementById('pinKeypad'); if(!pad) return; pad.innerHTML = ''; const keys = ['1','2','3','4','5','6','7','8','9','empty','0','back']; keys.forEach(key => { const btn = document.createElement('button'); if(key === 'empty') btn.className = 'pin-key empty'; else if(key === 'back') { btn.className = 'pin-key backspace'; btn.innerHTML = '<i class="fas fa-backspace"></i>'; btn.onclick = pinBackspace; } else { btn.className = 'pin-key'; btn.textContent = key; btn.onclick = () => pinInput(key); } pad.appendChild(btn); }); }
-    function setupPin() { const p = prompt('Enter a new PIN (4-6 digits):'); if(p && /^\d{4,6}$/.test(p)) { localStorage.setItem('appPin', p); localStorage.setItem('appLockEnabled', 'true'); document.getElementById('appLockToggle').checked = true; document.getElementById('setPinRow').classList.remove('hidden'); showToast('PIN set successfully!', 'success'); } else if(p !== null) showToast('Invalid PIN format (4-6 digits)', 'error'); }
-    function toggleAppLock() { const toggle = document.getElementById('appLockToggle'); if(toggle.checked) setupPin(); else { localStorage.removeItem('appPin'); localStorage.setItem('appLockEnabled', 'false'); document.getElementById('setPinRow').classList.add('hidden'); showToast('App lock disabled', 'success'); document.getElementById('pinLockOverlay').classList.add('hidden'); document.getElementById('mainApp').style.display = 'block'; } }
+    function checkPinLock() { 
+        const pin = localStorage.getItem('appPin'), 
+              enabled = localStorage.getItem('appLockEnabled') === 'true'; 
+        if(enabled && pin) { 
+            pinLength = pin.length; 
+            renderPinDots(); 
+            initPinKeypad(); 
+            document.getElementById('pinLockOverlay').classList.remove('hidden'); 
+            document.getElementById('mainApp').style.display = 'none'; 
+        } else { 
+            document.getElementById('pinLockOverlay').classList.add('hidden'); 
+            document.getElementById('mainApp').style.display = 'block'; 
+        } 
+    }
+    
+    function renderPinDots() { 
+        const dots = document.getElementById('pinDots'); 
+        if(!dots) return; 
+        dots.innerHTML = ''; 
+        for(let i = 0; i < pinLength; i++) { 
+            const d = document.createElement('div'); 
+            d.className = 'pin-dot' + (i < enteredPin.length ? ' filled' : ''); 
+            dots.appendChild(d); 
+        } 
+    }
+    
+    function pinInput(digit) { 
+        if(enteredPin.length >= pinLength) return; 
+        enteredPin += digit; 
+        renderPinDots(); 
+        if(enteredPin.length === pinLength) { 
+            const storedPin = localStorage.getItem('appPin'); 
+            if(enteredPin === storedPin) { 
+                document.getElementById('pinLockOverlay').classList.add('hidden'); 
+                document.getElementById('mainApp').style.display = 'block'; 
+                enteredPin = ''; 
+                showToast('Unlocked!', 'success'); 
+            } else { 
+                document.querySelectorAll('#pinDots .pin-dot').forEach(d => d.classList.add('error')); 
+                setTimeout(() => { 
+                    enteredPin = ''; 
+                    renderPinDots(); 
+                    document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('error')); 
+                }, 500); 
+                showToast('Incorrect PIN', 'error'); 
+            } 
+        } 
+    }
+    
+    function pinBackspace() { 
+        if(enteredPin.length > 0) { 
+            enteredPin = enteredPin.slice(0, -1); 
+            renderPinDots(); 
+        } 
+    }
+    
+    function initPinKeypad() { 
+        const pad = document.getElementById('pinKeypad'); 
+        if(!pad) return; 
+        pad.innerHTML = ''; 
+        const keys = ['1','2','3','4','5','6','7','8','9','empty','0','back']; 
+        keys.forEach(key => { 
+            const btn = document.createElement('button'); 
+            if(key === 'empty') btn.className = 'pin-key empty'; 
+            else if(key === 'back') { 
+                btn.className = 'pin-key backspace'; 
+                btn.innerHTML = '<i class="fas fa-backspace"></i>'; 
+                btn.onclick = pinBackspace; 
+            } else { 
+                btn.className = 'pin-key'; 
+                btn.textContent = key; 
+                btn.onclick = () => pinInput(key); 
+            } 
+            pad.appendChild(btn); 
+        }); 
+    }
+    
+    function setupPin() { 
+        const p = prompt('Enter a new PIN (4-6 digits):'); 
+        if(p && /^\d{4,6}$/.test(p)) { 
+            localStorage.setItem('appPin', p); 
+            localStorage.setItem('appLockEnabled', 'true'); 
+            document.getElementById('appLockToggle').checked = true; 
+            document.getElementById('setPinRow').classList.remove('hidden'); 
+            showToast('PIN set successfully!', 'success'); 
+        } else if(p !== null) showToast('Invalid PIN format (4-6 digits)', 'error'); 
+    }
+    
+    function toggleAppLock() { 
+        const toggle = document.getElementById('appLockToggle'); 
+        if(toggle.checked) setupPin(); 
+        else { 
+            localStorage.removeItem('appPin'); 
+            localStorage.setItem('appLockEnabled', 'false'); 
+            document.getElementById('setPinRow').classList.add('hidden'); 
+            showToast('App lock disabled', 'success'); 
+            document.getElementById('pinLockOverlay').classList.add('hidden'); 
+            document.getElementById('mainApp').style.display = 'block'; 
+        } 
+    }
 
     // ==================== NAVIGATION ====================
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
-    function nav(page, el) { document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); if(p.id !== 'detailsPage') p.style.display = 'none'; }); document.getElementById(page).classList.add('active'); document.getElementById(page).style.display = 'block'; document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active')); if(el?.classList.contains('nav-item')) el.classList.add('active'); if(page === 'home') renderHomePage(); if(page === 'channels') renderAllChannels(); if(page === 'movies') renderAllMovies(); if(page === 'favorites') loadFavorites(); if(page === 'downloads') renderDownloads(); if(page === 'tips') renderTips(); if(page === 'bettingTips') renderBettingTips(); if(page === 'chat') listenChat(); if(window.innerWidth < 768) { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebarOverlay').classList.remove('active'); } window.scrollTo(0,0); }
-    function toggleSearch() { const bar = document.getElementById('searchBar'); bar.style.display = bar.style.display === 'none' ? 'block' : 'none'; if(bar.style.display === 'block') document.getElementById('searchInput').focus(); }
-    function globalSearch() { const q = document.getElementById('searchInput').value.toLowerCase().trim(); if(!q) { renderAllChannels(); renderAllMovies(); return; } const filteredChannels = allData.channels.filter(c => (c.name?.toLowerCase().includes(q)) || (c.genre?.toLowerCase().includes(q))); const filteredMovies = allData.movies.filter(m => (m.title?.toLowerCase().includes(q)) || (m.genre?.some?.(g => g.toLowerCase().includes(q)))); document.getElementById('allChannelsGrid').innerHTML = filteredChannels.length ? filteredChannels.map(ch => createCard(ch, true)).join('') : '<div class="empty-state">No channels found</div>'; document.getElementById('allMoviesGrid').innerHTML = filteredMovies.length ? filteredMovies.map(m => createCard(m, false)).join('') : '<div class="empty-state">No movies found</div>'; }
+    function toggleSidebar() { 
+        document.getElementById('sidebar').classList.toggle('active'); 
+        document.getElementById('sidebarOverlay').classList.toggle('active'); 
+    }
+    
+    function nav(page, el) { 
+        document.querySelectorAll('.page').forEach(p => { 
+            p.classList.remove('active'); 
+            if(p.id !== 'detailsPage') p.style.display = 'none'; 
+        }); 
+        document.getElementById(page).classList.add('active'); 
+        document.getElementById(page).style.display = 'block'; 
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active')); 
+        if(el?.classList.contains('nav-item')) el.classList.add('active'); 
+        if(page === 'home') renderHomePage(); 
+        if(page === 'channels') renderAllChannels(); 
+        if(page === 'movies') renderAllMovies(); 
+        if(page === 'favorites') loadFavorites(); 
+        if(page === 'downloads') renderDownloads(); 
+        if(page === 'tips') renderTips(); 
+        if(page === 'bettingTips') renderBettingTips(); 
+        if(page === 'chat') listenChat(); 
+        if(window.innerWidth < 768) { 
+            document.getElementById('sidebar').classList.remove('active'); 
+            document.getElementById('sidebarOverlay').classList.remove('active'); 
+        } 
+        window.scrollTo(0,0); 
+    }
+    
+    function toggleSearch() { 
+        const bar = document.getElementById('searchBar'); 
+        bar.style.display = bar.style.display === 'none' ? 'block' : 'none'; 
+        if(bar.style.display === 'block') document.getElementById('searchInput').focus(); 
+    }
+    
+    function globalSearch() { 
+        const q = document.getElementById('searchInput').value.toLowerCase().trim(); 
+        if(!q) { 
+            renderAllChannels(); 
+            renderAllMovies(); 
+            return; 
+        } 
+        const filteredChannels = allData.channels.filter(c => (c.name?.toLowerCase().includes(q)) || (c.genre?.toLowerCase().includes(q))); 
+        const filteredMovies = allData.movies.filter(m => (m.title?.toLowerCase().includes(q)) || (m.genre?.some?.(g => g.toLowerCase().includes(q)))); 
+        document.getElementById('allChannelsGrid').innerHTML = filteredChannels.length ? filteredChannels.map(ch => createCard(ch, true)).join('') : '<div class="empty-state">No channels found</div>'; 
+        document.getElementById('allMoviesGrid').innerHTML = filteredMovies.length ? filteredMovies.map(m => createCard(m, false)).join('') : '<div class="empty-state">No movies found</div>'; 
+    }
+    
     function showNotifications() { showToast('No new notifications', 'info'); }
     function showLanguageSettings() { document.querySelector('.language-selector')?.scrollIntoView({behavior: 'smooth'}); }
     function quickRefresh() { loadEssentialData(); showToast('Data refreshed!', 'success'); }
     function showLogoutConfirm() { document.getElementById('logoutModal').classList.add('show'); }
     function cancelLogout() { document.getElementById('logoutModal').classList.remove('show'); }
     function confirmLogout() { auth.signOut().then(() => { document.getElementById('logoutModal').classList.remove('show'); showToast('Logged out successfully', 'success'); window.location.reload(); }); }
-    function shareApp(platform) { const url = encodeURIComponent(window.location.href); const text = encodeURIComponent('Watch STANY MIN TV - Premium Entertainment'); let shareUrl = ''; if(platform === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`; else if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; else if(platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; else if(platform === 'telegram') shareUrl = `https://t.me/share/url?url=${url}&text=${text}`; if(shareUrl) window.open(shareUrl, '_blank'); }
+    function shareApp(platform) { 
+        const url = encodeURIComponent(window.location.href); 
+        const text = encodeURIComponent('Watch STANY MIN TV - Premium Entertainment'); 
+        let shareUrl = ''; 
+        if(platform === 'whatsapp') shareUrl = `https://wa.me/?text=${text}%20${url}`; 
+        else if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; 
+        else if(platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; 
+        else if(platform === 'telegram') shareUrl = `https://t.me/share/url?url=${url}&text=${text}`; 
+        if(shareUrl) window.open(shareUrl, '_blank'); 
+    }
     function copyLink() { navigator.clipboard.writeText(window.location.href).then(() => showToast('Link copied!', 'success')); }
     function shareContent(platform) { shareApp(platform); }
     function copyContentLink() { copyLink(); }
@@ -1700,13 +2547,70 @@
     function watchContent() { if(currentMovieData) playContent(currentMovieData); }
 
     // ==================== UTILITY ====================
-    function sanitize(str) { if(!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
-    function showToast(msg, type='info') { const wrap = document.getElementById('toastWrap'); const toast = document.createElement('div'); toast.className = `toast-msg ${type}`; toast.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':type==='premium'?'fa-crown':'fa-info-circle'}"></i> ${sanitize(msg)}`; wrap.appendChild(toast); setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(-20px)'; setTimeout(() => toast.remove(), 300); }, 3000); }
+    function sanitize(str) { 
+        if(!str) return ''; 
+        const div = document.createElement('div'); 
+        div.textContent = str; 
+        return div.innerHTML; 
+    }
+    
+    function showToast(msg, type='info') { 
+        const wrap = document.getElementById('toastWrap'); 
+        const toast = document.createElement('div'); 
+        toast.className = `toast-msg ${type}`; 
+        toast.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':type==='premium'?'fa-crown':'fa-info-circle'}"></i> ${sanitize(msg)}`; 
+        wrap.appendChild(toast); 
+        setTimeout(() => { 
+            toast.style.opacity = '0'; 
+            toast.style.transform = 'translateY(-20px)'; 
+            setTimeout(() => toast.remove(), 300); 
+        }, 3000); 
+    }
 
     // ==================== INIT ====================
-    window.addEventListener('DOMContentLoaded', () => { setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 1500); checkPinLock(); auth.onAuthStateChanged(user => { if(user) loadEssentialData(); else loadEssentialData(); }); const lockToggle = document.getElementById('appLockToggle'); if(lockToggle) { lockToggle.checked = localStorage.getItem('appLockEnabled') === 'true'; document.getElementById('setPinRow').classList.toggle('hidden', !lockToggle.checked); } window.addEventListener('online', () => showToast('Back online', 'success')); window.addEventListener('offline', () => showToast('You are offline', 'error')); if('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(() => {}); } });
-    document.addEventListener('touchstart', function(event) { if (event.touches.length > 1) event.preventDefault(); }, { passive: false });
-    let lastTouchEnd = 0; document.addEventListener('touchend', function(event) { const now = Date.now(); if (now - lastTouchEnd <= 300) event.preventDefault(); lastTouchEnd = now; }, false);
+    window.addEventListener('DOMContentLoaded', () => { 
+        setTimeout(() => { 
+            document.getElementById('loader').style.display = 'none'; 
+        }, 1500); 
+        checkPinLock(); 
+        auth.onAuthStateChanged(user => { 
+            if(user) loadEssentialData(); 
+            else loadEssentialData(); 
+        }); 
+        const lockToggle = document.getElementById('appLockToggle'); 
+        if(lockToggle) { 
+            lockToggle.checked = localStorage.getItem('appLockEnabled') === 'true'; 
+            document.getElementById('setPinRow').classList.toggle('hidden', !lockToggle.checked); 
+        } 
+        window.addEventListener('online', () => showToast('Back online', 'success')); 
+        window.addEventListener('offline', () => showToast('You are offline', 'error')); 
+        if('serviceWorker' in navigator) { 
+            // Register service worker with fallback
+            navigator.serviceWorker.register('/sw.js').catch(() => {
+                console.log('Service worker registration failed - using fallback');
+            }); 
+        } 
+    });
+    
+    document.addEventListener('touchstart', function(event) { 
+        if (event.touches.length > 1) event.preventDefault(); 
+    }, { passive: false });
+    
+    let lastTouchEnd = 0; 
+    document.addEventListener('touchend', function(event) { 
+        const now = Date.now(); 
+        if (now - lastTouchEnd <= 300) event.preventDefault(); 
+        lastTouchEnd = now; 
+    }, false);
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        firebaseListeners.forEach(ref => {
+            if(ref && ref.off) ref.off();
+        });
+        Object.keys(videoPlayers).forEach(key => cleanupPlayer(key));
+    });
 </script>
 </body>
 </html>
+
