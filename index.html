@@ -1,788 +1,481 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#000000">
-    <meta property="og:title" content="STANY MIN TV - Premium Entertainment">
-    <meta property="og:description" content="Watch Live TV, Movies, Sports with DRM protection">
-    <meta property="og:image" content="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
-    <meta property="og:url" content="https://yourdomain.com">
-    <meta property="og:type" content="website">
-    <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
-    <title>STANY MIN TV - Premium Entertainment</title>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/video.js@8.6.1/dist/video-js.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.7.0/dist/shaka-player.compiled.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'SF Pro Display',sans-serif;}
-        body{background:#000000;color:#ffffff;overflow-x:hidden;padding-bottom:80px;}
-        
-        :root{
-            --primary:#0A84FF;
-            --red:#FF3B30;
-            --green:#34C759;
-            --gray:#8E8E93;
-            --card:#1C1C1E;
-            --border:#2C2C2E;
-        }
-        
-        .ios-input{
-            width:100%;padding:16px 18px;background:#1C1C1E;border:1px solid #2C2C2E;
-            border-radius:14px;color:#ffffff;font-size:16px;margin-bottom:14px;outline:none;
-        }
-        .ios-input:focus{border-color:#0A84FF;}
-        
-        .ios-button{
-            width:100%;padding:16px;background:#0A84FF;border:none;border-radius:14px;
-            color:#fff;font-size:17px;font-weight:600;cursor:pointer;
-        }
-        
-        .header{
-            position:sticky;top:0;padding:16px 20px;background:rgba(0,0,0,0.9);
-            backdrop-filter:blur(20px);border-bottom:1px solid #2C2C2E;
-            display:flex;justify-content:space-between;align-items:center;z-index:100;
-        }
-        .header-title{font-size:20px;font-weight:700;background:linear-gradient(135deg,#FF2D55,#0A84FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-        .header-icon{width:40px;height:40px;background:#1C1C1E;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-        
-        .bottom-nav{
-            position:fixed;bottom:0;left:0;right:0;background:rgba(28,28,30,0.95);
-            backdrop-filter:blur(30px);border-top:1px solid #2C2C2E;
-            display:flex;justify-content:space-around;padding:8px 12px 20px;z-index:100;
-        }
-        .nav-item{
-            display:flex;flex-direction:column;align-items:center;gap:4px;
-            padding:8px 12px;border-radius:12px;cursor:pointer;
-        }
-        .nav-item.active{background:rgba(10,132,255,0.15);}
-        .nav-icon{font-size:20px;color:#8E8E93;}
-        .nav-item.active .nav-icon{color:#0A84FF;}
-        .nav-label{font-size:10px;color:#8E8E93;}
-        .nav-item.active .nav-label{color:#0A84FF;}
-        
-        .page{display:none;padding-bottom:20px;}
-        .page.active{display:block;}
-        
-        .slider-section{padding:16px;position:relative;}
-        .slider-container{position:relative;border-radius:24px;overflow:hidden;height:200px;}
-        .slider-wrapper{display:flex;transition:transform 0.5s ease;height:100%;}
-        .slide{min-width:100%;position:relative;cursor:pointer;}
-        .slide img{width:100%;height:100%;object-fit:cover;}
-        .slide-overlay{position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(to top, #000, transparent);}
-        .slide-title{font-size:18px;font-weight:700;}
-        .slide-desc{font-size:12px;color:#ccc;}
-        .slider-dots{display:flex;justify-content:center;gap:8px;margin-top:12px;}
-        .dot{width:8px;height:8px;border-radius:50%;background:#555;cursor:pointer;}
-        .dot.active{background:#FF3B30;width:24px;border-radius:4px;}
-        
-        .category-section{margin-bottom:24px;}
-        .category-header{display:flex;justify-content:space-between;align-items:center;padding:0 16px;margin-bottom:12px;}
-        .category-header h3{font-size:18px;font-weight:600;}
-        .see-all{color:#0A84FF;font-size:13px;cursor:pointer;}
-        
-        .horizontal-scroll{
-            display:flex;overflow-x:auto;gap:12px;padding:0 16px;
-            scrollbar-width:thin;-webkit-overflow-scrolling:touch;
-        }
-        .horizontal-scroll::-webkit-scrollbar{height:4px;}
-        .horizontal-scroll::-webkit-scrollbar-track{background:#1C1C1E;border-radius:4px;}
-        .horizontal-scroll::-webkit-scrollbar-thumb{background:#0A84FF;border-radius:4px;}
-        
-        .content-card{
-            min-width:140px;width:140px;border-radius:16px;overflow:hidden;
-            background:#1C1C1E;cursor:pointer;position:relative;
-        }
-        .content-card img{width:100%;height:200px;object-fit:cover;}
-        .card-info{padding:8px;}
-        .card-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .live-badge{position:absolute;top:8px;left:8px;background:#FF3B30;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:600;}
-        .premium-badge{position:absolute;top:8px;right:8px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:600;}
-        .play-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:rgba(0,0,0,0.7);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s;}
-        .content-card:hover .play-overlay{opacity:1;}
-        
-        .match-schedule{
-            background:#1C1C1E;margin:16px;border-radius:20px;padding:16px;
-            border:1px solid #2C2C2E;
-        }
-        .match-title{font-size:14px;color:#8E8E93;margin-bottom:12px;}
-        .match-item{
-            display:flex;align-items:center;justify-content:space-between;
-            padding:12px 0;border-bottom:1px solid #2C2C2E;
-        }
-        .match-item:last-child{border-bottom:none;}
-        .match-teams{display:flex;align-items:center;gap:12px;}
-        .team-logo{width:30px;height:30px;border-radius:30px;object-fit:cover;}
-        .team-name{font-size:14px;font-weight:500;}
-        .match-time{font-size:12px;color:#8E8E93;}
-        .match-channel{font-size:11px;color:#0A84FF;}
-        
-        .player-modal{
-            display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-            background:#000;z-index:1000;flex-direction:column;
-        }
-        .player-modal.show{display:flex;}
-        .player-header{
-            display:flex;justify-content:space-between;align-items:center;
-            padding:16px;background:rgba(0,0,0,0.9);border-bottom:1px solid #2C2C2E;
-        }
-        .player-close{width:36px;height:36px;background:#1C1C1E;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-        .player-container{flex:1;position:relative;}
-        .player-video{width:100%;height:100%;object-fit:contain;}
-        #vidsrcIframe{width:100%;height:100%;border:none;background:#000;}
-        
-        .toast{
-            position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
-            background:#1C1C1E;padding:10px 20px;border-radius:30px;
-            z-index:2000;display:none;border:1px solid #0A84FF;
-        }
-        
-        .auth-screen{
-            position:fixed;top:0;left:0;width:100%;height:100%;
-            background:#000;z-index:10000;display:flex;
-            justify-content:center;align-items:center;padding:20px;
-        }
-        .auth-container{width:100%;max-width:400px;}
-        .auth-logo{text-align:center;margin-bottom:30px;}
-        .auth-logo img{width:100px;height:100px;border-radius:25px;margin-bottom:16px;}
-        .auth-title{font-size:28px;font-weight:700;margin-bottom:8px;}
-        
-        .loader{
-            position:fixed;top:0;left:0;width:100%;height:100%;
-            background:#000;z-index:99999;display:flex;
-            justify-content:center;align-items:center;flex-direction:column;gap:20px;
-        }
-        .spinner{width:44px;height:44px;border:3px solid #1C1C1E;border-top-color:#0A84FF;border-radius:50%;animation:spin 1s linear infinite;}
-        @keyframes spin{to{transform:rotate(360deg);}}
-        
-        .hidden{display:none !important;}
-        
-        .timer-badge{
-            position:fixed;top:70px;right:16px;background:#FF3B30;
-            padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;
-            z-index:99;box-shadow:0 2px 10px rgba(0,0,0,0.3);
-        }
-        
-        .locked-overlay{
-            position:absolute;top:0;left:0;right:0;bottom:0;
-            background:rgba(0,0,0,0.8);display:flex;flex-direction:column;
-            align-items:center;justify-content:center;gap:8px;
-        }
-        .locked-overlay i{font-size:30px;color:#FFD700;}
-        .locked-overlay span{font-size:12px;}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛩️ AVIATOR ULTIMATE · SIGNAL GENERATOR</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+    }
+    body {
+      background: #0c1119;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .dashboard {
+      max-width: 750px;
+      width: 100%;
+      background: #131c28;
+      border-radius: 40px;
+      padding: 28px 24px;
+      border: 1px solid #2e4055;
+      box-shadow: 0 20px 30px #00000060, inset 0 1px 0 #3a5068;
+      color: #e9f1fc;
+    }
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #f5c542;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      color: #90a9c5;
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+      border-left: 5px solid #f5c542;
+      padding-left: 18px;
+    }
+    .section-title {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin: 28px 0 16px 0;
+      color: #c6d9f0;
+      border-bottom: 2px solid #2a4055;
+      padding-bottom: 8px;
+    }
+    .market-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .market-btn {
+      flex: 1;
+      background: #1d2a38;
+      border: 2px solid #314a60;
+      color: #cbdaea;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 14px 0;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+    .market-btn.active {
+      background: #f5b342;
+      border-color: #f9d27a;
+      color: #0b121c;
+      box-shadow: 0 0 15px #f5b34280;
+    }
+    .big-signal-btn {
+      background: linear-gradient(145deg, #1f7a5c, #146b4e);
+      border: none;
+      color: white;
+      font-weight: 800;
+      font-size: 1.6rem;
+      padding: 18px 20px;
+      border-radius: 60px;
+      width: 100%;
+      box-shadow: 0 8px 0 #0b3b2c, 0 6px 12px black;
+      cursor: pointer;
+      transition: 0.1s;
+      border: 1px solid #48b88a;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .big-signal-btn:active {
+      transform: translateY(5px);
+      box-shadow: 0 3px 0 #0b3b2c, 0 6px 12px black;
+    }
+    .signal-card {
+      background: #0f1a26;
+      border-radius: 30px;
+      padding: 24px;
+      margin: 18px 0;
+      border: 1px solid #ffd96670;
+    }
+    .signal-badge {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: #b2c9e8;
+    }
+    .signal-value {
+      font-size: 4rem;
+      font-weight: 900;
+      color: #ffe28c;
+      line-height: 1;
+      margin: 5px 0;
+    }
+    .signal-desc {
+      color: #bdd0e9;
+      font-size: 1rem;
+    }
+    .formula-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .formula-chip {
+      background: #1f3140;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #d7e5ff;
+      border: 1px solid #3f5a74;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+    .formula-chip.active {
+      background: #f5b342;
+      color: #0f1a24;
+      border-color: #fad98b;
+    }
+    .input-area {
+      background: #1a2632;
+      padding: 20px;
+      border-radius: 28px;
+      margin: 20px 0;
+    }
+    label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: #aac1df;
+    }
+    input, select {
+      width: 100%;
+      padding: 14px 16px;
+      background: #0d1620;
+      border: 1.5px solid #2d445b;
+      border-radius: 30px;
+      color: white;
+      font-size: 1.1rem;
+      margin: 8px 0 16px;
+      outline: none;
+    }
+    .flex-row {
+      display: flex;
+      gap: 12px;
+    }
+    .flex-row > div {
+      flex: 1;
+    }
+    .result-box {
+      background: #0d1a26;
+      border-radius: 24px;
+      padding: 18px;
+      border-left: 6px solid #f5b342;
+    }
+    .note {
+      color: #8da3c0;
+      font-size: 0.8rem;
+      margin-top: 6px;
+    }
+    hr {
+      border: 1px solid #253746;
+      margin: 28px 0;
+    }
+  </style>
 </head>
 <body>
+<div class="dashboard">
+  <h1>✈️ AVIATOR · SIGNAL PRO</h1>
+  <div class="subtitle">📘 Formulas zote kutoka kitabu · R10 · Arithmetic · Purple · Blue train · Auto‑Signal</div>
 
-<div class="loader" id="loader">
-    <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" style="width:80px;height:80px;border-radius:20px;">
-    <div class="spinner"></div>
+  <!-- ========== QUICK SIGNAL GENERATOR (Market based) ========= -->
+  <div class="section-title">⚡ QUICK SIGNAL — CHAGUA MARKET TYPE</div>
+  <div class="market-selector">
+    <div class="market-btn active" data-market="stable">✅ STABLE</div>
+    <div class="market-btn" data-market="transition">🔄 TRANSITION</div>
+    <div class="market-btn" data-market="unstable">⚠️ UNSTABLE</div>
+  </div>
+  <button class="big-signal-btn" id="generateAutoSignal">🚀 GENERATE SIGNAL</button>
+  
+  <div class="signal-card" id="autoSignalDisplay">
+    <div class="signal-badge">🎯 RECOMMENDED CASHOUT</div>
+    <div class="signal-value" id="autoTarget">3.20x</div>
+    <div class="signal-desc" id="autoDesc">Stable market · high pink inaweza tokea ndani ya dakika 10-15</div>
+  </div>
+
+  <!-- ========== PURPLE ODDS SECTION ========= -->
+  <div class="section-title">🟣 PURPLE ODDS PREDICTION</div>
+  <div class="flex-row">
+    <div style="flex:2"><input type="number" id="purpleInput" placeholder="Ingiza purple ya mwisho (mf. 4.56)" value="4.56" step="0.01"></div>
+    <div style="flex:1"><button id="predictPurpleBtn" style="padding:14px; background:#3f5e7a; border:none; border-radius:30px; color:white; font-weight:bold;">PREDICT</button></div>
+  </div>
+  <div class="result-box" id="purpleResult">
+    <span style="color:#b9cef0;">Next purple range: </span>
+    <strong style="font-size:1.4rem; color:#e0b354;" id="purpleRange">4.00 - 9.99</strong>
+    <div class="note" id="purpleNote">Ingiza odds ya purple utabiri range inayofuata</div>
+  </div>
+
+  <!-- ========== MANUAL FORMULA SELECTOR (ALL THEORIES) ========= -->
+  <div class="section-title">🧠 MANUAL FORMULA — CHAGUA THEORY</div>
+  <div class="formula-grid" id="formulaGrid">
+    <span class="formula-chip active" data-method="r10proper">🔥 R10 PROPER</span>
+    <span class="formula-chip" data-method="r10right">⏩ R10 RIGHT</span>
+    <span class="formula-chip" data-method="r10left">⏪ R10 LEFT</span>
+    <span class="formula-chip" data-method="arithmetic">🧮 ARITHMETIC PINK</span>
+    <span class="formula-chip" data-method="90min">⏳ 90 MIN ROLE</span>
+    <span class="formula-chip" data-method="pingpong">🏓 PING PONG</span>
+    <span class="formula-chip" data-method="bluetrain">🔵 BLUE TRAIN</span>
+    <span class="formula-chip" data-method="doubleDigits">🔁 DOUBLE DIGITS</span>
+    <span class="formula-chip" data-method="keycode">🔑 KEY CODE</span>
+  </div>
+
+  <!-- DYNAMIC INPUT AREA -->
+  <div class="input-area" id="dynamicInputArea"></div>
+
+  <button id="manualCalcBtn" style="background:#f5b342; border:none; padding:16px; width:100%; border-radius:60px; font-weight:800; font-size:1.2rem; color:#0f1a24;">📐 CALCULATE SIGNAL</button>
+
+  <div class="result-box" style="margin-top:22px;">
+    <div style="display:flex; justify-content:space-between;">
+      <span class="signal-badge">📌 PREDICTED SIGNAL</span>
+      <span class="signal-badge" id="methodNameDisplay">R10 PROPER</span>
+    </div>
+    <div class="signal-value" style="font-size:2.8rem;" id="manualResult">15:42:49</div>
+    <div class="note" id="manualNote">+10 min from high pink time · target window</div>
+  </div>
+  <hr>
+  <div style="text-align:center; color:#6a85a0;">⚙️ Based on Aviator Pink Theories · Updated 2026 patterns</div>
 </div>
-
-<div id="timerBadge" class="timer-badge hidden"></div>
-
-<div id="authScreen" class="auth-screen">
-    <div class="auth-container">
-        <div id="loginView">
-            <div class="auth-logo">
-                <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
-                <h1 class="auth-title">STANY MIN TV</h1>
-                <p style="color:#8E8E93;">Premium Entertainment</p>
-            </div>
-            <input type="email" id="loginEmail" class="ios-input" placeholder="Email Address">
-            <input type="password" id="loginPassword" class="ios-input" placeholder="Password">
-            <button class="ios-button" onclick="doLogin()">Sign In</button>
-            <p style="text-align:center;margin-top:20px;color:#8E8E93;">
-                No account? <span style="color:#0A84FF;cursor:pointer;" onclick="showRegisterView()">Sign Up</span>
-            </p>
-        </div>
-        <div id="registerView" style="display:none;">
-            <div class="auth-logo">
-                <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg">
-                <h1 class="auth-title">Create Account</h1>
-                <p style="color:#8E8E93;">Start watching premium content</p>
-            </div>
-            <input type="text" id="regName" class="ios-input" placeholder="Full Name">
-            <input type="email" id="regEmail" class="ios-input" placeholder="Email Address">
-            <input type="password" id="regPassword" class="ios-input" placeholder="Password (min 6 chars)">
-            <button class="ios-button" onclick="doRegister()">Create Account</button>
-            <p style="text-align:center;margin-top:20px;color:#8E8E93;">
-                Have an account? <span style="color:#0A84FF;cursor:pointer;" onclick="showLoginView()">Sign In</span>
-            </p>
-        </div>
-    </div>
-</div>
-
-<div id="mainApp" style="display:none;">
-    <div class="header">
-        <div class="header-title">STANY MIN TV</div>
-        <div class="header-icon" onclick="toggleSearch()"><i class="fas fa-search"></i></div>
-    </div>
-    
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="navigateTo('home')">
-            <i class="fas fa-home nav-icon"></i>
-            <span class="nav-label">Home</span>
-        </div>
-        <div class="nav-item" onclick="navigateTo('channels')">
-            <i class="fas fa-tv nav-icon"></i>
-            <span class="nav-label">Channels</span>
-        </div>
-        <div class="nav-item" onclick="navigateTo('movies')">
-            <i class="fas fa-film nav-icon"></i>
-            <span class="nav-label">Movies</span>
-        </div>
-        <div class="nav-item" onclick="navigateTo('schedule')">
-            <i class="fas fa-calendar-alt nav-icon"></i>
-            <span class="nav-label">Schedule</span>
-        </div>
-        <div class="nav-item" onclick="navigateTo('profile')">
-            <i class="fas fa-user nav-icon"></i>
-            <span class="nav-label">Profile</span>
-        </div>
-    </div>
-    
-    <div id="homePage" class="page active">
-        <div class="slider-section">
-            <div class="slider-container">
-                <div class="slider-wrapper" id="sliderWrapper"></div>
-            </div>
-            <div class="slider-dots" id="sliderDots"></div>
-        </div>
-        <div id="homeCategories"></div>
-    </div>
-    
-    <div id="channelsPage" class="page">
-        <div style="padding:16px;"><h3 style="font-size:20px;">All Channels</h3></div>
-        <div class="horizontal-scroll" id="allChannelsList" style="flex-wrap:wrap;justify-content:flex-start;"></div>
-    </div>
-    
-    <div id="moviesPage" class="page">
-        <div style="padding:16px;"><h3 style="font-size:20px;">All Movies</h3></div>
-        <div class="horizontal-scroll" id="allMoviesList" style="flex-wrap:wrap;justify-content:flex-start;"></div>
-    </div>
-    
-    <div id="schedulePage" class="page">
-        <div class="match-schedule" id="matchScheduleContainer">
-            <div class="match-title"><i class="fas fa-futbol"></i> Live Matches Schedule</div>
-            <div id="matchesList"></div>
-        </div>
-        <div class="match-schedule" id="seriesScheduleContainer">
-            <div class="match-title"><i class="fas fa-tv"></i> Series & Movies Schedule</div>
-            <div id="seriesList"></div>
-        </div>
-    </div>
-    
-    <div id="profilePage" class="page">
-        <div style="padding:20px;text-align:center;">
-            <img src="https://raw.githubusercontent.com/stanytz380/IAMLEGEND/refs/heads/main/IMG_1637.jpeg" style="width:80px;height:80px;border-radius:25px;margin-bottom:12px;">
-            <h3 id="profileName">User Name</h3>
-            <p id="profileEmail" style="color:#8E8E93;">email@example.com</p>
-            <p id="profileStatus" style="margin-top:10px;padding:8px;background:#1C1C1E;border-radius:12px;">Trial: 2 minutes</p>
-            <button class="ios-button" style="margin-top:20px;background:#FF3B30;" onclick="logout()">Logout</button>
-        </div>
-    </div>
-</div>
-
-<div class="player-modal" id="playerModal">
-    <div class="player-header">
-        <div class="player-title" id="playerTitle">Now Playing</div>
-        <div class="player-close" onclick="closePlayer()"><i class="fas fa-times"></i></div>
-    </div>
-    <div class="player-container">
-        <video id="videoPlayer" class="player-video" controls style="display:none;"></video>
-        <iframe id="vidsrcIframe" style="display:none;" allowfullscreen allow="autoplay; encrypted-media; fullscreen"></iframe>
-    </div>
-</div>
-
-<div class="toast" id="toastMsg">Message</div>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyAGQqAiYCnWR7X8XkxEXCGu19PU45qXDnc",
-        authDomain: "stanyappstore.firebaseapp.com",
-        projectId: "stanyappstore",
-        storageBucket: "stanyappstore.firebasestorage.app",
-        messagingSenderId: "735017831251",
-        appId: "1:735017831251:web:9fa4184ef141349fb9afa6"
-    };
-    
-    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
-    
-    let currentUser = null;
-    let trialExpiry = null;
-    let trialInterval = null;
-    let allChannels = [];
-    let allMovies = [];
-    let carouselItems = [];
-    let matchesSchedule = [];
-    let seriesSchedule = [];
-    let currentSlide = 0;
-    let slideInterval = null;
-    let deviceId = localStorage.getItem('deviceId') || 'dev_' + Date.now();
-    localStorage.setItem('deviceId', deviceId);
-    
-    function showToast(msg, isError){
-        let toast = document.getElementById('toastMsg');
-        toast.textContent = msg;
-        toast.style.display = 'block';
-        toast.style.background = isError ? '#FF3B30' : '#1C1C1E';
-        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+  (function(){
+    // ----- STATE -----
+    let currentMarket = 'stable';
+    let currentMethod = 'r10proper';
+
+    // ----- DOM elements -----
+    const marketBtns = document.querySelectorAll('.market-btn');
+    const generateAutoBtn = document.getElementById('generateAutoSignal');
+    const autoTarget = document.getElementById('autoTarget');
+    const autoDesc = document.getElementById('autoDesc');
+    const purpleInput = document.getElementById('purpleInput');
+    const predictPurpleBtn = document.getElementById('predictPurpleBtn');
+    const purpleRange = document.getElementById('purpleRange');
+    const purpleNote = document.getElementById('purpleNote');
+    const formulaChips = document.querySelectorAll('.formula-chip');
+    const dynamicInputArea = document.getElementById('dynamicInputArea');
+    const manualCalcBtn = document.getElementById('manualCalcBtn');
+    const manualResult = document.getElementById('manualResult');
+    const manualNote = document.getElementById('manualNote');
+    const methodNameDisplay = document.getElementById('methodNameDisplay');
+
+    // ----- Helper functions (time) -----
+    function parseTimeToSeconds(t) {
+      if (!t) return NaN;
+      const parts = t.split(':').map(Number);
+      if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+      if (parts.length === 2) return parts[0]*3600 + parts[1]*60;
+      return NaN;
     }
-    
-    function updateTrialTimer(){
-        if(!trialExpiry) return;
-        let remaining = trialExpiry - Date.now();
-        if(remaining <= 0){
-            if(trialInterval) clearInterval(trialInterval);
-            document.getElementById('timerBadge').classList.add('hidden');
-            showToast('Your trial has expired. Please upgrade to premium.', true);
-            return;
-        }
-        let minutes = Math.floor(remaining / 60000);
-        let seconds = Math.floor((remaining % 60000) / 1000);
-        document.getElementById('timerBadge').innerHTML = '<i class="fas fa-hourglass-half"></i> Trial: ' + minutes + ':' + (seconds<10?'0':'') + seconds;
-        document.getElementById('timerBadge').classList.remove('hidden');
+    function secondsToTime(sec) {
+      if (isNaN(sec)) return '--:--:--';
+      const h = Math.floor(sec / 3600) % 24;
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     }
-    
-    function isContentLocked(item){
-        if(!currentUser) return true;
-        if(currentUser.isPremium) return false;
-        if(trialExpiry && trialExpiry > Date.now()){
-            if(item.isPremiumOnly) return true;
-            return false;
-        }
-        return true;
+    function addMinutes(timeStr, mins) {
+      const s = parseTimeToSeconds(timeStr);
+      return isNaN(s) ? 'Invalid' : secondsToTime(s + mins*60);
     }
-    
-    async function doRegister(){
-        let name = document.getElementById('regName').value.trim();
-        let email = document.getElementById('regEmail').value.trim();
-        let password = document.getElementById('regPassword').value;
-        
-        if(!name || !email || !password){
-            showToast('Please fill all fields', true);
-            return;
-        }
-        if(password.length < 6){
-            showToast('Password must be at least 6 characters', true);
-            return;
-        }
-        
-        try{
-            let userCred = await auth.createUserWithEmailAndPassword(email, password);
-            let uid = userCred.user.uid;
-            let trialEnd = Date.now() + (2 * 60 * 1000);
-            let userData = {
-                name: name,
-                email: email,
-                deviceId: deviceId,
-                registeredAt: Date.now(),
-                trialExpiry: trialEnd,
-                isPremium: false,
-                isBlocked: false
-            };
-            await db.ref('users/' + uid).set(userData);
-            await db.ref('userProfiles/' + uid).set(userData);
-            showToast('Registration successful! You have 2 minutes trial', false);
-            showLoginView();
-        } catch(e){
-            showToast(e.message, true);
-        }
-    }
-    
-    async function doLogin(){
-        let email = document.getElementById('loginEmail').value.trim();
-        let password = document.getElementById('loginPassword').value;
-        
-        if(!email || !password){
-            showToast('Please enter email and password', true);
-            return;
-        }
-        
-        try{
-            let userCred = await auth.signInWithEmailAndPassword(email, password);
-            let uid = userCred.user.uid;
-            let snap = await db.ref('users/' + uid).once('value');
-            let userData = snap.val();
-            
-            if(!userData){
-                showToast('User data not found', true);
-                return;
-            }
-            if(userData.isBlocked){
-                showToast('Account is blocked', true);
-                await auth.signOut();
-                return;
-            }
-            if(userData.deviceId && userData.deviceId !== deviceId){
-                showToast('Device not authorized. Contact admin.', true);
-                await auth.signOut();
-                return;
-            }
-            
-            currentUser = { uid: uid, ...userData };
-            trialExpiry = currentUser.trialExpiry || null;
-            
-            if(trialExpiry && trialExpiry > Date.now()){
-                if(trialInterval) clearInterval(trialInterval);
-                trialInterval = setInterval(updateTrialTimer, 1000);
-                updateTrialTimer();
-            } else if(trialExpiry && trialExpiry <= Date.now()){
-                document.getElementById('timerBadge').classList.add('hidden');
-            }
-            
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            document.getElementById('loader').style.display = 'flex';
-            
-            document.getElementById('profileName').innerText = currentUser.name || 'User';
-            document.getElementById('profileEmail').innerText = currentUser.email;
-            let statusText = currentUser.isPremium ? 'Premium Active' : (trialExpiry && trialExpiry > Date.now() ? 'Trial Active (2 minutes)' : 'Expired');
-            document.getElementById('profileStatus').innerHTML = statusText;
-            
-            await loadData();
-            document.getElementById('loader').style.display = 'none';
-            navigateTo('home');
-        } catch(e){
-            showToast(e.message, true);
-        }
-    }
-    
-    function showRegisterView(){
-        document.getElementById('loginView').style.display = 'none';
-        document.getElementById('registerView').style.display = 'block';
-    }
-    
-    function showLoginView(){
-        document.getElementById('registerView').style.display = 'none';
-        document.getElementById('loginView').style.display = 'block';
-    }
-    
-    async function loadData(){
-        let channelsSnap = await db.ref('channels').once('value');
-        allChannels = [];
-        channelsSnap.forEach(c => {
-            allChannels.push({ id: c.key, ...c.val() });
-        });
-        
-        let moviesSnap = await db.ref('movies').once('value');
-        allMovies = [];
-        moviesSnap.forEach(m => {
-            allMovies.push({ id: m.key, ...m.val() });
-        });
-        
-        let carouselSnap = await db.ref('carousel').once('value');
-        carouselItems = [];
-        carouselSnap.forEach(c => {
-            carouselItems.push(c.val());
-        });
-        if(carouselItems.length === 0) carouselItems = allMovies.slice(0,5);
-        
-        let matchesSnap = await db.ref('matchSchedule').once('value');
-        matchesSchedule = [];
-        matchesSnap.forEach(m => {
-            matchesSchedule.push({ id: m.key, ...m.val() });
-        });
-        
-        let seriesSnap = await db.ref('seriesSchedule').once('value');
-        seriesSchedule = [];
-        seriesSnap.forEach(s => {
-            seriesSchedule.push({ id: s.key, ...s.val() });
-        });
-        
-        renderSlider();
-        renderHomePage();
-        renderAllChannels();
-        renderAllMovies();
-        renderSchedule();
-    }
-    
-    function renderSlider(){
-        let wrapper = document.getElementById('sliderWrapper');
-        let dots = document.getElementById('sliderDots');
-        if(!carouselItems.length) return;
-        
-        wrapper.innerHTML = '';
-        for(let i=0; i<carouselItems.length; i++){
-            let item = carouselItems[i];
-            wrapper.innerHTML += '<div class="slide" onclick="playCarouselItem(' + i + ')"><img src="' + (item.imageURL || item.backdrop_url || item.posterURL || 'https://via.placeholder.com/800x400') + '" onerror="this.src=\'https://via.placeholder.com/800x400\'"><div class="slide-overlay"><div class="slide-title">' + (item.title || item.name || 'Featured') + '</div><div class="slide-desc">' + (item.description || '').substring(0,80) + '</div></div></div>';
-        }
-        
-        dots.innerHTML = '';
-        for(let i=0; i<carouselItems.length; i++){
-            dots.innerHTML += '<div class="dot ' + (i===0?'active':'') + '" onclick="goToSlide(' + i + ')"></div>';
-        }
-        
-        if(slideInterval) clearInterval(slideInterval);
-        slideInterval = setInterval(() => {
-            currentSlide = (currentSlide + 1) % carouselItems.length;
-            document.getElementById('sliderWrapper').style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
-            document.querySelectorAll('.dot').forEach((d,idx) => {
-                d.classList.toggle('active', idx === currentSlide);
-            });
-        }, 5000);
-    }
-    
-    function goToSlide(index){
-        currentSlide = index;
-        document.getElementById('sliderWrapper').style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
-        document.querySelectorAll('.dot').forEach((d,idx) => {
-            d.classList.toggle('active', idx === currentSlide);
-        });
-        if(slideInterval){
-            clearInterval(slideInterval);
-            slideInterval = setInterval(() => {
-                currentSlide = (currentSlide + 1) % carouselItems.length;
-                document.getElementById('sliderWrapper').style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
-                document.querySelectorAll('.dot').forEach((d,idx) => {
-                    d.classList.toggle('active', idx === currentSlide);
-                });
-            }, 5000);
-        }
-    }
-    
-    function playCarouselItem(index){
-        let item = carouselItems[index];
-        if(item.type === 'movie') playMovieById(item.id);
-        else if(item.stream_url) playChannelStream(item);
-    }
-    
-    function renderHomePage(){
-        let container = document.getElementById('homeCategories');
-        container.innerHTML = '';
-        
-        let channelsSection = document.createElement('div');
-        channelsSection.className = 'category-section';
-        channelsSection.innerHTML = '<div class="category-header"><h3><i class="fas fa-tv"></i> Live Channels</h3><span class="see-all" onclick="navigateTo(\'channels\')">See All</span></div><div class="horizontal-scroll" id="homeChannels"></div>';
-        container.appendChild(channelsSection);
-        
-        let moviesSection = document.createElement('div');
-        moviesSection.className = 'category-section';
-        moviesSection.innerHTML = '<div class="category-header"><h3><i class="fas fa-film"></i> Movies</h3><span class="see-all" onclick="navigateTo(\'movies\')">See All</span></div><div class="horizontal-scroll" id="homeMovies"></div>';
-        container.appendChild(moviesSection);
-        
-        let homeChannels = document.getElementById('homeChannels');
-        let homeMovies = document.getElementById('homeMovies');
-        
-        for(let i=0; i<Math.min(10, allChannels.length); i++){
-            homeChannels.innerHTML += createCardHTML(allChannels[i], 'channel');
-        }
-        for(let i=0; i<Math.min(10, allMovies.length); i++){
-            homeMovies.innerHTML += createCardHTML(allMovies[i], 'movie');
-        }
-    }
-    
-    function renderAllChannels(){
-        let container = document.getElementById('allChannelsList');
-        container.innerHTML = '';
-        for(let i=0; i<allChannels.length; i++){
-            container.innerHTML += createCardHTML(allChannels[i], 'channel');
-        }
-    }
-    
-    function renderAllMovies(){
-        let container = document.getElementById('allMoviesList');
-        container.innerHTML = '';
-        for(let i=0; i<allMovies.length; i++){
-            container.innerHTML += createCardHTML(allMovies[i], 'movie');
-        }
-    }
-    
-    function createCardHTML(item, type){
-        let locked = isContentLocked(item);
-        let poster = item.posterURL || item.logo || 'https://via.placeholder.com/140x200';
-        let title = item.name || item.title || 'Untitled';
-        let lockOverlay = locked ? '<div class="locked-overlay"><i class="fas fa-lock"></i><span>Trial Only</span></div>' : '<div class="play-overlay"><i class="fas fa-play"></i></div>';
-        let liveBadge = (type === 'channel' && !locked) ? '<div class="live-badge">LIVE</div>' : '';
-        let premiumBadge = item.isPremium ? '<div class="premium-badge"><i class="fas fa-crown"></i></div>' : '';
-        
-        return '<div class="content-card" onclick="' + (locked ? 'showTrialExpired()' : 'play' + (type==='channel'?'Channel':'Movie') + '(\'' + item.id + '\')') + '">' + liveBadge + premiumBadge + '<img src="' + poster + '" onerror="this.src=\'https://via.placeholder.com/140x200\'">' + lockOverlay + '<div class="card-info"><div class="card-title">' + title + '</div></div></div>';
-    }
-    
-    function showTrialExpired(){
-        showToast('Trial expired. Please contact admin for premium access.', true);
-    }
-    
-    function playChannel(id){
-        let channel = allChannels.find(c => c.id === id);
-        if(!channel) return;
-        if(isContentLocked(channel)){
-            showTrialExpired();
-            return;
-        }
-        playChannelStream(channel);
-    }
-    
-    function playChannelStream(channel){
-        let url = channel.m3u8Link || channel.stream_url || channel.url;
-        if(!url){
-            showToast('No stream URL available', true);
-            return;
-        }
-        document.getElementById('playerTitle').innerText = channel.name || 'Channel';
-        document.getElementById('playerModal').classList.add('show');
-        
-        let video = document.getElementById('videoPlayer');
-        let iframe = document.getElementById('vidsrcIframe');
-        video.style.display = 'none';
-        iframe.style.display = 'none';
-        video.pause();
-        iframe.src = '';
-        
-        if(url.includes('.m3u8') && Hls.isSupported()){
-            video.style.display = 'block';
-            if(window.hlsPlayer) window.hlsPlayer.destroy();
-            window.hlsPlayer = new Hls();
-            window.hlsPlayer.loadSource(url);
-            window.hlsPlayer.attachMedia(video);
-            window.hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => video.play());
-        } else {
-            video.style.display = 'block';
-            video.src = url;
-            video.play();
-        }
-    }
-    
-    function playMovie(id){
-        let movie = allMovies.find(m => m.id === id);
-        if(!movie) return;
-        if(isContentLocked(movie)){
-            showTrialExpired();
-            return;
-        }
-        playMovieStream(movie);
-    }
-    
-    function playMovieStream(movie){
-        let movieId = movie.imdb_id || movie.tmdb_id || movie.external_id;
-        if(!movieId && movie.title){
-            showToast('Movie ID not found', true);
-            return;
-        }
-        
-        document.getElementById('playerTitle').innerText = movie.title || 'Movie';
-        document.getElementById('playerModal').classList.add('show');
-        
-        let video = document.getElementById('videoPlayer');
-        let iframe = document.getElementById('vidsrcIframe');
-        video.style.display = 'none';
-        iframe.style.display = 'none';
-        video.pause();
-        
-        let embedUrl = 'https://vidsrc.to/embed/movie/' + movieId;
-        iframe.style.display = 'block';
-        iframe.src = embedUrl;
-    }
-    
-    function playMovieById(movieId){
-        let movie = allMovies.find(m => m.id === movieId);
-        if(movie) playMovieStream(movie);
-    }
-    
-    function renderSchedule(){
-        let matchesContainer = document.getElementById('matchesList');
-        let seriesContainer = document.getElementById('seriesList');
-        
-        matchesContainer.innerHTML = '';
-        for(let i=0; i<matchesSchedule.length; i++){
-            let m = matchesSchedule[i];
-            matchesContainer.innerHTML += '<div class="match-item"><div class="match-teams"><img class="team-logo" src="' + (m.logo1 || 'https://via.placeholder.com/30') + '" onerror="this.src=\'https://via.placeholder.com/30\'"><span class="team-name">' + (m.team1 || 'Team A') + '</span><span>vs</span><img class="team-logo" src="' + (m.logo2 || 'https://via.placeholder.com/30') + '" onerror="this.src=\'https://via.placeholder.com/30\'"><span class="team-name">' + (m.team2 || 'Team B') + '</span></div><div><div class="match-time">' + (m.time || 'TBD') + '</div><div class="match-channel">' + (m.channel || '') + '</div></div><div onclick="playChannelById(\'' + (m.channelId || '') + '\')" style="background:#0A84FF;padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;">Watch</div></div>';
-        }
-        if(matchesSchedule.length === 0) matchesContainer.innerHTML = '<div style="padding:20px;text-align:center;color:#8E8E93;">No matches scheduled</div>';
-        
-        seriesContainer.innerHTML = '';
-        for(let i=0; i<seriesSchedule.length; i++){
-            let s = seriesSchedule[i];
-            seriesContainer.innerHTML += '<div class="match-item"><div class="match-teams"><img class="team-logo" src="' + (s.logo || 'https://via.placeholder.com/30') + '" onerror="this.src=\'https://via.placeholder.com/30\'"><span class="team-name">' + (s.title || 'Series') + '</span></div><div><div class="match-time">' + (s.time || 'TBD') + '</div><div class="match-channel">' + (s.channel || '') + '</div></div><div onclick="playMovieById(\'' + (s.movieId || '') + '\')" style="background:#0A84FF;padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;">Watch</div></div>';
-        }
-        if(seriesSchedule.length === 0) seriesContainer.innerHTML = '<div style="padding:20px;text-align:center;color:#8E8E93;">No series scheduled</div>';
-    }
-    
-    function playChannelById(channelId){
-        if(!channelId) return;
-        let channel = allChannels.find(c => c.id === channelId);
-        if(channel) playChannelStream(channel);
-        else showToast('Channel not found', true);
-    }
-    
-    function closePlayer(){
-        document.getElementById('playerModal').classList.remove('show');
-        let video = document.getElementById('videoPlayer');
-        let iframe = document.getElementById('vidsrcIframe');
-        video.pause();
-        video.src = '';
-        iframe.src = '';
-        if(window.hlsPlayer){
-            window.hlsPlayer.destroy();
-            window.hlsPlayer = null;
-        }
-    }
-    
-    function navigateTo(page){
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(page + 'Page').classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        event.target.closest('.nav-item').classList.add('active');
-        
-        if(page === 'home') renderHomePage();
-        if(page === 'channels') renderAllChannels();
-        if(page === 'movies') renderAllMovies();
-        if(page === 'schedule') renderSchedule();
-    }
-    
-    function toggleSearch(){
-        showToast('Search feature coming soon', false);
-    }
-    
-    function logout(){
-        if(trialInterval) clearInterval(trialInterval);
-        auth.signOut().then(() => {
-            currentUser = null;
-            trialExpiry = null;
-            document.getElementById('authScreen').style.display = 'flex';
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('timerBadge').classList.add('hidden');
-            showToast('Logged out successfully', false);
-        });
-    }
-    
-    auth.onAuthStateChanged(async (user) => {
-        if(user){
-            let snap = await db.ref('users/' + user.uid).once('value');
-            let data = snap.val();
-            if(data){
-                currentUser = { uid: user.uid, ...data };
-                trialExpiry = currentUser.trialExpiry;
-                if(trialExpiry && trialExpiry > Date.now()){
-                    if(trialInterval) clearInterval(trialInterval);
-                    trialInterval = setInterval(updateTrialTimer, 1000);
-                    updateTrialTimer();
-                }
-                document.getElementById('authScreen').style.display = 'none';
-                document.getElementById('mainApp').style.display = 'block';
-                document.getElementById('loader').style.display = 'flex';
-                document.getElementById('profileName').innerText = currentUser.name || 'User';
-                document.getElementById('profileEmail').innerText = currentUser.email;
-                await loadData();
-                document.getElementById('loader').style.display = 'none';
-                navigateTo('home');
-            }
-        }
+
+    // ----- Market selector -----
+    marketBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        marketBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMarket = btn.dataset.market;
+      });
     });
+
+    // ----- AUTO SIGNAL GENERATOR (based on market) -----
+    function generateAutoSignal() {
+      let target = '3.20x';
+      let desc = '';
+      if (currentMarket === 'stable') {
+        const opts = ['3.20x','4.50x','6.80x','10.50x','25.00x'];
+        target = opts[Math.floor(Math.random() * opts.length)];
+        desc = '✅ STABLE · Pink mara nyingi 200+ · cashout safe 3-10x, jaribu high pink ndani ya 10-15 min';
+      } else if (currentMarket === 'transition') {
+        target = ['2.10x','3.40x','5.20x','8.70x'][Math.floor(Math.random()*4)];
+        desc = '🔄 TRANSITION · Subiri ishara kali (purple train) · cashout mapema 2-5x';
+      } else {
+        target = ['1.80x','2.50x','3.90x','7.20x'][Math.floor(Math.random()*4)];
+        desc = '⚠️ UNSTABLE · Epuka high risk, target ndogo 1.8-4x · blue trains nyingi';
+      }
+      autoTarget.innerText = target;
+      autoDesc.innerText = desc;
+    }
+
+    // ----- PURPLE PREDICTION -----
+    function predictPurple() {
+      const val = parseFloat(purpleInput.value);
+      if (isNaN(val)) {
+        purpleRange.innerText = '4.00 - 9.99';
+        purpleNote.innerText = 'Weka namba sahihi';
+        return;
+      }
+      let low, high;
+      if (val < 4.0) {
+        low = 4.0; high = 9.99;
+        purpleNote.innerText = 'Low purple → next likely high purple (4.0-9.99)';
+      } else if (val >= 4.0 && val <= 9.99) {
+        // purple train logic
+        low = (val * 0.9).toFixed(2);
+        high = (val * 1.3).toFixed(2);
+        purpleNote.innerText = 'Purple train · next range iko karibu';
+      } else {
+        low = 2.0; high = 3.99;
+        purpleNote.innerText = 'High purple → expect low purple next';
+      }
+      purpleRange.innerText = `${low} - ${high}`;
+    }
+
+    // ----- RENDER INPUTS BASED ON SELECTED METHOD -----
+    function renderMethodInputs(method) {
+      let html = '';
+      if (method === 'r10proper' || method === 'r10right' || method === 'r10left') {
+        const add = method === 'r10proper' ? '10' : (method === 'r10right' ? '11' : '9');
+        html = `<label>🕒 INDOOR TIME ya High Pink (HH:MM:SS)</label>
+                <input type="text" id="highPinkTime" placeholder="15:32:49" value="15:32:49">
+                <div class="note">${method.toUpperCase()} : +${add} minutes</div>`;
+      } else if (method === 'arithmetic') {
+        html = `<div class="flex-row">
+                  <div><label>PINK A odds</label><input id="pinkA" type="number" step="0.01" value="19.67"></div>
+                  <div><label>TIME A</label><input id="timeA" placeholder="20:08:29" value="20:08:29"></div>
+                </div>
+                <div class="flex-row">
+                  <div><label>PINK B odds</label><input id="pinkB" type="number" step="0.01" value="46.90"></div>
+                  <div><label>TIME B</label><input id="timeB" placeholder="20:21:59" value="20:21:59"></div>
+                </div>
+                <div class="note">Pink C = B - A, time diff applied</div>`;
+      } else if (method === '90min') {
+        html = `<label>💥 INDOOR TIME ya HUGE PINK (1000+)</label>
+                <input type="text" id="hugeTime" placeholder="20:04:40" value="20:04:40">
+                <div class="note">+90 minutes → next huge pink window</div>`;
+      } else if (method === 'pingpong') {
+        html = `<label>🎯 CURRENT ODDS (low purple / pink)</label>
+                <input type="number" id="pingOdds" step="0.01" placeholder="2.35" value="2.35">
+                <div class="note">Angalia kama iko kwenye 10-10.99, 13-13.99, 17-17.99, 20s,30s,60s,200s</div>`;
+      } else if (method === 'bluetrain') {
+        html = `<label>🔵 BLUE COUNT (mfululizo wa blue)</label>
+                <input type="number" id="blueCount" value="4" min="2">
+                <div class="note">Baada ya blue train (4+), expect pink ndani ya 3 rounds</div>`;
+      } else if (method === 'doubleDigits') {
+        html = `<label>🔁 LAST ODDS (mf. 3.22, 7.66)</label>
+                <input type="text" id="doubleInput" placeholder="3.22" value="3.22">
+                <div class="note">Double digits → pink within 4 steps</div>`;
+      } else if (method === 'keycode') {
+        html = `<label>🔑 ENTER SPACE PATTERN (0,1,2,3,4)</label>
+                <input type="text" id="keyPattern" placeholder="2" value="2">
+                <div class="note">Key code ascending/descending/random</div>`;
+      }
+      dynamicInputArea.innerHTML = html;
+    }
+
+    // ----- MANUAL CALCULATION -----
+    function calculateManual() {
+      const method = currentMethod;
+      let result = '--:--:--';
+      let note = '';
+      try {
+        if (method.startsWith('r10')) {
+          const timeField = document.getElementById('highPinkTime');
+          if (!timeField) throw new Error('Field missing');
+          const t = timeField.value.trim();
+          let add = 10;
+          if (method === 'r10right') add = 11;
+          if (method === 'r10left') add = 9;
+          const sec = parseTimeToSeconds(t);
+          if (isNaN(sec)) throw new Error('Invalid time');
+          result = secondsToTime(sec + add*60);
+          note = `${method.toUpperCase()} · target ±1 min window`;
+        } else if (method === 'arithmetic') {
+          const pinkA = parseFloat(document.getElementById('pinkA')?.value);
+          const pinkB = parseFloat(document.getElementById('pinkB')?.value);
+          const timeA = document.getElementById('timeA')?.value.trim();
+          const timeB = document.getElementById('timeB')?.value.trim();
+          if (isNaN(pinkA) || isNaN(pinkB)) throw new Error('odds missing');
+          const secA = parseTimeToSeconds(timeA), secB = parseTimeToSeconds(timeB);
+          if (isNaN(secA) || isNaN(secB)) throw new Error('time invalid');
+          const pinkC = pinkB - pinkA;
+          if (pinkC <= 0) throw new Error('B must > A');
+          const diff = secB - secA;
+          const targetSec = secB + diff;
+          result = `${secondsToTime(targetSec)}  (${pinkC.toFixed(2)}x)`;
+          note = `Arithmetic C = ${pinkC.toFixed(2)} · window ±1 min`;
+        } else if (method === '90min') {
+          const t = document.getElementById('hugeTime')?.value.trim();
+          const sec = parseTimeToSeconds(t);
+          if (isNaN(sec)) throw new Error('Invalid time');
+          result = secondsToTime(sec + 90*60);
+          note = '90 MIN ROLE · huge pink inatarajiwa';
+        } else if (method === 'pingpong') {
+          const odds = parseFloat(document.getElementById('pingOdds')?.value);
+          if (isNaN(odds)) throw new Error('odds?');
+          if ((odds>=10&&odds<11)||(odds>=13&&odds<14)||(odds>=17&&odds<18)||(odds>=20&&odds<30)||(odds>=30&&odds<40)||(odds>=60&&odds<70)||(odds>=200&&odds<300))
+            { result = '✅ HIGH CHANCE PINK'; note = 'Ping Pong range confirmed, target 1-3 rounds'; }
+          else { result = '⏸️ Outside ping pong'; note = 'Subiri odds iingie kwenye special range'; }
+        } else if (method === 'bluetrain') {
+          const cnt = parseInt(document.getElementById('blueCount')?.value);
+          if (cnt >= 4) { result = '🔥 PINK SIGNAL'; note = 'Blue train (4+) → pink ndani ya round 3'; }
+          else { result = '🌀 Subiri blue zaidi'; note = 'Angalau 4 blue mfululizo'; }
+        } else if (method === 'doubleDigits') {
+          const str = document.getElementById('doubleInput')?.value;
+          if (/(\d)\.\1\d|(\d)\.\d\1/.test(str)) { result = '✅ DOUBLE DIGITS'; note = 'Expect pink within 4 steps'; }
+          else { result = '❌ No double'; note = 'Hakuna double digits pattern'; }
+        } else if (method === 'keycode') {
+          const pat = document.getElementById('keyPattern')?.value;
+          result = `Keycode analysis: ${pat}`;
+          note = 'Tumia ascending/descending spaces kwa pink';
+        } else {
+          result = 'Select method';
+        }
+      } catch(e) { result = 'ERROR'; note = e.message; }
+      manualResult.innerText = result;
+      manualNote.innerText = note;
+      methodNameDisplay.innerText = method.toUpperCase();
+    }
+
+    // ----- Event listeners -----
+    generateAutoBtn.addEventListener('click', generateAutoSignal);
+    predictPurpleBtn.addEventListener('click', predictPurple);
     
-    setTimeout(() => {
-        document.getElementById('loader').style.display = 'none';
-    }, 1000);
+    formulaChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        formulaChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentMethod = chip.dataset.method;
+        renderMethodInputs(currentMethod);
+        methodNameDisplay.innerText = currentMethod.toUpperCase();
+      });
+    });
+
+    manualCalcBtn.addEventListener('click', calculateManual);
+
+    // ----- Initialize -----
+    renderMethodInputs('r10proper');
+    generateAutoSignal(); // default
+
+    // Purple quick on load
+    predictPurple();
+
+    // Additional quick helper: double digits detection
+  })();
 </script>
 </body>
 </html>
