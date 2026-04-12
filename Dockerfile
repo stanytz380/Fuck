@@ -1,15 +1,26 @@
-FROM node:lts-bookworm
+# Use lightweight nginx alpine image
+FROM nginx:alpine
 
-# Install tzdata – ensures timezone support
-RUN apt-get update && apt-get install -y tzdata && \
-    rm -rf /var/lib/apt/lists/*
+# Copy the static HTML file to nginx web root
+COPY index.html /usr/share/nginx/html/index.html
 
-WORKDIR /app
+# Add custom nginx configuration (optional, but good for single-page apps)
+RUN echo 'server { \
+    listen 80; \
+    server_name _; \
+    root /usr/share/nginx/html; \
+    index index.html; \
+    location / { \
+        try_files $uri $uri/ /index.html; \
+    } \
+    # Enable gzip compression for faster loading
+    gzip on; \
+    gzip_vary on; \
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript; \
+}' > /etc/nginx/conf.d/default.conf
 
-# Clone IAMLEGEND repo
-RUN git clone https://github.com/Stanytz380/fuck . && \
-    npm install
+# Expose port 80
+EXPOSE 80
 
-EXPOSE 3000
-
-CMD ["npm", "start"]
+# Start nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]
